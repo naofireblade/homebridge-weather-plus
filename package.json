@@ -18,6 +18,6 @@
     "url": "git://github.com/xfjx/homebridge-wunderground.git"
   },
   "dependencies": {
-    "wundergroundnode": >= "0.9"
+    "wundergroundnode": ">=0.9"
   }
 }
