@@ -1,0 +1,23 @@
+{
+  "name": "homebridge-wunderground",
+  "version": "0.0.1",
+  "description": "wunderground plugin for homebridge",
+  "license": "ISC",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "author": {
+    "name": "Thorsten Voss"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xfjx/homebridge-wunderground.git"
+  },
+  "dependencies": {
+    "wundergroundnode": >= "0.9"
+  }
+}
