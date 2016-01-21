@@ -60,6 +60,14 @@ WUTemphum.prototype = {
                 .getCharacteristic(Characteristic.CurrentTemperature)
                 .on('get', this.getState.bind(this));
 
+        temperatureService
+                .getCharacteristic(Characteristic.CurrentTemperature)
+                .setProps({minValue: -50});
+        
+        temperatureService
+                .getCharacteristic(Characteristic.CurrentTemperature)
+                .setProps({maxValue: 50});
+
         humidityService = new Service.HumiditySensor(this.name);
         humidityService
                 .getCharacteristic(Characteristic.CurrentRelativeHumidity)
