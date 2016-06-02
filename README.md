@@ -40,7 +40,9 @@ Make sure to add your API key and provice your city or postal code.
 	      "accessory": "WUWeatherStation",
 	      "name": "Weather Station",
 	      "key": "XXXXXXXXXXXXXXX",
-	      "postalCode": "78613"
+	      "location": "78613"
 	    }
     ]
 ```
+
+Location can be any value that wunderground is able to associate with a known location (city, state, zip, etc) 
