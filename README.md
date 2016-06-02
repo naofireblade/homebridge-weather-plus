@@ -1,7 +1,6 @@
 # homebridge-weather-station
-Weather Underground Weather Station plugin for homebridge: https://github.com/nfarina/homebridge
 
-This is a weather station plugin for Nfarina's [Homebridge project](https://github.com/nfarina/homebridge). It will fetch current weather conditions from [Weather Underground](http://wunderground.com) and provide temperature, humidity, and clear/rain/snow condition information to HomeKit. These values update every 4 minutes with the latest conditions from wunderground.com
+This is a weather station plugin for Nfarina's [Homebridge project](https://github.com/nfarina/homebridge),and is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground). This fork combines all characterstics into a single service, exposes the current weather conditons, and automatically updates every few minutes.
 
 You can use these values as conditions for triggers or just look at them via HomeKit enabled Apps on your iOS device or even ask Siri for them.
 
