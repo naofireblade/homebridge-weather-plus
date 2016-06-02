@@ -1,0 +1,4 @@
+coverage
+.idea
+node_modules
+/test/devkey
