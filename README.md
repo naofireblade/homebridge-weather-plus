@@ -41,7 +41,7 @@ Make sure to add your API key and provice your city or postal code.
 	      "accessory": "WUWeatherStation",
 	      "name": "Weather Station",
 	      "key": "XXXXXXXXXXXXXXX",
-	      "city": "78613"
+	      "postalCode": "78613"
 	    }
     ]
 ```

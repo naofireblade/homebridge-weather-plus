@@ -57,7 +57,7 @@ function WUWeatherStation(log, config) {
     this.log = log;
     this.wunderground = new Wunderground(config['key']);
     this.name = config['name'];
-    this.city = config['city'];
+    this.postalCode = config['postalCode'];
     this.timestampOfLastUpdate = 0;
 	
     this.informationService = new Service.AccessoryInformation();
@@ -65,7 +65,7 @@ function WUWeatherStation(log, config) {
     this.informationService
             .setCharacteristic(Characteristic.Manufacturer, "HomeBridge")
             .setCharacteristic(Characteristic.Model, "Weather Underground")
-            .setCharacteristic(Characteristic.SerialNumber, this.city);
+            .setCharacteristic(Characteristic.SerialNumber, this.postalCode);
 
 	this.weatherStationService = new WeatherStation(this.name)	
 	
@@ -86,7 +86,7 @@ WUWeatherStation.prototype = {
 	updateWeatherConditions: function() {
 		var that = this
 		
-	    that.wunderground.conditions().request(that.city, function(err, response){
+	    that.wunderground.conditions().request(that.postalCode, function(err, response){
 			that.timestampOfLastUpdate = Date.now() / 1000 | 0;
     		that.temperature = response['current_observation']['temp_c'];
 			let conditionIcon = response['current_observation']['icon']
