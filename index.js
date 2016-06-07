@@ -87,36 +87,40 @@ WUWeatherStation.prototype = {
 		var that = this
 		
 	    that.wunderground.conditions().request(that.location, function(err, response){
-			that.timestampOfLastUpdate = Date.now() / 1000 | 0;
-    		that.temperature = response['current_observation']['temp_c'];
-			let conditionIcon = response['current_observation']['icon']
-			that.condition = response['current_observation']['weather']
-			switch (conditionIcon) {									
-			case "rain":
-			case "tstorm":
-			case "tstorms":
-				that.conditionValue = 1
-				break;
-			case "snow":
-			case "sleet":
-			case "flurries":
-				that.conditionValue = 2
-				break;
-			default:
-				that.conditionValue = 0
-				break;
+			if (!err && response['current_observation']) {
+				that.timestampOfLastUpdate = Date.now() / 1000 | 0;
+	    		that.temperature = response['current_observation']['temp_c'];
+				let conditionIcon = response['current_observation']['icon']
+				that.condition = response['current_observation']['weather']
+				switch (conditionIcon) {									
+				case "rain":
+				case "tstorm":
+				case "tstorms":
+					that.conditionValue = 1
+					break;
+				case "snow":
+				case "sleet":
+				case "flurries":
+					that.conditionValue = 2
+					break;
+				default:
+					that.conditionValue = 0
+					break;
+				}
+	   			that.humidity = parseInt(response['current_observation']['relative_humidity'].substr(0, response['current_observation']['relative_humidity'].length-1));
+			
+				let humidityString = response['current_observation']['relative_humidity']
+				let temperatureString = response['current_observation']['temperature_string']
+				let uv = response['current_observation']['UV']
+				that.log("Current Weather Conditions: " + that.condition + ", " + temperatureString + ", " + humidityString + " humidity, UV: " + uv)
+			
+				that.weatherStationService.setCharacteristic(WeatherConditionValue,that.conditionValue);
+				that.weatherStationService.setCharacteristic(WeatherCondition,that.condition);
+				that.weatherStationService.setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
+				that.weatherStationService.setCharacteristic(Characteristic.CurrentRelativeHumidity, that.humidity);
+			} else {
+				that.log("Error retrieving the weather conditions")
 			}
-   			that.humidity = parseInt(response['current_observation']['relative_humidity'].substr(0, response['current_observation']['relative_humidity'].length-1));
-			
-			let humidityString = response['current_observation']['relative_humidity']
-			let temperatureString = response['current_observation']['temperature_string']
-			let uv = response['current_observation']['UV']
-			that.log("Current Weather Conditions: " + that.condition + ", " + temperatureString + ", " + humidityString + " humidity, UV: " + uv)
-			
-			that.weatherStationService.setCharacteristic(WeatherConditionValue,that.conditionValue);
-			that.weatherStationService.setCharacteristic(WeatherCondition,that.condition);
-			that.weatherStationService.setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
-			that.weatherStationService.setCharacteristic(Characteristic.CurrentRelativeHumidity, that.humidity);
 	    });
 		
 		// wunderground limits to 500 api calls a day. Making a call every 4 minutes == 360 calls
