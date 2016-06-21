@@ -87,7 +87,7 @@ WUWeatherStation.prototype = {
 		var that = this
 		
 	    that.wunderground.conditions().request(that.location, function(err, response){
-			if (!err && response['current_observation']) {
+			if (!err && response['current_observation'] && response['current_observation']['temp_c']) {
 				that.timestampOfLastUpdate = Date.now() / 1000 | 0;
 	    		that.temperature = response['current_observation']['temp_c'];
 				let conditionIcon = response['current_observation']['icon']
