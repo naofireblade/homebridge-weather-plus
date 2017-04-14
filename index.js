@@ -75,6 +75,7 @@ module.exports = function (homebridge) {
 	inherits(CustomCharacteristic.WeatherCondition, Characteristic);
 
 	CustomCharacteristic.Rain1h = function() {
+		Characteristic.call(this, 'Rain last hour', CustomUUID.Rain1h);
 		this.setProps({
 			format: Characteristic.Formats.UINT16,
 			unit: "mm",
@@ -88,6 +89,7 @@ module.exports = function (homebridge) {
 	inherits(CustomCharacteristic.Rain1h, Characteristic);
 
 	CustomCharacteristic.Rain24h = function() {
+		Characteristic.call(this, 'Rain today', CustomUUID.Rain24h);
 		this.setProps({
 			format: Characteristic.Formats.UINT16,
 			unit: "mm",
