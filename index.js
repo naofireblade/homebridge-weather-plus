@@ -33,18 +33,7 @@ var CustomUUID = {
 	MeasuringStation: 'd1b2787d-1fc4-4345-a20e-7b5a74d693ed',
 };
 
-var CustomCharacteristic = {
-	WeatherCondition,
-	WeatherConditionCategory,
-	Rain1h,
-	Rain24h,
-	WindDirection,
-	WindSpeed,
-	AirPressure,
-	Visibility,
-	UVIndex,
-	MeasuringStation,
-};
+var CustomCharacteristic = {};
 
 module.exports = function (homebridge) {
 	Service = homebridge.hap.Service;
