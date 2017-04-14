@@ -4,19 +4,33 @@ This is a weather station plugin for Nfarina's [Homebridge project](https://gith
 
 You can use these values as conditions for triggers or just look at them via HomeKit enabled Apps on your iOS device or even ask Siri for them.
 
-## Weather Conditions
+# Weather Conditions
 
-Currently, the current weather conditions are exposed in two properties, `WeatherCondition` and `WeatherConditionValue`. `WeatherCondition` is a read-only string representation of the current weather conditions, and can be one of the Forecast Description Phrases listed on this [page](https://www.wunderground.com/weather/api/d/docs?d=resources/phrase-glossary).
+Currently, the current weather conditions are exposed in two properties, `WeatherCondition` and `WeatherConditionCategory`. `WeatherCondition` is a read-only string representation of the current weather conditions, and can be one of the Forecast Description Phrases listed on this [page](https://www.wunderground.com/weather/api/d/docs?d=resources/phrase-glossary).
 
-`WeatherConditionValue` is an enum value that currently represents one of three values:
+`WeatherConditionCategory` is an enum value that currently represents one of three values:
 
 | Condition              | Enum Value			                                                      |
 | -------------------    | -------- |
-| Other   		         | 0 |
-| Rain  			     | 1 |
-| Snow			    	 | 2 |
+| Sunny   		         | 0 |
+| Clouds   		         | 1 |
+| Rain  			     | 2 |
+| Snow			    	 | 3 |
 
 You can combine this with the [homebridge-suncalc](https://github.com/kcharwood/homebridge-suncalc) to create rules that turn on and off the lights when its raining during the day.
+
+# Measured Values
+
+The following values can be displayed
+- temperature
+- relative humidity
+- precip last hour
+- precip today
+- wind direction
+- wind speed
+- air pressure
+- visibility
+- uv-index
 
 # Installation
 
