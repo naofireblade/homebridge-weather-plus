@@ -1,6 +1,7 @@
 # homebridge-weather-station-extended
 
-This is a weather station plugin for Nfarina's [Homebridge project](https://github.com/nfarina/homebridge). Its a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) that doesn't get updated anymore which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
+This is a weather station plugin for Nfarina's [Homebridge project](https://github.com/nfarina/homebridge). You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
+Its a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) that doesn't get updated anymore which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
 # Measured Values
 
