@@ -35,13 +35,13 @@ Add the following information to your config file. Make sure to add your API key
 
 ```json
 "accessories": [
-	    {
-	      "accessory": "WUWeatherStation",
-	      "name": "Weather Station",
-	      "key": "XXXXXXXXXXXXXXX",
-	      "location": "78613"
-	    }
-    ]
+	{
+		"accessory": "WUWeatherStationExtended",
+		"name": "Weather Station",
+		"key": "XXXXXXXXXXXXXXX",
+		"location": "78613"
+	}
+]
 ```
 
 Location can be any value that wunderground is able to associate with a known location (city, state, zip, etc) 
