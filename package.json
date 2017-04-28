@@ -1,21 +1,22 @@
 {
-  "name": "homebridge-weather-station",
-  "version": "0.0.5",
-  "description": "auto updating wunderground weather station",
+  "name": "homebridge-weather-station-extended",
+  "version": "0.1.0",
+  "description": "auto updating wunderground weather station with many values",
   "license": "ISC",
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "weather"
   ],
   "engines": {
     "node": ">=0.12.0",
     "homebridge": ">=0.2.0"
   },
   "author": {
-    "name": "Kevin Harwood"
+    "name": "Arne Blumentritt"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/kcharwood/homebridge-weather-station.git"
+    "url": "https://github.com/naofireblade/homebridge-weather-station-extended.git"
   },
   "dependencies": {
     "wundergroundnode": ">=0.9"

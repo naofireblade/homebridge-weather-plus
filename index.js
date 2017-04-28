@@ -199,86 +199,85 @@ function WUWeatherStationExtended(log, config) {
 
 WUWeatherStationExtended.prototype = {
 	identify: function (callback) {
-	this.log("Identify requested!");
-	callback(); // success
-},
+		this.log("Identify requested!");
+		callback(); // success
+	},
 
-getServices: function () {
-	return [this.informationService, this.weatherStationService];
-},
+	getServices: function () {
+		return [this.informationService, this.weatherStationService];
+	},
 
-updateWeatherConditions: function() {
-	var that = this
+	updateWeatherConditions: function() {
+		var that = this
 
-	that.wunderground.conditions().request(that.location, function(err, response){
-		if (!err && response['current_observation'] && response['current_observation']['temp_c']) {
-			that.timestampOfLastUpdate = Date.now() / 1000 | 0;
-			let conditionIcon = response['current_observation']['icon']
-			that.condition = response['current_observation']['weather']
-			switch (conditionIcon) {									
-				case "snow":
-				case "sleet":
-				case "flurries":
-				that.conditionValue = 3
-				break;
-				case "rain":
-				case "tstorm":
-				case "tstorms":
-				that.conditionValue = 2
-				break;
-				case "cloudy":
-				case "fog":
-				case "partlysunny":
-				that.conditionValue = 1
-				break;
-				default:
-				that.conditionValue = 0
-				break;
+		that.wunderground.conditions().request(that.location, function(err, response){
+			if (!err && response['current_observation'] && response['current_observation']['temp_c']) {
+				that.timestampOfLastUpdate = Date.now() / 1000 | 0;
+				let conditionIcon = response['current_observation']['icon']
+				that.condition = response['current_observation']['weather']
+				switch (conditionIcon) {									
+					case "snow":
+					case "sleet":
+					case "flurries":
+					that.conditionValue = 3
+					break;
+					case "rain":
+					case "tstorm":
+					case "tstorms":
+					that.conditionValue = 2
+					break;
+					case "cloudy":
+					case "fog":
+					case "partlysunny":
+					that.conditionValue = 1
+					break;
+					default:
+					that.conditionValue = 0
+					break;
+				}
+
+				that.temperature = response['current_observation']['temp_c'];
+				that.humidity = parseInt(response['current_observation']['relative_humidity'].substr(0, response['current_observation']['relative_humidity'].length-1));
+				that.uv = parseInt(response['current_observation']['UV']);
+				that.rain_1h_metric = parseInt(response['current_observation']['precip_1hr_metric']);
+				if (isNaN(that.rain_1h_metric))
+					that.rain_1h_metric = 0;
+				that.rain_24h_metric = parseInt(response['current_observation']['precip_today_metric']);
+				if (isNaN(that.rain_24h_metric))
+					that.rain_24h_metric = 0;
+				that.windDirection = response['current_observation']['wind_dir'];
+				that.windSpeed = parseFloat(response['current_observation']['wind_kph']);
+				that.airPressure = parseInt(response['current_observation']['pressure_mb']);
+				that.visibility = parseInt(response['current_observation']['visibility_km']);
+				if (isNaN(that.visibility))
+					that.visibility = 0;
+				that.uvIndex = parseInt(response['current_observation']['UV']);
+				if (isNaN(that.uvIndex) || that.uvIndex < 0)
+					that.uvIndex = 0;
+				that.station = response['current_observation']['observation_location']['full'];
+
+				that.log("Current Weather Conditions -> Temperature: " + that.temperature + ", Humidity: " + that.humidity + ", WeatherConditionCategory: " + that.conditionValue + ", WeatherCondition: "
+					+ that.condition + ", Rain1h: " + that.rain_1h_metric + ", Rain24h: " + that.rain_24h_metric + ", WindDirection: " + that.windDirection + ", WindSpeed: "
+					+ that.windSpeed + ", AirPressure: " + that.airPressure + ", Visibility: " + that.visibility + ", UVIndex: " + that.uvIndex  + ", MeasuringStation: " + that.station);
+
+				that.weatherStationService.setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
+				that.weatherStationService.setCharacteristic(Characteristic.CurrentRelativeHumidity, that.humidity);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.WeatherConditionCategory,that.conditionValue);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.WeatherCondition,that.condition);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.Rain1h,that.rain_1h_metric);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.Rain24h,that.rain_24h_metric);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.WindDirection,that.windDirection);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.WindSpeed,that.windSpeed);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.AirPressure,that.airPressure);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.Visibility,that.visibility);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.UVIndex,that.uvIndex);
+				that.weatherStationService.setCharacteristic(CustomCharacteristic.MeasuringStation, that.station);
+			} else {
+				that.log("Error retrieving the weather conditions")
 			}
+		});
 
-			that.temperature = response['current_observation']['temp_c'];
-			that.humidity = parseInt(response['current_observation']['relative_humidity'].substr(0, response['current_observation']['relative_humidity'].length-1));
-			that.uv = parseInt(response['current_observation']['UV']);
-			that.rain_1h_metric = parseInt(response['current_observation']['precip_1hr_metric']);
-			if (isNaN(that.rain_1h_metric))
-				that.rain_1h_metric = 0;
-			that.rain_24h_metric = parseInt(response['current_observation']['precip_today_metric']);
-			if (isNaN(that.rain_24h_metric))
-				that.rain_24h_metric = 0;
-			that.windDirection = response['current_observation']['wind_dir'];
-			that.windSpeed = parseFloat(response['current_observation']['wind_kph']);
-			that.log('WIND' + that.windSpeed);
-			that.airPressure = parseInt(response['current_observation']['pressure_mb']);
-			that.visibility = parseInt(response['current_observation']['visibility_km']);
-			if (isNaN(that.visibility))
-				that.visibility = 0;
-			that.uvIndex = parseInt(response['current_observation']['UV']);
-			if (isNaN(that.uvIndex) || that.uvIndex < 0)
-				that.uvIndex = 0;
-			that.station = response['current_observation']['observation_location']['full'];
-
-			that.log("Current Weather Conditions -> Temperature: " + that.temperature + ", Humidity: " + that.humidity + ", WeatherConditionCategory: " + that.conditionValue + ", WeatherCondition: "
-				+ that.condition + ", Rain1h: " + that.rain_1h_metric + ", Rain24h: " + that.rain_24h_metric + ", WindDirection: " + that.windDirection + ", WindSpeed: "
-				+ that.windSpeed + ", AirPressure: " + that.airPressure + ", Visibility: " + that.visibility + ", UVIndex: " + that.uvIndex  + ", MeasuringStation: " + that.station);
-
-			that.weatherStationService.setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
-			that.weatherStationService.setCharacteristic(Characteristic.CurrentRelativeHumidity, that.humidity);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.WeatherConditionCategory,that.conditionValue);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.WeatherCondition,that.condition);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.Rain1h,that.rain_1h_metric);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.Rain24h,that.rain_24h_metric);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.WindDirection,that.windDirection);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.WindSpeed,that.windSpeed);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.AirPressure,that.airPressure);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.Visibility,that.visibility);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.UVIndex,that.uvIndex);
-			that.weatherStationService.setCharacteristic(CustomCharacteristic.MeasuringStation, that.station);
-		} else {
-			that.log("Error retrieving the weather conditions")
-		}
-	});
-
-	// wunderground limits to 500 api calls a day. Making a call every 4 minutes == 360 calls
-	setTimeout(this.updateWeatherConditions.bind(this), 4 * 60 * 1000);
+		// wunderground limits to 500 api calls a day. Making a call every 4 minutes == 360 calls
+		setTimeout(this.updateWeatherConditions.bind(this), 4 * 60 * 1000);
 	}
 };
