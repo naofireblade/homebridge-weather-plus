@@ -1,10 +1,11 @@
 {
   "name": "homebridge-weather-station-extended",
-  "version": "0.1.0",
-  "description": "auto updating wunderground weather station with many values",
-  "license": "ISC",
+  "version": "0.1.1",
+  "description": "A comprehensive weather station plugin for homebridge.",
+  "license": "MIT",
   "keywords": [
     "homebridge-plugin",
+    "weather-station",
     "weather"
   ],
   "engines": {
