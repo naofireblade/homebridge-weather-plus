@@ -1,7 +1,10 @@
 # homebridge-weather-station-extended
 
-This is a weather station plugin for Nfarina's [Homebridge project](https://github.com/nfarina/homebridge). You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
-Its a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) that doesn't get updated anymore which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
+This is a weather station plugin for [homebridge](https://github.com/nfarina/homebridge). You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
+
+Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-station-extended/issues).
+
+This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) that doesn't get code updates anymore which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
 # Measured Values
 
@@ -22,15 +25,23 @@ The following values can be displayed and used in HomeKit rules.
 
 The Apple Home app just knows temperature and relative humidity at the moment. So use e.g. Elgato Eve app to see and use all values.
 
+# Example use cases
+
+Here are some example rules to use this plugin.
+
+- Switch on a blue light in the morning when it rains and you will need an umbrella today (or white when it snows / yellow when it's sunny).
+- Start your automatic garden irrigation in the evening depending on the current weather condition and the amount of precip today.
+
+**Hint:** To trigger rules based on time and weather conditions you will need a pluing like this [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
+
 # Installation
 
-1. Install homebridge using: npm install -g homebridge
-2. Install this plugin using: npm install -g homebridge-weather-station-extended
-3. Update your configuration file. See the sample below.
+1. Install homebridge using: `npm install -g homebridge`
+2. Install this plugin using: `npm install -g homebridge-weather-station-extended`
+3. Gather a free developer key for Weather Underground [here](http://www.wunderground.com/weather/api/).
+4. Update your configuration file. See the sample below.
 
-All you need now is a developer key for Weather Underground which can be easily created [here](http://www.wunderground.com/weather/api/).
-
-# Configuration
+### Configuration
 
 Add the following information to your config file. Make sure to add your API key and provice your city or postal code.
 
@@ -44,5 +55,3 @@ Add the following information to your config file. Make sure to add your API key
 	}
 ]
 ```
-
-Location can be any value that wunderground is able to associate with a known location (city, state, zip, etc) 
