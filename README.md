@@ -23,14 +23,14 @@ The following values can be displayed and used in HomeKit rules.
 - Wind speed
 - Station
 
-The Apple Home app just knows temperature and relative humidity at the moment. So use e.g. Elgato Eve app to see and use all values.
+The Apple Home app recognizes just temperature and relative humidity at the moment. So use e.g. Elgato Eve app to see all values.
 
 # Example use cases
 
 - Switch on a blue light in the morning when it rains and you will need an umbrella today (or white when it snows / yellow when it's sunny).
 - Start your automatic garden irrigation in the evening depending on the current weather condition and the amount of precip today.
 
-**Hint:** To trigger rules based on time and weather condition you will need a pluing like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
+**Hint:** To trigger rules based on time and weather condition you will need a pluging like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
 # Installation
 
