@@ -171,6 +171,7 @@ function WUWeatherStationExtended(log, config) {
 	this.log = log;
 	this.wunderground = new Wunderground(config['key']);
 	this.name = config['name'];
+	this.interval = config['interval'];
 	this.location = config['location'];
 	this.timestampOfLastUpdate = 0;
 
@@ -278,6 +279,6 @@ WUWeatherStationExtended.prototype = {
 		});
 
 		// wunderground limits to 500 api calls a day. Making a call every 4 minutes == 360 calls
-		setTimeout(this.updateWeatherConditions.bind(this), 4 * 60 * 1000);
+		setTimeout(this.updateWeatherConditions.bind(this), (that.interval) * 60 * 1000);
 	}
 };

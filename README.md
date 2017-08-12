@@ -48,6 +48,7 @@ Add the following information to your config file. Make sure to add your API key
 	{
 		"accessory": "WUWeatherStationExtended",
 		"name": "Weather Station",
+		"interval": "4",
 		"key": "XXXXXXXXXXXXXXX",
 		"location": "78613"
 	}
