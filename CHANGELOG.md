@@ -5,3 +5,8 @@
 * Renamed condition values to condition categories
 * Changed condition category values
 * Changed service to temperature-sensor so that the device is recognized by apple home app
+
+## 0.1.2
+
+* Added optional parameter "interval"
+* Added debug library

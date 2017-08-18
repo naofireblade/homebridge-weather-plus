@@ -1,6 +1,6 @@
 {
   "name": "homebridge-weather-station-extended",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A comprehensive weather station plugin for homebridge.",
   "license": "MIT",
   "keywords": [
@@ -20,6 +20,7 @@
     "url": "https://github.com/naofireblade/homebridge-weather-station-extended.git"
   },
   "dependencies": {
-    "wundergroundnode": ">=0.9"
+    "wundergroundnode": ">=0.9",
+    "debug": "^2.2.0"
   }
 }

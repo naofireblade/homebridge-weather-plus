@@ -1,39 +1,41 @@
 "use strict";
-var Wunderground = require('wundergroundnode');
-var inherits = require('util').inherits;
-var Service, Characteristic;
+var Wunderground = require('wundergroundnode'),
+	inherits = require('util').inherits,
+	debug = require('debug')('homebridge-weather-station-extended'),
 
-var weatherStationService;
+	Service, Characteristic,
 
-var WeatherCondition;
-var WeatherConditionCategory;
-var Rain1h;
-var Rain24h;
-var WindDirection;
-var WindSpeed;
-var AirPressure;
-var Visibility;
-var UVIndex;
-var MeasuringStation;
+	weatherStationService,
 
-var CustomUUID = {
-	// Eve
-	AirPressure: 'E863F10F-079E-48FF-8F27-9C2605A29F52',
-	// Other
-	WindSpeed: '49C8AE5A-A3A5-41AB-BF1F-12D5654F9F41',
-	// Weather Station
-	WeatherCondition: 'cd65a9ab-85ad-494a-b2bd-2f380084134d',
-	WeatherConditionCategory: 'cd65a9ab-85ad-494a-b2bd-2f380084134c',
-	// Weather Station Extended
-	Rain1h: '10c88f40-7ec4-478c-8d5a-bd0c3cce14b7',
-	Rain24h: 'ccc04890-565b-4376-b39a-3113341d9e0f',
-	WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
-	Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
-	UVIndex: '05ba0fe0-b848-4226-906d-5b64272e05ce',
-	MeasuringStation: 'd1b2787d-1fc4-4345-a20e-7b5a74d693ed',
-};
+	WeatherCondition,
+	WeatherConditionCategory,
+	Rain1h,
+	Rain24h,
+	WindDirection,
+	WindSpeed,
+	AirPressure,
+	Visibility,
+	UVIndex,
+	MeasuringStation,
 
-var CustomCharacteristic = {};
+	CustomUUID = {
+		// Eve
+		AirPressure: 'E863F10F-079E-48FF-8F27-9C2605A29F52',
+		// Other
+		WindSpeed: '49C8AE5A-A3A5-41AB-BF1F-12D5654F9F41',
+		// Weather Station
+		WeatherCondition: 'cd65a9ab-85ad-494a-b2bd-2f380084134d',
+		WeatherConditionCategory: 'cd65a9ab-85ad-494a-b2bd-2f380084134c',
+		// Weather Station Extended
+		Rain1h: '10c88f40-7ec4-478c-8d5a-bd0c3cce14b7',
+		Rain24h: 'ccc04890-565b-4376-b39a-3113341d9e0f',
+		WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
+		Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
+		UVIndex: '05ba0fe0-b848-4226-906d-5b64272e05ce',
+		MeasuringStation: 'd1b2787d-1fc4-4345-a20e-7b5a74d693ed',
+	},
+
+	CustomCharacteristic = {};
 
 module.exports = function (homebridge) {
 	Service = homebridge.hap.Service;
@@ -172,6 +174,12 @@ function WUWeatherStationExtended(log, config) {
 	this.wunderground = new Wunderground(config['key']);
 	this.name = config['name'];
 	this.interval = config['interval'];
+	// default 4
+	this.interval = ('interval' in config ? parseInt(config['interval']) : 4);
+	// must be integer and positive
+	this.interval = (typeof this.interval !=='number' || (this.interval%1)!==0 || this.interval < 0) ? 4 : this.interval;
+	debug("Set update interval to: " + this.interval + " minutes.");
+
 	this.location = config['location'];
 	this.timestampOfLastUpdate = 0;
 
@@ -257,7 +265,7 @@ WUWeatherStationExtended.prototype = {
 					that.uvIndex = 0;
 				that.station = response['current_observation']['observation_location']['full'];
 
-				that.log("Current Weather Conditions -> Temperature: " + that.temperature + ", Humidity: " + that.humidity + ", WeatherConditionCategory: " + that.conditionValue + ", WeatherCondition: "
+				debug("Current Weather Conditions -> Temperature: " + that.temperature + ", Humidity: " + that.humidity + ", WeatherConditionCategory: " + that.conditionValue + ", WeatherCondition: "
 					+ that.condition + ", Rain1h: " + that.rain_1h_metric + ", Rain24h: " + that.rain_24h_metric + ", WindDirection: " + that.windDirection + ", WindSpeed: "
 					+ that.windSpeed + ", AirPressure: " + that.airPressure + ", Visibility: " + that.visibility + ", UVIndex: " + that.uvIndex  + ", MeasuringStation: " + that.station);
 
@@ -278,7 +286,7 @@ WUWeatherStationExtended.prototype = {
 			}
 		});
 
-		// wunderground limits to 500 api calls a day. Making a call every 4 minutes == 360 calls
-		setTimeout(this.updateWeatherConditions.bind(this), (that.interval) * 60 * 1000);
+		// wunderground limits to 500 api calls a day. Making a call every x minutes (default 4 minutes = 360 calls)
+		setTimeout(this.updateWeatherConditions.bind(this), (this.interval) * 60 * 1000);
 	}
 };
