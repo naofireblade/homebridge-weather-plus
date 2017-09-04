@@ -326,7 +326,7 @@ WeatherStationPlatform.prototype = {
 function CurrentConditionsWeatherAccessory(platform) {
 	this.platform = platform;
 	this.log = platform.log;
-	this.name = "Current Observations";
+	this.name = "Now";
 
 	this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
@@ -367,16 +367,16 @@ function ForecastWeatherAccessory(platform, day) {
 	this.log = platform.log;
 	switch(day) {
 		case 0:
-			this.name = "Forecast  Today";
+			this.name = "Later Today";
 			break;
 		case 1:
-			this.name = "Forecast in 1 Day";
+			this.name = "In 1 Day";
 			break;
 		case 2:
-			this.name = "Forecast in 2 Days";
+			this.name = "In 2 Days";
 			break;
 		case 3:
-			this.name = "Forecast in 3 Days";
+			this.name = "In 3 Days";
 			break;
 	}
 	this.day = day;

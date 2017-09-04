@@ -20,3 +20,7 @@
 * Added chance for rain
 * Added wind speed max
 * Changed plugin type to platform
+
+## 1.0.1
+
+* Changed names of accessories
