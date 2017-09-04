@@ -8,9 +8,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Current Observations
 
-The following observation values can be displayed and used in HomeKit rules.
-
-The Apple Home app only recognizes temperature. You can use the Elgato Eve app to see all values.
+The following current observation values can be displayed and used in HomeKit rules. Use a 3rd party App like Elgato Eve to see all values.
 
 - Temperature
 - Air Pressure
@@ -29,9 +27,7 @@ The Apple Home app only recognizes temperature. You can use the Elgato Eve app t
 
 ## Forecast
 
-The plugin also features a daily forecast for the current and the next 3 days.
-
-The following forecast values can be displayed.
+The plugin also features a daily forecast for today and the next 3 days. The following forecast values can be displayed.
 
 - Temperature
 - Relative Humidity
