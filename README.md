@@ -65,13 +65,13 @@ Add the following information to your config file. Make sure to add your API key
 
 ### Advanced
 
-The following config contains an advanced optional setting that must not be specified.
+The following config contains advanced optional settings that must not be specified.
 
 The parameter **interval** sets the interval (minutes) in which the weather will be updated from Weather Underground. The default value is 4 minutes, which fits in the maximum of 400 updates per day for free accounts.
 
 The parameter **forecast** sets which forecasts you want to see. You can set one of these three values: none, today, 3days. The default value is 3days.
 
-You can use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID in the location parameter.
+You can also use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID in the location parameter.
 
 ```json
 "accessories": [
