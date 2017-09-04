@@ -2,11 +2,9 @@
 
 This is a weather station plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations and daily forecasts. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
 
+If you **update from a version before 1.0.0** you have to adapt your config.
+
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-station-extended/issues).
-
-If you update from a previous version below 1.0.0 you have to adapt your config (plugin is now a platform).
-
-This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
 ## Current Observations
 
@@ -98,3 +96,7 @@ You can use a station from the **[Personal Weather Station Network](https://www.
 	}
 ]
 ```
+
+## Contributors
+
+This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
