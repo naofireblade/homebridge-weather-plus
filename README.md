@@ -1,34 +1,54 @@
 # homebridge-weather-station-extended
 
-This is a weather station plugin for [homebridge](https://github.com/nfarina/homebridge). You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
+This is a weather station plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations and daily forecasts. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
 
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-station-extended/issues).
 
-This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) that doesn't get code updates anymore which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
+If you update from a previous version below 1.0.0 you have to adapt your config (plugin is now a platform).
 
-## Measured Values
+This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
-The following values can be displayed and used in HomeKit rules.
+## Current Observations
+
+The following observation values can be displayed and used in HomeKit rules.
+
+The Apple Home app only recognizes temperature. You can use the Elgato Eve app to see all values.
 
 - Temperature
-- Air pressure
-- Relative humidity
-- Rain last hour (precip)
-- Rain today (precip)
+- Air Pressure
+- Relative Humidity
+- Rain Last Hour
+- Rain All Day
 - UV-Index
 - Visibility
 - Weather Condition
-- Weather Condition Category (Sunny = 0, Cloudy = 1, Rain = 2, Snow = 3)
-- Wind direction
-- Wind speed
-- Station
+- Weather Condition Category (Sun = 0, Clouds = 1, Rain = 2, Snow = 3)
+- Wind Direction
+- Wind Speed
+- Wind Speed Maximum
+- Observation Station
+- Observation Time
 
-The Apple Home app recognizes only temperature and relative humidity. So use e.g. Elgato Eve app to see all values.
+## Forecast
+
+The plugin also features a daily forecast for the current and the next 3 days.
+
+The following forecast values can be displayed.
+
+- Temperature
+- Relative Humidity
+- Chance Rain
+- Rain All Day
+- Weather Condition
+- Weather Condition Category (Sun = 0, Clouds = 1, Rain = 2, Snow = 3)
+- Wind Direction
+- Wind Speed
+- Wind Speed Maximum
 
 ## Example use cases
 
-- Switch on a blue light in the morning when it rains and you will need an umbrella today (or white when it snows / yellow when it's sunny).
-- Start your automatic garden irrigation in the evening depending on the current weather condition and the amount of precip today.
+- Switch on a blue light in the morning when the chance for rain is above 20% today (or white when the forecast condition is snow / yellow when it's sunny).
+- Start your automatic garden irrigation in the evening depending on the amount of rain today and the forecast for tomorrow.
 
 **Hint:** To trigger rules based on time and weather condition you will need a pluging like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
@@ -37,7 +57,7 @@ The Apple Home app recognizes only temperature and relative humidity. So use e.g
 1. Install homebridge using: `npm install -g homebridge`
 2. Install this plugin using: `npm install -g homebridge-weather-station-extended`
 3. Gather a free developer key for Weather Underground [here](http://www.wunderground.com/weather/api/).
-4. Update your configuration file. See the sample below.
+4. Update your configuration file. See the samples below.
 
 ## Configuration
 
@@ -46,9 +66,9 @@ Add the following information to your config file. Make sure to add your API key
 ### Simple
 
 ```json
-"accessories": [
+"platforms": [
 	{
-		"accessory": "WUWeatherStationExtended",
+		"platform": "WUWeatherStationExtended",
 		"name": "Weather Station",
 		"key": "XXXXXXXXXXXXXXX",
 		"location": "78613"
@@ -62,6 +82,8 @@ The following config contains an advanced optional setting that must not be spec
 
 The parameter **interval** sets the interval (minutes) in which the weather will be updated from Weather Underground. The default value is 4 minutes, which fits in the maximum of 400 updates per day for free accounts.
 
+The parameter **forecast** sets which forecasts you want to see. You can set one of these three values: none, today, 3days. The default value is 3days.
+
 You can use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID in the location parameter.
 
 ```json
@@ -71,7 +93,8 @@ You can use a station from the **[Personal Weather Station Network](https://www.
 		"name": "Weather Station",
 		"interval": "4",
 		"key": "XXXXXXXXXXXXXXX",
-		"location": "pws:ICALIFOR123"
+		"location": "pws:ICALIFOR123",
+		"forecast": "today"
 	}
 ]
 ```

@@ -1,12 +1,26 @@
 {
   "name": "homebridge-weather-station-extended",
-  "version": "0.1.2",
-  "description": "A comprehensive weather station plugin for homebridge.",
+  "version": "1.0.0",
+  "description": "A comprehensive weather station plugin for homekit with current observations and forecasts.",
   "license": "MIT",
   "keywords": [
     "homebridge-plugin",
     "weather-station",
-    "weather"
+    "weather",
+    "weather forecast",
+    "observations",
+    "temperature",
+    "air pressure",
+    "humidity",
+    "precip",
+    "rain",
+    "rain chance",
+    "wind",
+    "wind speed",
+    "wind direction",
+    "uv index",
+    "visiblity",
+    "weather condition"
   ],
   "engines": {
     "node": ">=0.12.0",

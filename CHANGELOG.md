@@ -10,3 +10,13 @@
 
 * Added optional parameter "interval"
 * Added debug library
+
+## 1.0.0
+
+* Added forecast for today
+* Added forecast for next three days
+* Added configuration for forecast
+* Added observation time
+* Added chance for rain
+* Added wind speed max
+* Changed plugin type to platform
