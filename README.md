@@ -34,17 +34,10 @@ The plugin also features a daily forecast for today and the next 3 days. The fol
 - Chance Rain
 - Rain All Day
 - Weather Condition
-- Weather Condition Category (Sun = 0, Clouds = 1, Rain = 2, Snow = 3)
+- Weather Condition Category
 - Wind Direction
 - Wind Speed
 - Wind Speed Maximum
-
-## Example use cases
-
-- Switch on a blue light in the morning when the chance for rain is above 20% today (or white when the forecast condition is snow / yellow when it's sunny).
-- Start your automatic garden irrigation in the evening depending on the amount of rain today and the forecast for tomorrow.
-
-**Hint:** To trigger rules based on time and weather condition you will need a pluging like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
 ## Installation
 
@@ -92,6 +85,13 @@ You can use a station from the **[Personal Weather Station Network](https://www.
 	}
 ]
 ```
+
+## Example use cases
+
+- Switch on a blue light in the morning when the chance for rain is above 20% today (or white when the forecast condition is snow / yellow when it's sunny).
+- Start your automatic garden irrigation in the evening depending on the amount of rain today and the forecast for tomorrow.
+
+**Hint:** To trigger rules based on time and weather condition you will need a pluging like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
 ## Contributors
 
