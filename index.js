@@ -367,7 +367,7 @@ function ForecastWeatherAccessory(platform, day) {
 	this.log = platform.log;
 	switch(day) {
 		case 0:
-			this.name = "Later Today";
+			this.name = "Today";
 			break;
 		case 1:
 			this.name = "In 1 Day";

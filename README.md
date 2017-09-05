@@ -55,7 +55,7 @@ Add the following information to your config file. Make sure to add your API key
 ```json
 "platforms": [
 	{
-		"platform": "WUWeatherStationExtended",
+		"platform": "WeatherStation",
 		"name": "Weather Station",
 		"key": "XXXXXXXXXXXXXXX",
 		"location": "78613"
@@ -74,9 +74,9 @@ The parameter **forecast** sets which forecasts you want to see. You can set one
 You can also use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID in the location parameter.
 
 ```json
-"accessories": [
+"platforms": [
 	{
-		"accessory": "WUWeatherStationExtended",
+		"platform": "WeatherStation",
 		"name": "Weather Station",
 		"interval": "4",
 		"key": "XXXXXXXXXXXXXXX",
