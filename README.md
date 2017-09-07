@@ -48,7 +48,7 @@ The plugin also features a daily forecast for today and the next 3 days. The fol
 
 ## Configuration
 
-Add the following information to your config file. Make sure to add your API key and provice your city or postal code.
+Add the following information to your config file. Make sure to add your API key and provide your city or postal code.
 
 ### Simple
 
@@ -81,7 +81,7 @@ You can also use a station from the **[Personal Weather Station Network](https:/
 		"interval": "4",
 		"key": "XXXXXXXXXXXXXXX",
 		"location": "pws:ICALIFOR123",
-		"forecast": "today"
+		"forecast": "3days"
 	}
 ]
 ```
@@ -91,7 +91,7 @@ You can also use a station from the **[Personal Weather Station Network](https:/
 - Switch on a blue light in the morning when the chance for rain is above 20% today (or white when the forecast condition is snow / yellow when it's sunny).
 - Start your automatic garden irrigation in the evening depending on the amount of rain today and the forecast for tomorrow.
 
-**Hint:** To trigger rules based on time and weather condition you will need a pluging like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
+**Hint:** To trigger rules based on time and weather condition you will need a plugin like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
 ## Contributors
 
