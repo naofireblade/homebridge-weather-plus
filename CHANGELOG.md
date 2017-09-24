@@ -24,3 +24,11 @@
 ## 1.0.1
 
 * Changed names of accessories
+
+## 1.0.2
+
+* Fixed config example in readme
+
+## 1.0.3
+
+* Added screenshot to description
