@@ -8,7 +8,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Current Observations
 
-The following current observation values can be displayed and used in HomeKit rules. Use a 3rd party App like Elgato Eve to see all values.
+The following current observation values can be displayed and used in HomeKit rules. Use a 3rd party App like Elgato Eve to see all values, translations and some nice icons.
 
 - Temperature
 - Air Pressure
@@ -92,6 +92,10 @@ You can also use a station from the **[Personal Weather Station Network](https:/
 - Start your automatic garden irrigation in the evening depending on the amount of rain today and the forecast for tomorrow.
 
 **Hint:** To trigger rules based on time and weather condition you will need a plugin like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
+
+## Screenshot
+![Current Conditions in Elgato Eve app](https://i.imgur.com/ql9t8w0l.png)
+>(c) Screenshot is taken from Elgato Eve app
 
 ## Contributors
 
