@@ -8,7 +8,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Current Observations
 
-The following current observation values can be displayed and used in HomeKit rules. Use a 3rd party App like Elgato Eve to see all values, translations and some nice icons.
+The following current observation values can be displayed and used in HomeKit rules. Use a 3rd party app like Elgato Eve to see all values, translations and some nice [icons](#screenshot).
 
 - Temperature
 - Air Pressure
