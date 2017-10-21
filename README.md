@@ -16,6 +16,7 @@ The following current observation values can be displayed and used in HomeKit ru
 - Rain Last Hour
 - Rain All Day
 - UV-Index
+- Solar Radiation
 - Visibility
 - Weather Condition
 - Weather Condition Category (Sun = 0, Clouds = 1, Rain = 2, Snow = 3)
