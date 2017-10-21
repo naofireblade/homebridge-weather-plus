@@ -9,22 +9,22 @@ Characteristic,
 CustomUUID = {
 	// Eve UUID
 	AirPressure: 'E863F10F-079E-48FF-8F27-9C2605A29F52',
-	// Other UUID
+	// Eve recognized UUIDs
 	WindSpeed: '49C8AE5A-A3A5-41AB-BF1F-12D5654F9F41',
-	// Weather Station UUIDs
-	Condition: 'cd65a9ab-85ad-494a-b2bd-2f380084134d',
-	ConditionCategory: 'cd65a9ab-85ad-494a-b2bd-2f380084134c',
-	// Weather Station Extended UUIDs
+	WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
 	Rain1h: '10c88f40-7ec4-478c-8d5a-bd0c3cce14b7',
 	RainDay: 'ccc04890-565b-4376-b39a-3113341d9e0f',
-	WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
-	WindSpeedMax: '6b8861e5-d6f3-425c-83b6-069945ffd1f1',
+	Condition: 'cd65a9ab-85ad-494a-b2bd-2f380084134d',
 	Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
 	UVIndex: '05ba0fe0-b848-4226-906d-5b64272e05ce',
+	// Custom UUIDs
+	ConditionCategory: 'cd65a9ab-85ad-494a-b2bd-2f380084134c',
+	WindSpeedMax: '6b8861e5-d6f3-425c-83b6-069945ffd1f1',
 	ObservationStation: 'd1b2787d-1fc4-4345-a20e-7b5a74d693ed',
 	ObservationTime: '234fd9f1-1d33-4128-b622-d052f0c402af',
 	ChanceRain: 'fc01b24f-cf7e-4a74-90db-1b427af1ffa3',
-	ForecastDay: '57f1d4b2-0e7e-4307-95b5-808750e2c1c7'
+	ForecastDay: '57f1d4b2-0e7e-4307-95b5-808750e2c1c7',
+	SolarRadiation: '1819a23e-ecab-4d39-b29a-7364d299310b'
 },
 CustomCharacteristic = {};
 
@@ -163,6 +163,20 @@ module.exports = function (homebridge) {
 	};
 	inherits(CustomCharacteristic.UVIndex, Characteristic);
 
+	CustomCharacteristic.SolarRadiation = function() {
+		Characteristic.call(this, 'Solar Radiation', CustomUUID.SolarRadiation);
+		this.setProps({
+			format: Characteristic.Formats.UINT8,
+			unit: "W/m²",
+			maxValue: 2000,
+			minValue: 0,
+			minStep: 1,
+			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+		});
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.SolarRadiation, Characteristic);
+
 	CustomCharacteristic.ChanceRain = function() {
 		Characteristic.call(this, 'Chance Rain', CustomUUID.ChanceRain);
 		this.setProps({
@@ -278,6 +292,8 @@ WeatherStationPlatform.prototype = {
 						service.setCharacteristic(CustomCharacteristic.Visibility,isNaN(visibility) ? 0 : visibility);
 						let uvIndex = parseInt(conditions['UV']);
 						service.setCharacteristic(CustomCharacteristic.UVIndex,isNaN(uvIndex) ? 0 : uvIndex);
+						let solarradiation = parseInt(conditions['solarradiation']);
+						service.setCharacteristic(CustomCharacteristic.SolarRadiation,isNaN(solarradiation) ? 0 : solarradiation);
 						service.setCharacteristic(CustomCharacteristic.ObservationStation, conditions['observation_location']['full']);
 						service.setCharacteristic(CustomCharacteristic.ObservationTime, conditions['observation_time_rfc822'].split(' ')[4]);
 						service.setCharacteristic(CustomCharacteristic.ConditionCategory, getConditionCategory(conditions['icon']));
@@ -305,18 +321,18 @@ WeatherStationPlatform.prototype = {
 
 				if (!response['current_observation'])
 				{
-					that.log("Found no current observations");
-					that.log(response);
+					that.log.error("Found no current observations");
+					that.log.error(response);
 				}
 				if (!response['forecast'])
 				{
-					that.log("Found no forecast");
-					that.log(response);
+					that.log.error("Found no forecast");
+					that.log.error(response);
 				}
 			}
 			else {
-				that.log("Error retrieving weather");
-				that.log(response);
+				that.log.error("Error retrieving weather");
+				that.log.error(response);
 			}
 		});
 		setTimeout(this.updateWeather.bind(this), (this.interval) * 60 * 1000);
@@ -340,20 +356,28 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.AirPressure);
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.Visibility);
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.UVIndex);
+	this.currentConditionsService.addCharacteristic(CustomCharacteristic.SolarRadiation);
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.ObservationStation);
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.ObservationTime);
 
 	this.informationService = new Service.AccessoryInformation();
 	this.informationService
 	.setCharacteristic(Characteristic.Name, this.name)
-	.setCharacteristic(Characteristic.Manufacturer, "Homebridge")
-	.setCharacteristic(Characteristic.Model, "Weather Underground")
-	.setCharacteristic(Characteristic.SerialNumber, this.location);
+	.setCharacteristic(Characteristic.Manufacturer, "github.com/naofireblade")
+	.setCharacteristic(Characteristic.Model, "Weather Station Extended")
 }
 
 CurrentConditionsWeatherAccessory.prototype = {
 	identify: function (callback) {
-		this.log("Identify requested!");
+		let that = this;
+		this.platform.station.conditions().request(this.platform.location, function(err, response) {
+			if (err) {
+				that.log.error(err);
+			}
+			else {
+				that.log(response);
+			}
+		});
 		callback();
 	},
 
@@ -395,15 +419,22 @@ function ForecastWeatherAccessory(platform, day) {
 
 	this.informationService = new Service.AccessoryInformation();
 	this.informationService
-	.setCharacteristic(Characteristic.Name, "Weather Forecast")
-	.setCharacteristic(Characteristic.Manufacturer, "Homebridge")
-	.setCharacteristic(Characteristic.Model, "Weather Underground")
-	.setCharacteristic(Characteristic.SerialNumber, this.location);
+	.setCharacteristic(Characteristic.Name, this.name)
+	.setCharacteristic(Characteristic.Manufacturer, "github.com/naofireblade")
+	.setCharacteristic(Characteristic.Model, "Weather Station Extended")
 }
 
 ForecastWeatherAccessory.prototype = {
 	identify: function (callback) {
-		this.log("Identify requested!");
+		let that = this;
+		this.platform.station.forecast().request(this.platform.location, function(err, response) {
+			if (err) {
+				that.log.error(err);
+			}
+			else {
+				that.log(response['forecast']['simpleforecast']['forecastday']);
+			}
+		});
 		callback();
 	},
 

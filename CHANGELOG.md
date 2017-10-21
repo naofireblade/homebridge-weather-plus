@@ -32,3 +32,8 @@
 ## 1.0.3
 
 * Added screenshot to description
+
+## 1.0.4
+
+* Added condition solar radiation
+* Added log output of API response to identify function
