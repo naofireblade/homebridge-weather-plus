@@ -37,3 +37,7 @@
 
 * Added condition solar radiation
 * Added log output of API response to identify function
+
+## 1.1.0
+
+* Added forecast temperature minimum

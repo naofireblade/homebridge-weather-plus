@@ -31,6 +31,7 @@ The following current observation values can be displayed and used in HomeKit ru
 The plugin also features a daily forecast for today and the next 3 days. The following forecast values can be displayed.
 
 - Temperature
+- Temperature Minimum
 - Relative Humidity
 - Chance Rain
 - Rain All Day

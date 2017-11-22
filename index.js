@@ -24,7 +24,8 @@ CustomUUID = {
 	ObservationTime: '234fd9f1-1d33-4128-b622-d052f0c402af',
 	ChanceRain: 'fc01b24f-cf7e-4a74-90db-1b427af1ffa3',
 	ForecastDay: '57f1d4b2-0e7e-4307-95b5-808750e2c1c7',
-	SolarRadiation: '1819a23e-ecab-4d39-b29a-7364d299310b'
+	SolarRadiation: '1819a23e-ecab-4d39-b29a-7364d299310b',
+	TemperatureMin: '707b78ca-51ab-4dc9-8630-80a58f07e419'
 },
 CustomCharacteristic = {};
 
@@ -191,6 +192,20 @@ module.exports = function (homebridge) {
 	};
 	inherits(CustomCharacteristic.ChanceRain, Characteristic);
 
+	CustomCharacteristic.TemperatureMin = function() {
+		Characteristic.call(this, 'Temperature Min', CustomUUID.TemperatureMin);
+		this.setProps({
+			format: Characteristic.Formats.FLOAT,
+			unit: Characteristic.Units.CELSIUS,
+			maxValue: 50,
+			minValue: -50,
+			minStep: 0.1,
+			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+		});
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.TemperatureMin, Characteristic);
+
 	CustomCharacteristic.ObservationStation = function() {
 		Characteristic.call(this, 'Station', CustomUUID.ObservationStation);
 		this.setProps({
@@ -307,6 +322,7 @@ WeatherStationPlatform.prototype = {
 
 						service.setCharacteristic(CustomCharacteristic.ForecastDay, forecast[day]['date']['weekday']);
 						service.setCharacteristic(Characteristic.CurrentTemperature, forecast[day]['high']['celsius']);
+						service.setCharacteristic(CustomCharacteristic.TemperatureMin, forecast[day]['low']['celsius']);
 						service.setCharacteristic(Characteristic.CurrentRelativeHumidity, parseInt(forecast[day]['avehumidity']));
 						service.setCharacteristic(CustomCharacteristic.Condition, forecast[day]['conditions']);
 						service.setCharacteristic(CustomCharacteristic.ChanceRain, forecast[day]['pop']);
@@ -407,6 +423,7 @@ function ForecastWeatherAccessory(platform, day) {
 
 	this.forecastService = new Service.TemperatureSensor(this.name);
 	this.forecastService.addCharacteristic(CustomCharacteristic.ForecastDay);
+	this.forecastService.addCharacteristic(CustomCharacteristic.TemperatureMin);
 	this.forecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 	this.forecastService.addCharacteristic(CustomCharacteristic.Condition);
 	this.forecastService.addCharacteristic(CustomCharacteristic.ConditionCategory);
@@ -415,7 +432,6 @@ function ForecastWeatherAccessory(platform, day) {
 	this.forecastService.addCharacteristic(CustomCharacteristic.WindDirection);
 	this.forecastService.addCharacteristic(CustomCharacteristic.WindSpeed);	
 	this.forecastService.addCharacteristic(CustomCharacteristic.WindSpeedMax);	
-
 
 	this.informationService = new Service.AccessoryInformation();
 	this.informationService
