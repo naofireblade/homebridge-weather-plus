@@ -376,6 +376,9 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.ObservationStation);
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.ObservationTime);
 
+	// fix negative temperatures not supported by homekit
+	this.currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
+
 	this.informationService = new Service.AccessoryInformation();
 	this.informationService
 	.setCharacteristic(Characteristic.Name, this.name)
@@ -431,7 +434,10 @@ function ForecastWeatherAccessory(platform, day) {
 	this.forecastService.addCharacteristic(CustomCharacteristic.RainDay);
 	this.forecastService.addCharacteristic(CustomCharacteristic.WindDirection);
 	this.forecastService.addCharacteristic(CustomCharacteristic.WindSpeed);	
-	this.forecastService.addCharacteristic(CustomCharacteristic.WindSpeedMax);	
+	this.forecastService.addCharacteristic(CustomCharacteristic.WindSpeedMax);
+
+	// fix negative temperatures not supported by homekit
+	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 
 	this.informationService = new Service.AccessoryInformation();
 	this.informationService

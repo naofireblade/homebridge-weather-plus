@@ -41,3 +41,7 @@
 ## 1.1.0
 
 * Added forecast temperature minimum
+
+## 1.1.1
+
+* Fixed negative temperatures shown as 0°C
