@@ -289,49 +289,68 @@ WeatherStationPlatform.prototype = {
 					if (that.accessories[i].currentConditionsService !== undefined && response['current_observation'] )
 					{
 						debug("Update values for " + that.accessories[i].currentConditionsService.displayName);
-						let conditions = response['current_observation'];
-						let service = that.accessories[i].currentConditionsService;
+						try
+						{
+							let conditions = response['current_observation'];
+							let service = that.accessories[i].currentConditionsService;
 
-						service.setCharacteristic(Characteristic.CurrentTemperature, conditions['temp_c']);
-						service.setCharacteristic(Characteristic.CurrentRelativeHumidity, parseInt(conditions['relative_humidity'].substr(0, conditions['relative_humidity'].length-1)));
-						service.setCharacteristic(CustomCharacteristic.Condition,conditions['weather']);
-						let rain1h = parseInt(conditions['precip_1hr_metric']);
-						service.setCharacteristic(CustomCharacteristic.Rain1h,isNaN(rain1h) ? 0 : rain1h);
-						let rainDay = parseInt(conditions['precip_today_metric']);
-						service.setCharacteristic(CustomCharacteristic.RainDay,isNaN(rainDay) ? 0 : rainDay);
-						service.setCharacteristic(CustomCharacteristic.WindDirection,conditions['wind_dir']);
-						service.setCharacteristic(CustomCharacteristic.WindSpeed,parseFloat(conditions['wind_kph']));
-						service.setCharacteristic(CustomCharacteristic.WindSpeedMax,parseFloat(conditions['wind_gust_kph']));
-						service.setCharacteristic(CustomCharacteristic.AirPressure,parseInt(conditions['pressure_mb']));
-						let visibility = parseInt(conditions['visibility_km']);
-						service.setCharacteristic(CustomCharacteristic.Visibility,isNaN(visibility) ? 0 : visibility);
-						let uvIndex = parseInt(conditions['UV']);
-						service.setCharacteristic(CustomCharacteristic.UVIndex,isNaN(uvIndex) ? 0 : uvIndex);
-						let solarradiation = parseInt(conditions['solarradiation']);
-						service.setCharacteristic(CustomCharacteristic.SolarRadiation,isNaN(solarradiation) ? 0 : solarradiation);
-						service.setCharacteristic(CustomCharacteristic.ObservationStation, conditions['observation_location']['full']);
-						service.setCharacteristic(CustomCharacteristic.ObservationTime, conditions['observation_time_rfc822'].split(' ')[4]);
-						service.setCharacteristic(CustomCharacteristic.ConditionCategory, getConditionCategory(conditions['icon']));
+							service.setCharacteristic(Characteristic.CurrentTemperature, conditions['temp_c']);
+							service.setCharacteristic(Characteristic.CurrentRelativeHumidity, parseInt(conditions['relative_humidity'].substr(0, conditions['relative_humidity'].length-1)));
+							service.setCharacteristic(CustomCharacteristic.Condition,conditions['weather']);
+							let rain1h = parseInt(conditions['precip_1hr_metric']);
+							service.setCharacteristic(CustomCharacteristic.Rain1h,isNaN(rain1h) ? 0 : rain1h);
+							let rainDay = parseInt(conditions['precip_today_metric']);
+							service.setCharacteristic(CustomCharacteristic.RainDay,isNaN(rainDay) ? 0 : rainDay);
+							service.setCharacteristic(CustomCharacteristic.WindDirection,conditions['wind_dir']);
+							service.setCharacteristic(CustomCharacteristic.WindSpeed,parseFloat(conditions['wind_kph']));
+							service.setCharacteristic(CustomCharacteristic.WindSpeedMax,parseFloat(conditions['wind_gust_kph']));
+							service.setCharacteristic(CustomCharacteristic.AirPressure,parseInt(conditions['pressure_mb']));
+							let visibility = parseInt(conditions['visibility_km']);
+							service.setCharacteristic(CustomCharacteristic.Visibility,isNaN(visibility) ? 0 : visibility);
+							let uvIndex = parseInt(conditions['UV']);
+							service.setCharacteristic(CustomCharacteristic.UVIndex,isNaN(uvIndex) ? 0 : uvIndex);
+							let solarradiation = parseInt(conditions['solarradiation']);
+							service.setCharacteristic(CustomCharacteristic.SolarRadiation,isNaN(solarradiation) ? 0 : solarradiation);
+							service.setCharacteristic(CustomCharacteristic.ObservationStation, conditions['observation_location']['full']);
+							service.setCharacteristic(CustomCharacteristic.ObservationTime, conditions['observation_time_rfc822'].split(' ')[4]);
+							service.setCharacteristic(CustomCharacteristic.ConditionCategory, getConditionCategory(conditions['icon']));
+						}
+						catch (err)
+						{
+							that.log.error("Exception while parsing current observations: " + err);
+							that.log.error("Response from Weather Underground API:");
+							that.log.error(response['current_observation']);
+						}
+						
 					}
 					else if (that.accessories[i].forecastService !== undefined && response['forecast'])
 					{
 						debug("Update values for " + that.accessories[i].forecastService.displayName);
-						let forecast = response['forecast']['simpleforecast']['forecastday'];
-						let service = that.accessories[i].forecastService;
-						let day = that.accessories[i].day;
+						try
+						{
+							let forecast = response['forecast']['simpleforecast']['forecastday'];
+							let service = that.accessories[i].forecastService;
+							let day = that.accessories[i].day;
 
-						service.setCharacteristic(CustomCharacteristic.ForecastDay, forecast[day]['date']['weekday']);
-						service.setCharacteristic(Characteristic.CurrentTemperature, forecast[day]['high']['celsius']);
-						service.setCharacteristic(CustomCharacteristic.TemperatureMin, forecast[day]['low']['celsius']);
-						service.setCharacteristic(Characteristic.CurrentRelativeHumidity, parseInt(forecast[day]['avehumidity']));
-						service.setCharacteristic(CustomCharacteristic.Condition, forecast[day]['conditions']);
-						service.setCharacteristic(CustomCharacteristic.ChanceRain, forecast[day]['pop']);
-						let rainDay = parseInt(forecast[day]['qpf_allday']['mm']);
-						service.setCharacteristic(CustomCharacteristic.RainDay,isNaN(rainDay) ? 0 : rainDay);
-						service.setCharacteristic(CustomCharacteristic.WindDirection,forecast[day]['avewind']['dir']);
-						service.setCharacteristic(CustomCharacteristic.WindSpeed,parseFloat(forecast[day]['avewind']['kph']));
-						service.setCharacteristic(CustomCharacteristic.WindSpeedMax,parseFloat(forecast[day]['maxwind']['kph']));
-						service.setCharacteristic(CustomCharacteristic.ConditionCategory, getConditionCategory(forecast[day]['icon']));
+							service.setCharacteristic(CustomCharacteristic.ForecastDay, forecast[day]['date']['weekday']);
+							service.setCharacteristic(Characteristic.CurrentTemperature, forecast[day]['high']['celsius']);
+							service.setCharacteristic(CustomCharacteristic.TemperatureMin, forecast[day]['low']['celsius']);
+							service.setCharacteristic(Characteristic.CurrentRelativeHumidity, parseInt(forecast[day]['avehumidity']));
+							service.setCharacteristic(CustomCharacteristic.Condition, forecast[day]['conditions']);
+							service.setCharacteristic(CustomCharacteristic.ChanceRain, forecast[day]['pop']);
+							let rainDay = parseInt(forecast[day]['qpf_allday']['mm']);
+							service.setCharacteristic(CustomCharacteristic.RainDay,isNaN(rainDay) ? 0 : rainDay);
+							service.setCharacteristic(CustomCharacteristic.WindDirection,forecast[day]['avewind']['dir']);
+							service.setCharacteristic(CustomCharacteristic.WindSpeed,parseFloat(forecast[day]['avewind']['kph']));
+							service.setCharacteristic(CustomCharacteristic.WindSpeedMax,parseFloat(forecast[day]['maxwind']['kph']));
+							service.setCharacteristic(CustomCharacteristic.ConditionCategory, getConditionCategory(forecast[day]['icon']));
+						}
+						catch (err)
+						{
+							that.log.error("Exception while parsing forecast for day #" + that.accessories[i].day + ": " + err);
+							that.log.error("Response from Weather Underground API:");
+							that.log.error(response['forecast']);
+						}
 					}
 				}
 
