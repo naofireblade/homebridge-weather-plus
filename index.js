@@ -317,9 +317,9 @@ WeatherStationPlatform.prototype = {
 						}
 						catch (err)
 						{
-							that.log.error("Exception while parsing current observations: " + err);
-							that.log.error("Response from Weather Underground API:");
-							that.log.error(response['current_observation']);
+							that.log.warn("Exception while parsing current observations: " + err);
+							debug("Response from Weather Underground API:");
+							debug(response['current_observation']);
 						}
 						
 					}
@@ -347,22 +347,22 @@ WeatherStationPlatform.prototype = {
 						}
 						catch (err)
 						{
-							that.log.error("Exception while parsing forecast for day #" + that.accessories[i].day + ": " + err);
-							that.log.error("Response from Weather Underground API:");
-							that.log.error(response['forecast']);
+							that.log.warn("Exception while parsing forecast for day #" + that.accessories[i].day + ": " + err);
+							debug("Response from Weather Underground API:");
+							debug(response['forecast']);
 						}
 					}
 				}
 
 				if (!response['current_observation'])
 				{
-					that.log.error("Found no current observations");
-					that.log.error(response);
+					that.log.warn("Found no current observations");
+					that.log.warn(response);
 				}
 				if (!response['forecast'])
 				{
-					that.log.error("Found no forecast");
-					that.log.error(response);
+					that.log.warn("Found no forecast");
+					that.log.warn(response);
 				}
 			}
 			else {

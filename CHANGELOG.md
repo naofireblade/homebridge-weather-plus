@@ -45,3 +45,7 @@
 ## 1.1.1
 
 * Fixed negative temperatures shown as 0°C
+
+## 1.1.2
+
+* Fixed handling of sometimes flawed weather underground responses
