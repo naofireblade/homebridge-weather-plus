@@ -50,7 +50,7 @@ The plugin also features a daily forecast for today and the next 3 days. The fol
 
 ## Configuration
 
-Add the following information to your config file. Make sure to add your API key and provide your city or postal code.
+Add the following information to your config file. Make sure to add your API **key** and provide your city or postal code in the **location** field.
 
 ### Simple
 
@@ -73,7 +73,7 @@ The parameter **interval** sets the interval (minutes) in which the weather will
 
 The parameter **forecast** sets which forecasts you want to see. You can set one of these three values: none, today, 3days. The default value is 3days.
 
-You can also use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID in the location parameter.
+You can also use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID in the **location** parameter.
 
 ```json
 "platforms": [
@@ -101,4 +101,4 @@ You can also use a station from the **[Personal Weather Station Network](https:/
 
 ## Contributors
 
-This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
+This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
