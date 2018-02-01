@@ -1,6 +1,6 @@
 {
   "name": "homebridge-weather-station-extended",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "A comprehensive weather station plugin for homekit with current observations and forecasts.",
   "license": "MIT",
   "keywords": [
@@ -10,6 +10,8 @@
     "weather forecast",
     "forecast",
     "observations",
+    "history",
+    "weather history",
     "temperature",
     "air pressure",
     "humidity",
@@ -37,6 +39,7 @@
   },
   "dependencies": {
     "wundergroundnode": ">=0.9",
+    "fakegato-history": ">=0.3.8",
     "debug": "^2.2.0"
   }
 }

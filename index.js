@@ -5,6 +5,7 @@ wunderground = require('wundergroundnode'),
 
 Service,
 Characteristic,
+FakeGatoHistoryService,
 
 CustomUUID = {
 	// Eve UUID
@@ -33,6 +34,9 @@ module.exports = function (homebridge) {
 	Service = homebridge.hap.Service;
 	Characteristic = homebridge.hap.Characteristic;
 	homebridge.registerPlatform("homebridge-wunderground-extended", "WeatherStation", WeatherStationPlatform);
+
+	// History Service
+	FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
 	CustomCharacteristic.Condition = function() {
 		Characteristic.call(this, 'Weather Condition', CustomUUID.Condition);
@@ -292,28 +296,48 @@ WeatherStationPlatform.prototype = {
 						try
 						{
 							let conditions = response['current_observation'];
-							let service = that.accessories[i].currentConditionsService;
+							let conditionService = that.accessories[i].currentConditionsService;
+							let historyService = that.accessories[i].historyService;
 
-							service.setCharacteristic(Characteristic.CurrentTemperature, conditions['temp_c']);
-							service.setCharacteristic(Characteristic.CurrentRelativeHumidity, parseInt(conditions['relative_humidity'].substr(0, conditions['relative_humidity'].length-1)));
-							service.setCharacteristic(CustomCharacteristic.Condition,conditions['weather']);
-							let rain1h = parseInt(conditions['precip_1hr_metric']);
-							service.setCharacteristic(CustomCharacteristic.Rain1h,isNaN(rain1h) ? 0 : rain1h);
-							let rainDay = parseInt(conditions['precip_today_metric']);
-							service.setCharacteristic(CustomCharacteristic.RainDay,isNaN(rainDay) ? 0 : rainDay);
-							service.setCharacteristic(CustomCharacteristic.WindDirection,conditions['wind_dir']);
-							service.setCharacteristic(CustomCharacteristic.WindSpeed,parseFloat(conditions['wind_kph']));
-							service.setCharacteristic(CustomCharacteristic.WindSpeedMax,parseFloat(conditions['wind_gust_kph']));
-							service.setCharacteristic(CustomCharacteristic.AirPressure,parseInt(conditions['pressure_mb']));
-							let visibility = parseInt(conditions['visibility_km']);
-							service.setCharacteristic(CustomCharacteristic.Visibility,isNaN(visibility) ? 0 : visibility);
-							let uvIndex = parseInt(conditions['UV']);
-							service.setCharacteristic(CustomCharacteristic.UVIndex,isNaN(uvIndex) ? 0 : uvIndex);
-							let solarradiation = parseInt(conditions['solarradiation']);
-							service.setCharacteristic(CustomCharacteristic.SolarRadiation,isNaN(solarradiation) ? 0 : solarradiation);
-							service.setCharacteristic(CustomCharacteristic.ObservationStation, conditions['observation_location']['full']);
-							service.setCharacteristic(CustomCharacteristic.ObservationTime, conditions['observation_time_rfc822'].split(' ')[4]);
-							service.setCharacteristic(CustomCharacteristic.ConditionCategory, getConditionCategory(conditions['icon']));
+							let temperature = conditions['temp_c'];
+							let humidity = parseInt(conditions['relative_humidity'].substr(0, conditions['relative_humidity'].length-1));
+							let condition = conditions['weather'];
+							let rain1h = isNaN(parseInt(conditions['precip_1hr_metric'])) ? 0 : parseInt(conditions['precip_1hr_metric']);
+							let rainDay = isNaN(parseInt(conditions['precip_today_metric'])) ? 0 : parseInt(conditions['precip_today_metric']);
+							let windDirection = conditions['wind_dir'];
+							let windSpeed = parseFloat(conditions['wind_kph']);
+							let windSpeedMax = parseFloat(conditions['wind_gust_kph']);
+							let pressure = parseInt(conditions['pressure_mb']);
+							let visibility = isNaN(parseInt(conditions['visibility_km'])) ? 0 : parseInt(conditions['visibility_km']);
+							let uvIndex = isNaN(parseInt(conditions['UV'])) ? 0 : parseInt(conditions['UV']);
+							let solarRadiation = isNaN(parseInt(conditions['solarradiation'])) ? 0 : parseInt(conditions['solarradiation']);
+							let observationStation = conditions['observation_location']['full'];
+							let observationTime = conditions['observation_time_rfc822'].split(' ')[4];
+							let conditionCategory = getConditionCategory(conditions['icon']);
+
+							conditionService.setCharacteristic(Characteristic.CurrentTemperature, temperature);
+							conditionService.setCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+							conditionService.setCharacteristic(CustomCharacteristic.Condition, condition);
+							conditionService.setCharacteristic(CustomCharacteristic.Rain1h, rain1h);
+							conditionService.setCharacteristic(CustomCharacteristic.RainDay, rainDay);
+							conditionService.setCharacteristic(CustomCharacteristic.WindDirection, windDirection);
+							conditionService.setCharacteristic(CustomCharacteristic.WindSpeed, windSpeed);
+							conditionService.setCharacteristic(CustomCharacteristic.WindSpeedMax, windSpeedMax);
+							conditionService.setCharacteristic(CustomCharacteristic.AirPressure, pressure);
+							conditionService.setCharacteristic(CustomCharacteristic.Visibility, visibility);
+							conditionService.setCharacteristic(CustomCharacteristic.UVIndex, uvIndex);
+							conditionService.setCharacteristic(CustomCharacteristic.SolarRadiation, solarRadiation);
+							conditionService.setCharacteristic(CustomCharacteristic.ObservationStation, observationStation);
+							conditionService.setCharacteristic(CustomCharacteristic.ObservationTime, observationTime);
+							conditionService.setCharacteristic(CustomCharacteristic.ConditionCategory, conditionCategory);
+
+							// Add entry to history
+							historyService.addEntry({
+								time: new Date().getTime() / 1000,
+								temp: temperature,
+								ressure: pressure,
+								humidity: humidity
+							});
 						}
 						catch (err)
 						{
@@ -403,6 +427,9 @@ function CurrentConditionsWeatherAccessory(platform) {
 	.setCharacteristic(Characteristic.Name, this.name)
 	.setCharacteristic(Characteristic.Manufacturer, "github.com/naofireblade")
 	.setCharacteristic(Characteristic.Model, "Weather Station Extended")
+
+	// History Service
+	this.historyService = new FakeGatoHistoryService("weather", this);
 }
 
 CurrentConditionsWeatherAccessory.prototype = {
@@ -420,7 +447,7 @@ CurrentConditionsWeatherAccessory.prototype = {
 	},
 
 	getServices: function () {
-		return [this.informationService, this.currentConditionsService];
+		return [this.informationService, this.currentConditionsService, this.historyService];
 	},
 }
 
