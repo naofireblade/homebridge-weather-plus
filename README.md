@@ -100,5 +100,7 @@ You can also use a station from the **[Personal Weather Station Network](https:/
 >(c) Screenshot is taken from Elgato Eve app
 
 ## Contributors
+Thanks to
+- [GatoPharaoh](https://github.com/GatoPharaoh) for the interval option
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
