@@ -1,5 +1,6 @@
 "use strict";
-var inherits = require('util').inherits, 
+var inherits = require('util').inherits,
+moment = require('moment'),
 debug = require('debug')('homebridge-weather-station-extended'),
 wunderground = require('wundergroundnode'),
 
@@ -331,13 +332,17 @@ WeatherStationPlatform.prototype = {
 							conditionService.setCharacteristic(CustomCharacteristic.ObservationTime, observationTime);
 							conditionService.setCharacteristic(CustomCharacteristic.ConditionCategory, conditionCategory);
 
+							debug(historyService);
+
 							// Add entry to history
 							historyService.addEntry({
-								time: new Date().getTime() / 1000,
+								// time: new Date().getTime() / 1000,
+								time: moment().unix(),
 								temp: temperature,
 								ressure: pressure,
 								humidity: humidity
 							});
+							debug(historyService);
 						}
 						catch (err)
 						{
@@ -402,6 +407,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.platform = platform;
 	this.log = platform.log;
 	this.name = "Now";
+	this.displayName = this.name;
 
 	this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
@@ -429,7 +435,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 	.setCharacteristic(Characteristic.Model, "Weather Station Extended")
 
 	// History Service
-	this.historyService = new FakeGatoHistoryService("weather", this);
+	this.historyService = new FakeGatoHistoryService("weather", this, 4032, platform.interval);
 }
 
 CurrentConditionsWeatherAccessory.prototype = {
