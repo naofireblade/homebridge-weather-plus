@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "wundergroundnode": ">=0.9",
-    "fakegato-history": ">=0.3.8",
+    "fakegato-history": "0.3.8",
     "debug": "^2.2.0"
   }
 }

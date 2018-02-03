@@ -332,17 +332,14 @@ WeatherStationPlatform.prototype = {
 							conditionService.setCharacteristic(CustomCharacteristic.ObservationTime, observationTime);
 							conditionService.setCharacteristic(CustomCharacteristic.ConditionCategory, conditionCategory);
 
-							debug(historyService);
-
 							// Add entry to history
 							historyService.addEntry({
 								// time: new Date().getTime() / 1000,
 								time: moment().unix(),
 								temp: temperature,
-								ressure: pressure,
+								pressure: pressure,
 								humidity: humidity
 							});
-							debug(historyService);
 						}
 						catch (err)
 						{
@@ -410,6 +407,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.displayName = this.name;
 
 	this.currentConditionsService = new Service.TemperatureSensor(this.name);
+
 	this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.Condition);
 	this.currentConditionsService.addCharacteristic(CustomCharacteristic.ConditionCategory);
@@ -430,9 +428,9 @@ function CurrentConditionsWeatherAccessory(platform) {
 
 	this.informationService = new Service.AccessoryInformation();
 	this.informationService
-	.setCharacteristic(Characteristic.Name, this.name)
-	.setCharacteristic(Characteristic.Manufacturer, "github.com/naofireblade")
-	.setCharacteristic(Characteristic.Model, "Weather Station Extended")
+		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
+		.setCharacteristic(Characteristic.Model, "Weather Station Extended")
+		.setCharacteristic(Characteristic.FirmwareRevision, 1.0)
 
 	// History Service
 	this.historyService = new FakeGatoHistoryService("weather", this, 4032, platform.interval);
