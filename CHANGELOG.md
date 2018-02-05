@@ -49,3 +49,7 @@
 ## 1.1.2
 
 * Fixed handling of sometimes flawed weather underground responses
+
+## 1.2.0
+
+* Added history in eve app for temperature, relative humidity and air pressure

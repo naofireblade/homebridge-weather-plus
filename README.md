@@ -1,8 +1,8 @@
 # homebridge-weather-station-extended
 
-This is a weather station plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations and daily forecasts. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
+This is a weather station plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations, daily forecasts and history graphs. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
 
-If you **update from a version before 1.0.0** you have to adapt your config.
+If you **update from a version before 1.2.0** and want to see the history graphs, you have to remove and reinstall the eve app. Your devices and rules will remain unchanged.
 
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-station-extended/issues).
 
@@ -40,6 +40,14 @@ The plugin also features a daily forecast for today and the next 3 days. The fol
 - Wind Direction
 - Wind Speed
 - Wind Speed Maximum
+
+## History
+
+With the eve app you can view the history for
+
+- Temperature
+- Air Pressure
+- Relative Humidity
 
 ## Installation
 
@@ -95,12 +103,16 @@ You can also use a station from the **[Personal Weather Station Network](https:/
 
 **Hint:** To trigger rules based on time and weather condition you will need a plugin like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
-## Screenshot
+## Screenshots
 ![Current Conditions in Elgato Eve app](https://i.imgur.com/ql9t8w0l.png)
->(c) Screenshot is taken from Elgato Eve app
+![History graph in Elgato Eve app](https://i.imgur.com/8opO7hel.png)
+>(c) Screenshots are taken from the Elgato Eve app
 
 ## Contributors
-Thanks to
-- [GatoPharaoh](https://github.com/GatoPharaoh) for the interval option
+Many thanks go to
+- [Kevin Harwood](https://github.com/kcharwood) for his original homebridge-weather-station
+- [Clark Endrizzi](https://github.com/cendrizzi) for his wundergroundnode library
+- [simont77](https://github.com/simont77) for his fakegato-history library
+- [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
