@@ -1,4 +1,7 @@
 # homebridge-weather-station-extended
+[![npm](https://img.shields.io/npm/v/homebridge-weather-station-extended.svg?style=flat-square)](https://www.npmjs.com/package/homebridge-weather-station-extended)
+[![npm](https://img.shields.io/npm/dt/homebridge-weather-station-extended.svg?style=flat-square)](https://www.npmjs.com/package/homebridge-weather-station-extended)
+[![GitHub last commit](https://img.shields.io/github/last-commit/naofireblade/homebridge-weather-station-extended.svg?style=flat-square)](https://github.com/naofireblade/homebridge-weather-station-extended)
 
 This is a weather station plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations, daily forecasts and history graphs. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-station-extended).
 
