@@ -92,9 +92,9 @@ You can also use a station from the **[Personal Weather Station Network](https:/
 	{
 		"platform": "WeatherStation",
 		"name": "Weather Station",
-		"interval": "4",
 		"key": "XXXXXXXXXXXXXXX",
 		"location": "pws:ICALIFOR123",
+		"interval": "4",
 		"forecast": "3days"
 	}
 ]

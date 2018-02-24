@@ -53,3 +53,8 @@
 ## 1.2.0
 
 * Added history in eve app for temperature, relative humidity and air pressure
+
+## 1.2.1
+
+* Added persistence for history to handle homebridge restarts
+* Fixed history has gaps with interval greater than 10 minutes

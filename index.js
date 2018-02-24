@@ -249,8 +249,6 @@ function WeatherStationPlatform(log, config) {
 	this.station = new wunderground(config['key']);
 	this.interval = ('interval' in config ? parseInt(config['interval']) : 4);
 	this.interval = (typeof this.interval !=='number' || (this.interval%1)!==0 || this.interval < 0) ? 4 : this.interval;
-
-	this.updateWeather();
 }
 
 WeatherStationPlatform.prototype = {
@@ -297,7 +295,6 @@ WeatherStationPlatform.prototype = {
 						{
 							let conditions = response['current_observation'];
 							let conditionService = that.accessories[i].currentConditionsService;
-							let historyService = that.accessories[i].historyService;
 
 							let temperature = conditions['temp_c'];
 							let humidity = parseInt(conditions['relative_humidity'].substr(0, conditions['relative_humidity'].length-1));
@@ -330,14 +327,6 @@ WeatherStationPlatform.prototype = {
 							conditionService.setCharacteristic(CustomCharacteristic.ObservationStation, observationStation);
 							conditionService.setCharacteristic(CustomCharacteristic.ObservationTime, observationTime);
 							conditionService.setCharacteristic(CustomCharacteristic.ConditionCategory, conditionCategory);
-
-							// Add entry to history
-							historyService.addEntry({
-								time: new Date().getTime() / 1000,
-								temp: temperature,
-								pressure: pressure,
-								humidity: humidity
-							});
 						}
 						catch (err)
 						{
@@ -395,6 +384,27 @@ WeatherStationPlatform.prototype = {
 			}
 		});
 		setTimeout(this.updateWeather.bind(this), (this.interval) * 60 * 1000);
+	},
+
+	addHistory: function() {
+		debug("Saving history entry");
+
+		for (var i = 0; i < this.accessories.length; i++) {
+			if (this.accessories[i] !== undefined && this.accessories[i].currentConditionsService !== undefined)
+			{
+				// Add entry to history
+				this.accessories[i].historyService.addEntry({
+					time: new Date().getTime() / 1000,
+					temp: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
+					pressure: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value,
+					humidity: this.accessories[i].currentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value
+				});
+				break;
+			}
+		}
+
+		// Call function every 9:50 minutes (a new entry every 10 minutes is required to avoid gaps in the graph)
+		setTimeout(this.addHistory.bind(this), (10 * 60 * 1000) - 10000);
 	}
 }
 
@@ -428,9 +438,15 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, "Weather Station Extended")
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.location);
 
 	// History Service
-	this.historyService = new FakeGatoHistoryService("weather", this, 4032);
+	this.historyService = new FakeGatoHistoryService("weather", this, {
+		storage:'fs'
+	});
+
+	this.platform.updateWeather();
+	setTimeout(this.platform.addHistory.bind(this.platform), 10000);
 }
 
 CurrentConditionsWeatherAccessory.prototype = {
@@ -449,7 +465,7 @@ CurrentConditionsWeatherAccessory.prototype = {
 
 	getServices: function () {
 		return [this.informationService, this.currentConditionsService, this.historyService];
-	},
+	}
 }
 
 function ForecastWeatherAccessory(platform, day) {
@@ -508,7 +524,7 @@ ForecastWeatherAccessory.prototype = {
 
 	getServices: function () {
 		return [this.informationService, this.forecastService];
-	},
+	}
 }
 
 function getConditionCategory(icon) {
