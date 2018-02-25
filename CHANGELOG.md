@@ -62,3 +62,7 @@
 ## 1.2.2
 
 * Fixed mix-up between air pressure and relative humidity
+
+## 1.2.3
+
+* Fixed a crash on startup

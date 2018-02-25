@@ -396,8 +396,8 @@ WeatherStationPlatform.prototype = {
 				this.accessories[i].historyService.addEntry({
 					time: new Date().getTime() / 1000,
 					temp: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
-					pressure: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.AirPressure).value,
-					humidity: this.accessories[i].currentConditionsService.getCharacteristic(CustomCharacteristic.CurrentRelativeHumidity).value
+					pressure: this.accessories[i].currentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
+					humidity: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value
 				});
 				break;
 			}
