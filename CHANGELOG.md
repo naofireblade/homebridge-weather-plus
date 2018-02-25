@@ -58,3 +58,7 @@
 
 * Added persistence for history to handle homebridge restarts
 * Fixed history has gaps with interval greater than 10 minutes
+
+## 1.2.2
+
+* Fixed mix-up between air pressure and relative humidity
