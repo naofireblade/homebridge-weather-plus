@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-weather-station-extended",
-  "version": "1.2.3",
-  "description": "A comprehensive weather station plugin for homekit with current observations and forecasts.",
+  "name": "homebridge-weather-plus",
+  "version": "2.0.0",
+  "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
     "homebridge-plugin",
@@ -12,19 +12,27 @@
     "observations",
     "history",
     "weather history",
-    "temperature",
-    "air pressure",
-    "humidity",
-    "precip",
-    "rain",
-    "rain chance",
-    "wind",
-    "wind speed",
-    "wind direction",
-    "uv index",
-    "solar radiation",
-    "visiblity",
-    "weather condition"
+    "Air Pressure",
+    "Cloud Cover",
+    "Condition",
+    "Condition Category",
+    "Dew Point",
+    "Humidity",
+    "Ozone",
+    "Rain Chance",
+    "Rain Last Hour",
+    "Rain All Day",
+    "Solar Radiation",
+    "Temperature",
+    "Temperature Min",
+    "Temperature Max",
+    "UV-Index",
+    "Visibility",
+    "Wind Direction",
+    "Wind Speed",
+    "Wind Speed Maximum",
+    "Observation Time",
+    "Observation Station"
   ],
   "engines": {
     "node": ">=0.12.0",
@@ -35,11 +43,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/naofireblade/homebridge-weather-station-extended.git"
+    "url": "https://github.com/naofireblade/homebridge-weather-plus.git"
   },
   "dependencies": {
-    "wundergroundnode": "~0.9",
-    "fakegato-history": "~0.4.1",
-    "debug": "~2.2.0"
+    "dark-sky": "^1.1.4",
+    "debug": "~2.2.0",
+    "fakegato-history": "^0.5.2",
+    "moment-timezone": "^0.5.21",
+    "wundergroundnode": "~0.9"
   }
 }
