@@ -66,3 +66,20 @@
 ## 1.2.3
 
 * Fixed a crash on startup
+
+## 2.0.0
+
+* Added support for multiple apis
+* Added support for dark-sky api
+* Added condition ozone (dark-sky only)
+* Added condition cloud cover (dark-sky only)
+* Added condition dew point (dark-sky only)
+* Added forecast for 7 days instead of 4 (dark-sky only)
+* Added forecast for air pressure (dark-sky only)
+* Added forecast for cloud cover (dark-sky only)
+* Added forecast for dew point (dark-sky only)
+* Added forecast for ozone (dark-sky only)
+* Added forecast for uv-index (dark-sky only)
+* Added forecast for visibility (dark-sky only)
+* Added language for day and weather description (dark-sky only)
+* Changed configuration to set exact forecast days
