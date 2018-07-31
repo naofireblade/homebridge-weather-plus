@@ -85,3 +85,7 @@
 * Added language for day and weather description (dark-sky only)
 * Changed configuration to support multiple apis
 * Changed configuration to set exact forecast days
+
+## 2.0.1
+
+* Changed readme
