@@ -93,7 +93,7 @@ Add one of the following samples to your config file.
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
-The **location** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can get them by looking up your location on Google Maps, click right and then selecting "What's here?".
+The **location** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). To get them, enter your location on https://darksky.net and copy the latitude and longitude values from the url. Or just use google maps, right click on your location and choose "What's here?".
 
 The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
 
