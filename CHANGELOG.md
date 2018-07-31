@@ -69,6 +69,7 @@
 
 ## 2.0.0
 
+* Renamed from homebridge-weather-station-extended to homebridge-weather-plus
 * Added support for multiple apis
 * Added support for dark-sky api
 * Added condition ozone (dark-sky only)

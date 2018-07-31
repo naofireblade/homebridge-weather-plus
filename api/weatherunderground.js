@@ -6,10 +6,10 @@ const Wunderground = require('wundergroundnode'),
 
     attribution = 'Powered by Weather Underground',
     reportCharacteristics = [
-         'AirPressure',
+        'AirPressure',
         'Condition',
         'ConditionCategory',
-         'Humidity',
+        'Humidity',
         'ObservationStation',
         'ObservationTime',
         'Rain1h',

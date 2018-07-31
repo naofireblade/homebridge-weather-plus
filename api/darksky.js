@@ -162,8 +162,7 @@ var parseForecast = function (values, timezone, i) {
 };
 
 var updateCache = function (api, callback) {
-//3600000
-    if (typeof cache.lastUpdate === 'undefined' || new Date() - this.lastUpdate > 600000) {
+    if (typeof cache.lastUpdate === 'undefined' || new Date() - cache.lastUpdate > 3600000) {
         debug("Called hourly update of rain data");
         cache.lastUpdate = new Date();
 
@@ -188,7 +187,7 @@ var updateCache = function (api, callback) {
             });
         }
     }
-    else{
+    else {
         callback();
     }
 };
