@@ -83,4 +83,5 @@
 * Added forecast for uv-index (dark-sky only)
 * Added forecast for visibility (dark-sky only)
 * Added language for day and weather description (dark-sky only)
+* Changed configuration to support multiple apis
 * Changed configuration to set exact forecast days
