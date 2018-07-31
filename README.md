@@ -106,7 +106,7 @@ The **forecast** parameter is *optional* and defines a list of forecast days wit
 		"name": "WeatherPlus",
 		"service": "darksky",
 		"key": "XXXXXXXXXXXXXXX",
-		"location": [57.322956, -4.424380],
+		"location": [52.5200066, 13.404954],
 		"language": "en",
 		"forecast": [1,2,3,4,5,6,7]
 	}
