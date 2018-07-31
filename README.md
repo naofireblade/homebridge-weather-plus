@@ -95,9 +95,9 @@ The **key** parameter is the API key that you get by registering for a weather s
 
 The **location** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can get them by looking up your location on Google Maps, click right and then selecting "What's here?".
 
-The **language** parameter is *optional* and sets the translation for the description of the current day and condition. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
+The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
 
-The **forecast** parameter is *optional* and defines a list of forecast days to show starting with 1 for today, 2 for tomorrow etc. Default are none.
+The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
 
 ```json
 "platforms": [
@@ -119,7 +119,7 @@ The **key** parameter is the API key that you get by registering for a weather s
 
 The **location** parameter can be a city name or a zip. You can also use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID.
 
-The **forecast** parameter is *optional* and defines a list of forecast days to show starting with 1 for today, 2 for tomorrow etc. Default are none.
+The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
 
 
 ```json
@@ -137,12 +137,12 @@ The **forecast** parameter is *optional* and defines a list of forecast days to 
 
 ### Advanced
 
-You can add the parameter **interval** to set the update interval in minutes. The default value is 4 minutes.
+You can add the parameter **interval** to set the update interval in minutes. The default value is 4 minutes because the rate for free API keys is limited.
 
 ## Example use cases
 
 - Switch on a blue light in the morning when the chance for rain is above 20% today (or white when the forecast condition is snow / yellow when it's sunny).
-- Start your automatic garden irrigation in the evening depending on the amount of rain today and the forecast for tomorrow.
+- Start your automatic garden irrigation in the evening, depending on the amount of rain today and the forecast for tomorrow.
 
 **Hint:** To trigger rules based on time and weather condition you will need a plugin like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
