@@ -1,6 +1,7 @@
 "use strict";
 const darksky = require('./api/darksky'),
 	weatherunderground = require('./api/weatherunderground'),
+	openweathermap = require('./api/openweathermap'),
 	debug = require('debug')('homebridge-weather-plus');
 
 var Service,
@@ -19,7 +20,7 @@ module.exports = function (homebridge) {
 	FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
 	homebridge.registerPlatform("homebridge-weather-plus", "WeatherPlus", WeatherStationPlatform);
-}
+};
 
 // ============
 // = Platform =
@@ -30,6 +31,9 @@ function WeatherStationPlatform(log, config) {
 	this.config = config;
 	this.key = config['key'];
 	this.location = config['location'];
+	this.locationGeo = config['locationGeo'];
+	this.locationZip = config['locationZip'];
+	this.locationCity = config['locationCity'];
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
 
@@ -45,6 +49,11 @@ function WeatherStationPlatform(log, config) {
 		debug("Using service weather underground");
 		weatherunderground.init(this.key, this.location, log, debug);
 		this.api = weatherunderground;
+	}
+	else if (service === 'openweathermap') {
+		debug("Using service OpenWeatherMap");
+        openweathermap.init(this.key, this.language, this.location, this.locationGeo, this.locationZip, this.locationCity, log, debug);
+		this.api = openweathermap;
 	}
 
 	// Update interval
