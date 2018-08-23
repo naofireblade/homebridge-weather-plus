@@ -68,7 +68,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 |                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                   Weather Underground (legacy)                   |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      15                      |                                13                                |                                13                                |
+| Current observation values |                      15                      |                                8                                |                                13                                |
 | Forecast values            |                      16                      |                                10                                |                                10                                |
 | Forecast days              |                       7                      |                                 5                                |                                 4                                |
 | Location                   |                geo-coordinates               |                city name, city id, zp, geo-coordinates           |                         city name or zip                         |
