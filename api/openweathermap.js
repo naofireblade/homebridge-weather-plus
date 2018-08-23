@@ -34,7 +34,7 @@ var debug, log;
 
 var init = function (apiKey, language, location, locationGeo, locationZip, locationCity, l, d) {
     Openweathermap.setLang(language);
-    if (language) {
+    if (location) {
         Openweathermap.setCityId(location);
     }
     if (locationGeo) {
