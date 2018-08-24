@@ -13,25 +13,27 @@ module.exports = function (homebridge) {
 
 	// Homekit Characteristics
 	Characteristic = homebridge.hap.Characteristic;
-	// Custom Characteristics
-	CustomCharacteristic = require('./util/characteristics')(homebridge);
 	// History Service
 	FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
 	homebridge.registerPlatform("homebridge-weather-plus", "WeatherPlus", WeatherStationPlatform);
-}
+};
 
 // ============
 // = Platform =
 // ============
-function WeatherStationPlatform(log, config) {
+function WeatherStationPlatform(log, config, api) {
 	debug("Init platform");
 	this.log = log;
 	this.config = config;
 	this.key = config['key'];
 	this.location = config['location'];
+	this.units = config['units'] || 'metric';
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
+
+	// Custom Characteristics
+	CustomCharacteristic = require('./util/characteristics')(api, this.units);
 
 	// API Service
 	let service = config['service'].toLowerCase().replace(/\s/g, '');
@@ -130,6 +132,7 @@ WeatherStationPlatform.prototype = {
 		}
 		// all other custom characteristics
 		else {
+			if (CustomCharacteristic[name]._unitvalue) value = CustomCharacteristic[name]._unitvalue(value);
 			service.setCharacteristic(CustomCharacteristic[name], value);
 		}
 	},
@@ -154,7 +157,7 @@ WeatherStationPlatform.prototype = {
 		// Call function every 9:50 minutes (a new entry every 10 minutes is required to avoid gaps in the graph)
 		setTimeout(this.addHistory.bind(this), (10 * 60 * 1000) - 10000);
 	}
-}
+};
 
 // ===============================
 // = Current Condition Accessory =
@@ -210,7 +213,7 @@ CurrentConditionsWeatherAccessory.prototype = {
 	getServices: function () {
 		return [this.informationService, this.currentConditionsService, this.historyService];
 	}
-}
+};
 
 // ======================
 // = Forecast Accessory =
@@ -268,4 +271,4 @@ ForecastWeatherAccessory.prototype = {
 	getServices: function () {
 		return [this.informationService, this.forecastService];
 	}
-}
+};
