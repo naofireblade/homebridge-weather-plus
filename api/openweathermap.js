@@ -59,30 +59,31 @@ var update = function (callback) {
 
     let weather = {};
     Openweathermap.getAllWeather(function (err, jsonObj) {
-        if (!err) {
+        if (!err && jsonObj['coord']) {
             // Current weather report
             parseReport(weather, jsonObj, callback);
-        } else {
-            log.error("Error retrieving weather report and forecast");
-            log.error("Error Message: " + err);
-            callback(err);
+        }
+        else {
+            log.error("Error retrieving weather report");
+            log.error("Error Message: " + (err ? err : JSON.stringify(jsonObj)));
+            callback(err ? err : true);
         }
     });
 
     Openweathermap.getWeatherForecast(function (err, jsonObj) {
-        if (!err) {
+        if (!err && jsonObj['city']) {
             parseForecasts(weather, jsonObj, callback);
-        } else {
-            log.error("Error retrieving weather report and forecast");
-            log.error("Error Message: " + err);
-            callback(err);
+        }
+        else {
+            log.error("Error retrieving weather forecast");
+            log.error("Error Message: " + (err ? err : JSON.stringify(jsonObj)));
+            callback(err ? err : true);
         }
     });
 };
 
 var parseReport = function (weather, values, callback) {
     let report = weather.report || {};
-
     const timezone = geoTz(values['coord']['lat'], values['coord']['lon']);
 
     report.AirPressure = parseInt(values['main']['pressure']);
