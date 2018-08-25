@@ -38,7 +38,7 @@ var init = function (apiKey, language, location, locationGeo, locationZip, locat
         Openweathermap.setCityId(location);
     }
     if (locationGeo) {
-        Openweathermap.setCoordinate(location[0], location[1]);
+        Openweathermap.setCoordinate(locationGeo[0], locationGeo[1]);
     }
     if (locationZip) {
         Openweathermap.setZipCode(locationZip);
