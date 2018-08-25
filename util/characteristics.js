@@ -77,7 +77,7 @@ module.exports = function (homebridge, units) {
 
     var kmh2mih = (km) => { return (km / 1.60934); };
     var windspeedProps = (max) => {
-        var range = (units === 'metric') ? { unit: 'k/h', maxValue: max,          minValue: 0 }
+        var range = (units === 'metric') ? { unit: 'km/h', maxValue: max,          minValue: 0 }
                                          : { unit: 'mph',  maxValue: kmh2mih(max), minValue: 0 };
 
         return underscore.extend(
