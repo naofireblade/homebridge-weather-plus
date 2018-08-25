@@ -42,7 +42,10 @@ function WeatherStationPlatform(log, config) {
 	if (service === 'darksky') {
 		debug("Using service dark sky");
 		// TODO adapt unit of characteristics
-		darksky.init(this.key, this.language, this.location, log, debug);
+		if (this.location) {
+			this.locationGeo = this.location;
+		}
+		darksky.init(this.key, this.language, this.locationGeo, log, debug);
 		this.api = darksky;
 	}
 	else if (service === 'weatherunderground') {

@@ -71,7 +71,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Current observation values |                      15                      |                                8                                |                                13                                |
 | Forecast values            |                      16                      |                                10                                |                                10                                |
 | Forecast days              |                       7                      |                                 5                                |                                 4                                |
-| Location                   |                geo-coordinates               |                city name, city id, zp, geo-coordinates           |                         city name or zip                         |
+| Location                   |                geo-coordinates               |                city name, city id, zip, geo-coordinates           |                         city name or zip                         |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
 | Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        | :x: (only legacy accounts)                                       |
 | Register                   | [here](https://darksky.net/dev/register) | [here](https://openweathermap.org/appid) | [here](https://www.wunderground.com/weather/api/) |
@@ -93,7 +93,7 @@ Add one of the following samples to your config file.
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
-The **location** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
+The **locationGeo** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
 
 The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
 
@@ -106,7 +106,7 @@ The **forecast** parameter is *optional* and defines a list of forecast days wit
 		"name": "WeatherPlus",
 		"service": "darksky",
 		"key": "XXXXXXXXXXXXXXX",
-		"location": [52.5200066, 13.404954],
+		"locationGeo": [52.5200066, 13.404954],
 		"language": "en",
 		"forecast": [1,2,3,4,5,6,7]
 	}
