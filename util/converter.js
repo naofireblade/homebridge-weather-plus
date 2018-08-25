@@ -142,6 +142,7 @@ var getRainAccumulated = function (array, parameter) {
 
 module.exports = {
 	getConditionCategory,
+	getConditionCategoryOwm,
 	getWindDirection,
 	getRainAccumulated
 };
