@@ -39,7 +39,9 @@
     "homebridge": ">=0.2.0"
   },
   "author": {
-    "name": "Arne Blumentritt"
+    "name": "Arne Blumentritt",
+    "email": "arne.blumentritt@gmail.com",
+    "url": "https://github.com/naofireblade"
   },
   "contributors": [
     {
