@@ -99,6 +99,15 @@ The **language** parameter is *optional* and sets the translation for the descri
 
 The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
 
+The **units** parameter is *optional* and sets the conventions used for reporting values. 
+The default is "metric".
+The choices are:
+
+- "si" (or "metric")
+- "us" (or "imperial")
+- "ca" to report wind speeds in km/h instead of m/s
+- "uk" to report visibility in miles and wind speeds in km/h instead of m/s
+
 ```json
 "platforms": [
 	{

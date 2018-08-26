@@ -67,7 +67,7 @@ var init = function (apiKey, language, location, l, d) {
         latitude: location[0],
         longitude: location[1],
         language: language,
-        units: 'ca',
+        units: 'si',
         exclude: ['minutely', 'hourly', 'alerts', 'flags']
     });
     log = l;

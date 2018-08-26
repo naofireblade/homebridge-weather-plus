@@ -1,9 +1,12 @@
+/* jshint asi: true, esversion: 6, laxbreak: true, laxcomma: true, node: true, undef: true, unused: true */
+
 var underscore = require('underscore');
 
 const inherits = require('util').inherits,
     CustomUUID = {
         // Eve UUID
         AirPressure: 'E863F10F-079E-48FF-8F27-9C2605A29F52',
+
         // Eve recognized UUIDs
         Condition: 'cd65a9ab-85ad-494a-b2bd-2f380084134d',
         Rain1h: '10c88f40-7ec4-478c-8d5a-bd0c3cce14b7',
@@ -12,6 +15,7 @@ const inherits = require('util').inherits,
         Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
         WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
         WindSpeed: '49C8AE5A-A3A5-41AB-BF1F-12D5654F9F41',
+
         // Custom UUIDs
         CloudCover: '64392fed-1401-4f7a-9adb-1710dd6e3897',
         ConditionCategory: 'cd65a9ab-85ad-494a-b2bd-2f380084134c',
@@ -29,12 +33,20 @@ const inherits = require('util').inherits,
 var CustomCharacteristic = {};
 
 module.exports = function (homebridge, units) {
-    units = units.toLowerCase();
-    if (Array('metric', 'imperial').indexOf(units) === -1) units = 'metric';
+    units =                    // rainfail    temperature    visibility    windspeed
+      { ca       : 'ca'        //    mm       celsius        kilometers    km/hour
+      , imperial : 'imperial'  //  inches     fahrenheit       miles       miles/hour
+      , si       : 'si'        //    mm       celsius        kilometers    m/second
+      , uk       : 'uk'        //    mm       celsius          miles       miles/hour
+
+      , metric   : 'si'
+      , us       : 'imperial'
+      }[units.toLowerCase()];
+    if (!units) units = 'si';
 
     var rainfallProps = (max) => {
-        var range = (units === 'metric') ? { unit: 'mm', maxValue: max,                    minValue: 0, minStep: 0.1 }
-                                         : { unit: 'in', maxValue: Math.round(max / 25.4), minValue: 0, minStep: 0.01 };
+        var range = (units !== 'imperial') ? { unit: 'mm', maxValue: max,                    minValue: 0, minStep: 0.1 }
+                                           : { unit: 'in', maxValue: Math.round(max / 25.4), minValue: 0, minStep: 0.01 };
 
         return underscore.extend(
           { format  : Characteristic.Formats.FLOAT
@@ -42,13 +54,13 @@ module.exports = function (homebridge, units) {
           }, range);
     };
     var rainfallValue = (val) => {
-      return (units === 'metric') ? val : (val / 25.4);
+      return (units !== 'imperial') ? val : (val / 25.4);
     };
 
     var c2f = (celsius) => { return (celsius * 1.8) + 32; };
     var temperatureProps = (max, min) => {
-        var range = (units === 'metric') ? { unit: Characteristic.Units.CELSIUS, maxValue: max,      minValue: min }
-                                         : { unit: 'fahrenheit',                 maxValue: c2f(max), minValue: c2f(min) };
+        var range = (units !== 'imperial') ? { unit: Characteristic.Units.CELSIUS, maxValue: max,      minValue: min }
+                                           : { unit: 'fahrenheit',                 maxValue: c2f(max), minValue: c2f(min) };
 
         return underscore.extend(
           { format  : Characteristic.Formats.FLOAT
@@ -56,14 +68,11 @@ module.exports = function (homebridge, units) {
           , perms   : [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
           }, range);
     };
-    var temperatureValue = (val) => {
-      return (units === 'metric') ? val : c2f(val);
-    };
 
     var km2mi = (km) => { return Math.round(km / 1.60934); };
     var visibilityProps = (max) => {
-        var range = (units === 'metric') ? { unit: 'km', maxValue: max,        minValue: 0 }
-                                         : { unit: 'mi', maxValue: km2mi(max), minValue: 0 };
+        var range = ((units === 'si') || (units == 'ca')) ? { unit: 'km', maxValue: max,        minValue: 0 }
+                                                          : { unit: 'mi', maxValue: km2mi(max), minValue: 0 };
 
         return underscore.extend(
           { format  : Characteristic.Formats.UINT8
@@ -72,13 +81,15 @@ module.exports = function (homebridge, units) {
           }, range);
     };
     var visibilityValue = (val) => {
-      return (units === 'metric') ? val : km2mi(val);
+      return ((units === 'si') || (units === 'ca')) ? val : km2mi(val);
     };
 
-    var kmh2mih = (km) => { return (km / 1.60934); };
+    var mtos2kmh = (m) => { return ((m * 3600) / 1000); };
+    var mtos2mih = (m) => { return ((m * 3600) / 1609.34); };
     var windspeedProps = (max) => {
-        var range = (units === 'metric') ? { unit: 'km/h', maxValue: max,          minValue: 0 }
-                                         : { unit: 'mph',  maxValue: kmh2mih(max), minValue: 0 };
+        var range = (units === 'si') ? { unit: 'm/s',  maxValue: max,           minValue: 0 }
+                  : (units === 'ca') ? { unit: 'km/h', maxValue: mtos2kmh(max), minValue: 0 }
+                                     : { unit: 'mph',  maxValue: mtos2mih(max), minValue: 0 };
 
         return underscore.extend(
           { format  : Characteristic.Formats.UINT8
@@ -87,7 +98,9 @@ module.exports = function (homebridge, units) {
           }, range);
     };
     var windspeedValue = (val) => {
-      return (units === 'metric') ? val : kmh2mih(val);
+      return (units === 'si') ? val 
+           : (units === 'ca') ? mtos2kmh (val)
+                              : mtos2mih(val);
     };
 
     var Characteristic = homebridge.hap.Characteristic;
@@ -150,6 +163,7 @@ module.exports = function (homebridge, units) {
     };
     inherits(CustomCharacteristic.DewPoint, Characteristic);
 /* Eve sees the 'fahrenheit' and does the calculation itself!
+
     CustomCharacteristic.DewPoint._unitvalue = temperatureValue;
  */
 
@@ -248,6 +262,7 @@ module.exports = function (homebridge, units) {
     };
     inherits(CustomCharacteristic.TemperatureMin, Characteristic);
 /* Eve sees the 'fahrenheit' and does the calculation itself!
+
     CustomCharacteristic.TemperatureMin._unitvalue = temperatureValue;
  */
 

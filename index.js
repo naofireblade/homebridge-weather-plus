@@ -28,7 +28,7 @@ function WeatherStationPlatform(log, config, api) {
 	this.config = config;
 	this.key = config['key'];
 	this.location = config['location'];
-	this.units = config['units'] || 'metric';
+	this.units = config['units'] || 'si';
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
 
