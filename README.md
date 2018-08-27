@@ -121,11 +121,9 @@ The **key** parameter is the API key that you get by registering for a weather s
 
 The **location** parameter must be a numerical unique city-id (can be found [here](https://openweathermap.org/find))
 
-The **locationCity** parameter must be a city-name (must return only one result, check it [here](https://openweathermap.org/find))
+The **locationCity** parameter must be a city-name with an optional country code e.g. "Berlin, DE" (you can check it [here](https://openweathermap.org/find))
 
-The **locationZip** parameter must be a numerical zip-code
-
-The **locationGeo** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
+The **locationGeo** parameter must be a list with the latitude longitude for your location (don't forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
 
 The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
 
@@ -140,7 +138,6 @@ The **forecast** parameter is *optional* and defines a list of forecast days wit
 		"key": "XXXXXXXXXXXXXXX",
 		"location": 2950159,
 		"locationCity": "Berlin, DE",
-		"locationZip": 10115,
 		"locationGeo": [52.5200066, 13.404954],
 		"language": "en",
 		"forecast": [1,2,3,4,5]
