@@ -71,7 +71,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Current observation values |                      15                      |                                8                                |                                13                                |
 | Forecast values            |                      16                      |                                10                                |                                10                                |
 | Forecast days              |                       7                      |                                 5                                |                                 4                                |
-| Location                   |                geo-coordinates               |                city name, city id, zip, geo-coordinates           |                         city name or zip                         |
+| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates           |                         city name or zip                         |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
 | Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        | :x: (only legacy accounts)                                       |
 | Register                   | [here](https://darksky.net/dev/register) | [here](https://openweathermap.org/appid) | [here](https://www.wunderground.com/weather/api/) |
