@@ -32,16 +32,13 @@ const Openweathermap = require('openweather-apis'),
 
 var debug, log;
 
-var init = function (apiKey, language, location, locationGeo, locationZip, locationCity, l, d) {
+var init = function (apiKey, language, location, locationGeo, locationCity, l, d) {
     Openweathermap.setLang(language);
     if (location) {
         Openweathermap.setCityId(location);
     }
     if (locationGeo) {
         Openweathermap.setCoordinate(locationGeo[0], locationGeo[1]);
-    }
-    if (locationZip) {
-        Openweathermap.setZipCode(locationZip);
     }
     if (locationCity) {
         Openweathermap.setCity(locationCity);

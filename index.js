@@ -32,7 +32,6 @@ function WeatherStationPlatform(log, config) {
 	this.key = config['key'];
 	this.location = config['location'];
 	this.locationGeo = config['locationGeo'];
-	this.locationZip = config['locationZip'];
 	this.locationCity = config['locationCity'];
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
@@ -55,7 +54,7 @@ function WeatherStationPlatform(log, config) {
 	}
 	else if (service === 'openweathermap') {
 		debug("Using service OpenWeatherMap");
-        openweathermap.init(this.key, this.language, this.location, this.locationGeo, this.locationZip, this.locationCity, log, debug);
+        openweathermap.init(this.key, this.language, this.location, this.locationGeo, this.locationCity, log, debug);
 		this.api = openweathermap;
 	}
 
