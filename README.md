@@ -53,6 +53,7 @@ The plugin also features forecasts for up to **7 days**. The following **16 fore
 - Wind Direction
 - Wind Speed
 - Wind Speed Maximum
+- *Forecast day*
 
 ## History
 
@@ -68,8 +69,8 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 |                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                   Weather Underground (legacy)                   |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      15                      |                                8                                |                                13                                |
-| Forecast values            |                      16                      |                                10                                |                                10                                |
+| Current observation values |                      15                      |                                7                                |                                13                                |
+| Forecast values            |                      16                      |                                9                                |                                10                                |
 | Forecast days              |                       7                      |                                 5                                |                                 4                                |
 | Location                   |                geo-coordinates               |                city name, city id, geo-coordinates           |                         city name or zip                         |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
@@ -115,7 +116,7 @@ The **forecast** parameter is *optional* and defines a list of forecast days wit
 
 ### OpenWeatherMap
 
-**Use only one location-property!**
+**Use only one location property**
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
