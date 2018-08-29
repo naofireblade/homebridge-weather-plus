@@ -1,6 +1,7 @@
 "use strict";
 const darksky = require('./api/darksky'),
 	weatherunderground = require('./api/weatherunderground'),
+	openweathermap = require('./api/openweathermap'),
 	debug = require('debug')('homebridge-weather-plus');
 
 var Service,
@@ -13,6 +14,8 @@ module.exports = function (homebridge) {
 
 	// Homekit Characteristics
 	Characteristic = homebridge.hap.Characteristic;
+	// Custom Characteristics
+	CustomCharacteristic = require('./util/characteristics')(homebridge);
 	// History Service
 	FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
@@ -22,31 +25,37 @@ module.exports = function (homebridge) {
 // ============
 // = Platform =
 // ============
-function WeatherStationPlatform(log, config, api) {
+function WeatherStationPlatform(log, config) {
 	debug("Init platform");
 	this.log = log;
 	this.config = config;
 	this.key = config['key'];
 	this.location = config['location'];
-	this.units = config['units'] || 'si';
+	this.locationGeo = config['locationGeo'];
+	this.locationCity = config['locationCity'];
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
-
-	// Custom Characteristics
-	CustomCharacteristic = require('./util/characteristics')(api, this.units);
 
 	// API Service
 	let service = config['service'].toLowerCase().replace(/\s/g, '');
 	if (service === 'darksky') {
 		debug("Using service dark sky");
 		// TODO adapt unit of characteristics
-		darksky.init(this.key, this.language, this.location, log, debug);
+		if (this.location) {
+			this.locationGeo = this.location;
+		}
+		darksky.init(this.key, this.language, this.locationGeo, log, debug);
 		this.api = darksky;
 	}
 	else if (service === 'weatherunderground') {
 		debug("Using service weather underground");
 		weatherunderground.init(this.key, this.location, log, debug);
 		this.api = weatherunderground;
+	}
+	else if (service === 'openweathermap') {
+		debug("Using service OpenWeatherMap");
+        openweathermap.init(this.key, this.language, this.location, this.locationGeo, this.locationCity, log, debug);
+		this.api = openweathermap;
 	}
 
 	// Update interval
@@ -132,7 +141,6 @@ WeatherStationPlatform.prototype = {
 		}
 		// all other custom characteristics
 		else {
-			if (CustomCharacteristic[name]._unitvalue) value = CustomCharacteristic[name]._unitvalue(value);
 			service.setCharacteristic(CustomCharacteristic[name], value);
 		}
 	},
@@ -157,7 +165,7 @@ WeatherStationPlatform.prototype = {
 		// Call function every 9:50 minutes (a new entry every 10 minutes is required to avoid gaps in the graph)
 		setTimeout(this.addHistory.bind(this), (10 * 60 * 1000) - 10000);
 	}
-};
+}
 
 // ===============================
 // = Current Condition Accessory =
@@ -213,7 +221,7 @@ CurrentConditionsWeatherAccessory.prototype = {
 	getServices: function () {
 		return [this.informationService, this.currentConditionsService, this.historyService];
 	}
-};
+}
 
 // ======================
 // = Forecast Accessory =
@@ -271,4 +279,4 @@ ForecastWeatherAccessory.prototype = {
 	getServices: function () {
 		return [this.informationService, this.forecastService];
 	}
-};
+}
