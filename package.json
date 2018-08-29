@@ -1,6 +1,6 @@
 {
   "name": "homebridge-weather-plus",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
@@ -32,7 +32,10 @@
     "Wind Speed",
     "Wind Speed Maximum",
     "Observation Time",
-    "Observation Station"
+    "Observation Station",
+    "yahoo",
+    "openweather",
+    "openweathermap"
   ],
   "engines": {
     "node": ">=0.12.0",
@@ -61,6 +64,7 @@
     "geo-tz": "^4.0.1",
     "moment-timezone": "^0.5.21",
     "openweather-apis": "^3.3.5",
+    "request": "^2.88.0",
     "wundergroundnode": "~0.9"
   }
 }

@@ -65,6 +65,65 @@ var getConditionCategoryOwm = function (code) {
     }
 };
 
+var getConditionCategoryYahoo = function (code) {
+    // See https://developer.yahoo.com/weather/documentation.html#codes
+    switch (code) {
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 10:
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+        case 17:
+        case 18:
+        case 35:
+        case 41:
+        case 42:
+        case 43:
+        case 46:
+            return 3; // snow
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 9:
+        case 11:
+        case 12:
+        case 37:
+        case 38:
+        case 39:
+        case 40:
+        case 45:
+        case 47:
+            return 2; // rain
+        case 19:
+        case 20:
+        case 21:
+        case 22:
+        case 23:
+        case 24:
+        case 26:
+        case 27:
+        case 28:
+        case 29:
+        case 30:
+            return 1; // cloudy
+        case 25:
+        case 31:
+        case 32:
+        case 33:
+        case 34:
+        case 36:
+        case 44:
+        case 3200:
+        default:
+            return 0; // clear
+    }
+};
+
 var getWindDirection = function (degree) {
 	if (typeof degree !== 'number' || isNaN(degree)) {
 		return 'Unkown';
@@ -143,6 +202,7 @@ var getRainAccumulated = function (array, parameter) {
 module.exports = {
 	getConditionCategory,
 	getConditionCategoryOwm,
+    getConditionCategoryYahoo,
 	getWindDirection,
 	getRainAccumulated
 };

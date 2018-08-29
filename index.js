@@ -2,6 +2,7 @@
 const darksky = require('./api/darksky'),
 	weatherunderground = require('./api/weatherunderground'),
 	openweathermap = require('./api/openweathermap'),
+	yahoo = require('./api/yahoo'),
 	debug = require('debug')('homebridge-weather-plus');
 
 var Service,
@@ -56,6 +57,11 @@ function WeatherStationPlatform(log, config) {
 		debug("Using service OpenWeatherMap");
         openweathermap.init(this.key, this.language, this.location, this.locationGeo, this.locationCity, log, debug);
 		this.api = openweathermap;
+	}
+	else if (service === 'yahoo') {
+		debug("Using service Yahoo");
+        yahoo.init(this.location, log, debug);
+		this.api = yahoo;
 	}
 
 	// Update interval
