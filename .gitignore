@@ -7,9 +7,6 @@
 /tmp
 /out-tsc
 
-# dependencies
-/node_modules
-
 # IDEs and editors
 /.idea
 .project
@@ -30,9 +27,7 @@
 # misc
 /.sass-cache
 /connect.lock
-/coverage
 /libpeerconnection.log
-npm-debug.log
 yarn-error.log
 testem.log
 /typings
@@ -41,3 +36,5 @@ testem.log
 .DS_Store
 Thumbs.db
 package-lock.json
+
+node_modules
