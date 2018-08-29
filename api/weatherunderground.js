@@ -92,7 +92,7 @@ var parseReport = function (values) {
     report.WindSpeedMax = parseFloat(values['wind_gust_kph']);
 
     return report;
-};
+}
 
 var parseForecast = function (values) {
     let forecast = {};
