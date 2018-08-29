@@ -1,6 +1,7 @@
 "use strict";
 const darksky = require('./api/darksky'),
 	weatherunderground = require('./api/weatherunderground'),
+	openweathermap = require('./api/openweathermap'),
 	debug = require('debug')('homebridge-weather-plus');
 
 var Service,
@@ -27,8 +28,10 @@ function WeatherStationPlatform(log, config, api) {
 	this.log = log;
 	this.config = config;
 	this.key = config['key'];
-	this.location = config['location'];
 	this.units = config['units'] || 'si';
+	this.location = config['location'];
+	this.locationGeo = config['locationGeo'];
+	this.locationCity = config['locationCity'];
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
 
@@ -40,13 +43,21 @@ function WeatherStationPlatform(log, config, api) {
 	if (service === 'darksky') {
 		debug("Using service dark sky");
 		// TODO adapt unit of characteristics
-		darksky.init(this.key, this.language, this.location, log, debug);
+		if (this.location) {
+			this.locationGeo = this.location;
+		}
+		darksky.init(this.key, this.language, this.locationGeo, log, debug);
 		this.api = darksky;
 	}
 	else if (service === 'weatherunderground') {
 		debug("Using service weather underground");
 		weatherunderground.init(this.key, this.location, log, debug);
 		this.api = weatherunderground;
+	}
+	else if (service === 'openweathermap') {
+		debug("Using service OpenWeatherMap");
+        openweathermap.init(this.key, this.language, this.location, this.locationGeo, this.locationCity, log, debug);
+		this.api = openweathermap;
 	}
 
 	// Update interval
