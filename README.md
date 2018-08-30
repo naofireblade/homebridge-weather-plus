@@ -191,7 +191,6 @@ Many thanks go to
 - [simont77](https://github.com/simont77) for his fakegato-history library
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the openweathermap api
-- [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 

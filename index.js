@@ -30,7 +30,6 @@ function WeatherStationPlatform(log, config) {
 	this.log = log;
 	this.config = config;
 	this.key = config['key'];
-	this.units = config['units'] || 'si';
 	this.location = config['location'];
 	this.locationGeo = config['locationGeo'];
 	this.locationCity = config['locationCity'];
