@@ -88,7 +88,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 ## Configuration
 
-Below are explanations for all parameters and examples for all weather apis.
+Below are explanations for all parameters and examples for all weather apis. Most parameters are optional.
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
@@ -103,7 +103,7 @@ The **units** parameter is *optional* and sets the conventions used for reportin
 - "ca" to report wind speeds in km/h instead of m/s
 - "uk" to report visibility in miles and wind speeds in km/h instead of m/s
 
-The **interval** parameter sets the update interval in minutes. The default is 4 minutes because the rate for free API keys is limited.
+The **interval** parameter is *optional* and sets the update interval in minutes. The default is 4 minutes because the rate for free API keys is limited.
 
 The **displayName** parameter is *optional* and sets the accessory's name. The default is "Now". If the **forecast** parameter is present, then the names of the forecasts are prefixed with the **displayName** parameter.
 

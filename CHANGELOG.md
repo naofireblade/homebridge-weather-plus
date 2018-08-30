@@ -101,3 +101,7 @@
 ## 2.2.0
 
 * Added support for different units
+
+## 2.3.0
+
+* Added displayName parameter
