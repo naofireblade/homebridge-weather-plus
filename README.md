@@ -53,6 +53,7 @@ The plugin also features forecasts for up to **7 days**. The following **16 fore
 - Wind Direction
 - Wind Speed
 - Wind Speed Maximum
+- *Forecast day*
 
 ## History
 
@@ -87,17 +88,26 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 ## Configuration
 
-Add one of the following samples to your config file.
-
-### Dark Sky
+Below are explanations for all parameters and examples for all weather apis.
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
-
-The **locationGeo** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
 
 The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
 
 The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
+
+The **units** parameter is *optional* and sets the conventions used for reporting values. The default is "metric". The choices are:
+
+- "si" (or "metric")
+- "us" (or "imperial")
+- "ca" to report wind speeds in km/h instead of m/s
+- "uk" to report visibility in miles and wind speeds in km/h instead of m/s
+
+The **interval** parameter sets the update interval in minutes. The default value is 4 minutes because the rate for free API keys is limited.
+
+### Dark Sky
+
+The **locationGeo** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net/en.
 
 ```json
 "platforms": [
@@ -115,19 +125,13 @@ The **forecast** parameter is *optional* and defines a list of forecast days wit
 
 ### OpenWeatherMap
 
-**Use only one location-property!**
-
-The **key** parameter is the API key that you get by registering for a weather service in the table above.
+**Please use only one location property.**
 
 The **location** parameter must be a numerical unique city-id (can be found [here](https://openweathermap.org/find))
 
 The **locationCity** parameter must be a city-name with an optional country code e.g. "Berlin, DE" (you can check it [here](https://openweathermap.org/find))
 
-The **locationGeo** parameter must be a list with the latitude longitude for your location (don't forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
-
-The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
-
-The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
+The **locationGeo** parameter must be a list with the latitude longitude for your location (don't forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net/en.
 
 ```json
 "platforms": [
@@ -165,11 +169,7 @@ The **forecast** parameter is *optional* and defines a list of forecast days wit
 
 ### Weather Underground
 
-The **key** parameter is the API key that you get by registering for a weather service in the table above.
-
 The **location** parameter can be a city name or a zip. You can also use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID.
-
-The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
 
 
 ```json
@@ -184,10 +184,6 @@ The **forecast** parameter is *optional* and defines a list of forecast days wit
 	}
 ]
 ```
-
-### Advanced
-
-You can add the parameter **interval** to set the update interval in minutes. The default value is 4 minutes because the rate for free API keys is limited.
 
 ## Example use cases
 
@@ -208,6 +204,7 @@ Many thanks go to
 - [simont77](https://github.com/simont77) for his fakegato-history library
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the openweathermap api
+- [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 

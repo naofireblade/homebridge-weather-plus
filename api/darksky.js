@@ -67,7 +67,7 @@ var init = function (apiKey, language, locationGeo, l, d) {
         latitude: locationGeo[0],
         longitude: locationGeo[1],
         language: language,
-        units: 'ca',
+        units: 'si',
         exclude: ['minutely', 'hourly', 'alerts', 'flags']
     });
     log = l;
@@ -79,7 +79,7 @@ var init = function (apiKey, language, locationGeo, l, d) {
         latitude: locationGeo[0],
         longitude: locationGeo[1],
         language: language,
-        units: 'ca',
+        units: 'si',
         exclude: ['currently', 'minutely', 'daily', 'alerts', 'flags']
     });
 };
