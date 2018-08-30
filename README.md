@@ -88,6 +88,8 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 ## Configuration
 
+Below are explanations for all parameters and examples for all weather apis.
+
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
 The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
@@ -102,8 +104,6 @@ The **units** parameter is *optional* and sets the conventions used for reportin
 - "uk" to report visibility in miles and wind speeds in km/h instead of m/s
 
 The **interval** parameter sets the update interval in minutes. The default value is 4 minutes because the rate for free API keys is limited.
-
-Add one of the following samples to your config file. You will find an explanation for all parameters after the samples.
 
 ### Dark Sky
 
