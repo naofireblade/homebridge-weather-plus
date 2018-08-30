@@ -89,3 +89,15 @@
 ## 2.0.1
 
 * Changed readme
+
+## 2.0.2
+
+* Changed readme
+
+## 2.1.0
+
+* Added support for OpenWeatherMap api
+
+## 2.2.0
+
+* Added support for different units
