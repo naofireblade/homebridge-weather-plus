@@ -61,13 +61,13 @@ var debug,
         }
     };
 
-var init = function (apiKey, language, locationGeo, l, d) {
+var init = function (apiKey, language, location, l, d) {
     this.darksky = new DarkSky(apiKey);
     this.darksky.options({
-        latitude: locationGeo[0],
-        longitude: locationGeo[1],
+        latitude: location[0],
+        longitude: location[1],
         language: language,
-        units: 'ca',
+        units: 'si',
         exclude: ['minutely', 'hourly', 'alerts', 'flags']
     });
     log = l;
@@ -76,8 +76,8 @@ var init = function (apiKey, language, locationGeo, l, d) {
 
     this.darkskyTimeMachine = new DarkSky(apiKey);
     this.darkskyTimeMachine.options({
-        latitude: locationGeo[0],
-        longitude: locationGeo[1],
+        latitude: location[0],
+        longitude: location[1],
         language: language,
         units: 'ca',
         exclude: ['currently', 'minutely', 'daily', 'alerts', 'flags']

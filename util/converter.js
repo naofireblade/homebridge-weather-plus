@@ -39,32 +39,6 @@ var getConditionCategory = function (name) {
 	}
 };
 
-var getConditionCategoryOwm = function (code) {
-    // See https://openweathermap.org/weather-conditions
-    if (code >= 200 && code < 300) {
-        // Thunderstorm
-        return 2;
-    } else if (code >= 300 && code < 400) {
-        // Drizzle
-        return 2;
-    } else if (code >= 500 && code < 600) {
-        // Rain
-        return 2;
-    } else if (code >= 600 && code < 700) {
-        // Snow
-        return 3;
-    } else if (code >= 700 && code < 800) {
-        // Atmosphere
-        return 1;
-    } else if (code >= 801 && code < 900) {
-        // Clouds
-        return 1;
-    } else {
-        // 800 = Clear
-        return 0;
-    }
-};
-
 var getWindDirection = function (degree) {
 	if (typeof degree !== 'number' || isNaN(degree)) {
 		return 'Unkown';
@@ -142,7 +116,6 @@ var getRainAccumulated = function (array, parameter) {
 
 module.exports = {
 	getConditionCategory,
-	getConditionCategoryOwm,
 	getWindDirection,
 	getRainAccumulated
 };
