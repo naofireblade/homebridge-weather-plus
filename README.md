@@ -53,6 +53,7 @@ The plugin also features forecasts for up to **7 days**. The following **16 fore
 - Wind Direction
 - Wind Speed
 - Wind Speed Maximum
+- *Forecast day*
 
 ## History
 
@@ -66,15 +67,15 @@ With the eve app you can view the history for
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   Weather Underground (legacy)                   |
-|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      15                      |                                13                                |
-| Forecast values            |                      16                      |                                10                                |
-| Forecast days              |                       7                      |                                 4                                |
-| Location                   |                geo-coordinates               |                         city name or zip                         |
-| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |
-| Free                       | :heavy_check_mark:                           | :x: (only legacy accounts)                                       |
-| Register                   | [here](https://darksky.net/dev/register) | [here](https://www.wunderground.com/weather/api/) |
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                   Weather Underground (legacy)                   |
+|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
+| Current observation values |                      15                      |                                7                                |                                13                                |
+| Forecast values            |                      16                      |                                9                                |                                10                                |
+| Forecast days              |                       7                      |                                 5                                |                                 4                                |
+| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates           |                         city name or zip                         |
+| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
+| Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        | :x: (only legacy accounts)                                       |
+| Register                   | [here](https://darksky.net/dev/register) | [here](https://openweathermap.org/appid) | [here](https://www.wunderground.com/weather/api/) |
 
 *You can add more services by forking the project and submitting a pull request.*
 
@@ -93,7 +94,7 @@ Add one of the following samples to your config file.
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
-The **location** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
+The **locationGeo** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
 
 The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
 
@@ -115,9 +116,41 @@ The choices are:
 		"name": "WeatherPlus",
 		"service": "darksky",
 		"key": "XXXXXXXXXXXXXXX",
-		"location": [52.5200066, 13.404954],
+		"locationGeo": [52.5200066, 13.404954],
 		"language": "en",
 		"forecast": [1,2,3,4,5,6,7]
+	}
+]
+```
+
+### OpenWeatherMap
+
+**Use only one location property**
+
+The **key** parameter is the API key that you get by registering for a weather service in the table above.
+
+The **location** parameter must be a numerical unique city-id (can be found [here](https://openweathermap.org/find))
+
+The **locationCity** parameter must be a city-name with an optional country code e.g. "Berlin, DE" (you can check it [here](https://openweathermap.org/find))
+
+The **locationGeo** parameter must be a list with the latitude longitude for your location (don't forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net.
+
+The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
+
+The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
+
+```json
+"platforms": [
+	{
+		"platform": "WeatherPlus",
+		"name": "WeatherPlus",
+		"service": "openweathermap",
+		"key": "XXXXXXXXXXXXXXX",
+		"location": 2950159,
+		"locationCity": "Berlin, DE",
+		"locationGeo": [52.5200066, 13.404954],
+		"language": "en",
+		"forecast": [1,2,3,4,5]
 	}
 ]
 ```
@@ -166,9 +199,12 @@ Many thanks go to
 - [Clark Endrizzi](https://github.com/cendrizzi) for his wundergroundnode library
 - [simont77](https://github.com/simont77) for his fakegato-history library
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
+- [David Werth](https://github.com/werthdavid) for integrating the openweathermap api
+- [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
 ## Attribution
 - [Powered by Dark Sky](https://darksky.net/poweredby/)
-- [Powered Weather Underground](https://www.wunderground.com/)
+- [Powered by Weather Underground](https://www.wunderground.com/)
+- [Powered by OpenWeatherMap](https://openweathermap.org/)
