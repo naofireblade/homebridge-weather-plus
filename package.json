@@ -35,7 +35,9 @@
     "Observation Station",
     "yahoo",
     "openweather",
-    "openweathermap"
+    "openweathermap",
+    "dark sky",
+    "weather underground"
   ],
   "engines": {
     "node": ">=0.12.0",
