@@ -28,6 +28,7 @@ function WeatherStationPlatform(log, config, api) {
 	debug("Init platform");
 	this.log = log;
 	this.config = config;
+	this.displayName = config['displayName'];
 	this.key = config['key'];
 	this.units = config['units'] || 'si';
 	this.location = config['location'];
@@ -182,8 +183,7 @@ WeatherStationPlatform.prototype = {
 function CurrentConditionsWeatherAccessory(platform) {
 	this.platform = platform;
 	this.log = platform.log;
-	this.name = "Now";
-	this.displayName = this.name;
+	this.name = platform.displayName || "Now";
 
 	// Create temperature sensor service that includes temperature characteristic
 	this.currentConditionsService = new Service.TemperatureSensor(this.name);
@@ -250,6 +250,7 @@ function ForecastWeatherAccessory(platform, day) {
 			this.name = "In " + day + " Days";
 			break;
 	}
+	if (this.platform.displayName) this.name = this.platform.displayName + ' ' + this.name;
 	this.day = day;
 
 	// Create temperature sensor service that includes temperature characteristic

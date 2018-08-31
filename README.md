@@ -88,13 +88,13 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 ## Configuration
 
-Below are explanations for all parameters and examples for all weather apis.
+Below are explanations for all parameters and examples for all weather apis. Most parameters are optional.
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
-The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). Default is en.
+The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). The default is en.
 
-The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. Default are none.
+The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. The default is none.
 
 The **units** parameter is *optional* and sets the conventions used for reporting values. The default is "metric". The choices are:
 
@@ -103,7 +103,10 @@ The **units** parameter is *optional* and sets the conventions used for reportin
 - "ca" to report wind speeds in km/h instead of m/s
 - "uk" to report visibility in miles and wind speeds in km/h instead of m/s
 
-The **interval** parameter sets the update interval in minutes. The default value is 4 minutes because the rate for free API keys is limited.
+The **interval** parameter is *optional* and sets the update interval in minutes. The default is 4 minutes because the rate for free API keys is limited.
+
+The **displayName** parameter is *optional* and sets the accessory's name. The default is "Now". If the **forecast** parameter is present, then the names of the forecasts are prefixed with the **displayName** parameter.
+
 
 ### Dark Sky
 
@@ -204,7 +207,7 @@ Many thanks go to
 - [simont77](https://github.com/simont77) for his fakegato-history library
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the openweathermap api
-- [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units
+- [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
