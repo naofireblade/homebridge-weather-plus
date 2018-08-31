@@ -96,7 +96,7 @@
 
 ## 2.1.0
 
-* Added support for OpenWeatherMap api
+* Added support for the OpenWeatherMap api
 
 ## 2.2.0
 
@@ -105,3 +105,7 @@
 ## 2.3.0
 
 * Added displayName parameter
+
+## 2.4.0
+
+* Added support for the Yahoo api
