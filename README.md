@@ -206,7 +206,7 @@ Many thanks go to
 - [Clark Endrizzi](https://github.com/cendrizzi) for his wundergroundnode library
 - [simont77](https://github.com/simont77) for his fakegato-history library
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
-- [David Werth](https://github.com/werthdavid) for integrating the openweathermap api
+- [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
 - [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
@@ -215,3 +215,4 @@ This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwo
 - [Powered by Dark Sky](https://darksky.net/poweredby/)
 - [Powered by Weather Underground](https://www.wunderground.com/)
 - [Powered by OpenWeatherMap](https://openweathermap.org/)
+- [Powered by Yahoo](https://yahoo.com/)
