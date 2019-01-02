@@ -3,11 +3,13 @@ const darksky = require('./api/darksky'),
 	weatherunderground = require('./api/weatherunderground'),
 	openweathermap = require('./api/openweathermap'),
 	yahoo = require('./api/yahoo'),
-	debug = require('debug')('homebridge-weather-plus');
+	debug = require('debug')('homebridge-weather-plus'),
+	version = require('./package.json').version;
 
 var Service,
 	Characteristic,
 	CustomCharacteristic,
+	CustomService,
 	FakeGatoHistoryService;
 
 module.exports = function (homebridge) {
@@ -36,9 +38,14 @@ function WeatherStationPlatform(log, config, api) {
 	this.locationCity = config['locationCity'];
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
+	this.EveWeatherEmu = ('EveWeatherEmu' in config ? config['EveWeatherEmu'] : false);
+	this.fakegatoParameters = ('fakegatoParameters' in config ? config['fakegatoParameters'] : {storage:'fs'});
 
 	// Custom Characteristics
 	CustomCharacteristic = require('./util/characteristics')(api, this.units);
+	
+	// Custom Services
+	CustomService = require('./util/services')(api);
 
 	// API Service
 	let service = config['service'].toLowerCase().replace(/\s/g, '');
@@ -185,8 +192,12 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.log = platform.log;
 	this.name = platform.displayName || "Now";
 
-	// Create temperature sensor service that includes temperature characteristic
-	this.currentConditionsService = new Service.TemperatureSensor(this.name);
+	// Create temperature sensor or Eve Weather service that includes temperature characteristic
+	
+	if (!this.EveWeatherEmu)
+		this.currentConditionsService = new Service.TemperatureSensor(this.name);
+	else
+		this.currentConditionsService = new CustomService.EveWeatherService(this.name);
 
 	// Fix negative temperatures not supported by homekit
 	this.currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
@@ -210,12 +221,11 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location);
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.location)
+		.setCharacteristic(Characteristic.FirmwareRevision, version);
 
 	// Create history service
-	this.historyService = new FakeGatoHistoryService("weather", this, {
-		storage: 'fs'
-	});
+	this.historyService = new FakeGatoHistoryService("weather", this, this.fakegatoParameters);
 	setTimeout(this.platform.addHistory.bind(this.platform), 10000);
 
 	// Start the weather update process
