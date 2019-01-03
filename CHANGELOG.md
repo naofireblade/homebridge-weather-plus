@@ -109,3 +109,9 @@
 ## 2.4.0
 
 * Added support for the Yahoo api
+
+## 2.5.0
+
+* Added option to show Current Conditions as Eve Weather emulation
+* Added ability to pass parameter to fakegato
+* Show plugin version in Accessory Info
