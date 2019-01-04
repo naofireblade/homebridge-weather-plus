@@ -112,6 +112,6 @@
 
 ## 2.5.0
 
-* Added option to show Current Conditions as Eve Weather emulation
+* Added option to show Current Conditions and Forecasts as Eve Weather emulation
 * Added ability to pass parameter to fakegato
 * Show plugin version in Accessory Info

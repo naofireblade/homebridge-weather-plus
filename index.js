@@ -264,7 +264,10 @@ function ForecastWeatherAccessory(platform, day) {
 	this.day = day;
 
 	// Create temperature sensor service that includes temperature characteristic
-	this.forecastService = new Service.TemperatureSensor(this.name);
+	if (!this.EveWeatherEmu)
+		this.forecastService = new Service.TemperatureSensor(this.name);
+	else
+		this.forecastService = new CustomService.EveWeatherService(this.name);
 
 	// Fix negative temperatures not supported by homekit
 	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
@@ -288,7 +291,8 @@ function ForecastWeatherAccessory(platform, day) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location);
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.location)
+		.setCharacteristic(Characteristic.FirmwareRevision, version);
 }
 
 ForecastWeatherAccessory.prototype = {
