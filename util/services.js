@@ -13,8 +13,6 @@ module.exports = function (homebridge) {
 	
 	var Service = homebridge.hap.Service;
 	var Characteristic = homebridge.hap.Characteristic;
-	
-	var CustomCharacteristic = require('./characteristics')(homebridge);
 
 	CustomService.EveWeatherService = function (displayName, subtype) {
 			Service.call(this, displayName, CustomUUID.EveWeather, subtype);
