@@ -66,7 +66,7 @@
   },
   "dependencies": {
     "dark-sky": "^1.1.4",
-    "debug": "~2.2.0",
+    "debug": "^2.6.9",
     "fakegato-history": "^0.5.2",
     "geo-tz": "^4.0.1",
     "moment-timezone": "^0.5.21",
