@@ -32,6 +32,7 @@ function WeatherStationPlatform(log, config, api) {
 	this.log = log;
 	this.config = config;
 	this.displayName = config['displayName'];
+	this.displayNameForecast = config['displayNameForecast'];
 	this.key = config['key'];
 	this.units = config['units'] || 'si';
 	this.location = config['location'];
@@ -192,7 +193,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.platform = platform;
 	this.log = platform.log;
 	this.name = platform.displayName || "Now";
-	this.displayName = platform.config.name;
+	this.displayName = platform.config.name;  //needed by fakegato for proper logging and file naming
 
 	// Create temperature sensor or Eve Weather service that includes temperature characteristic
 	
@@ -223,7 +224,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location)
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || 999)
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 
 	// Create history service
@@ -262,7 +263,7 @@ function ForecastWeatherAccessory(platform, day) {
 			this.name = "In " + day + " Days";
 			break;
 	}
-	if (this.platform.displayName) this.name = this.platform.displayName + ' ' + this.name;
+	if (this.platform.displayNameForecast) this.name = this.platform.displayNameForecast + ' ' + this.name;
 	this.day = day;
 
 	// Create temperature sensor service that includes temperature characteristic
@@ -293,7 +294,7 @@ function ForecastWeatherAccessory(platform, day) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location)
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || this.day)
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 }
 
