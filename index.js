@@ -192,6 +192,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.platform = platform;
 	this.log = platform.log;
 	this.name = platform.displayName || "Now";
+	this.displayName = platform.config.name;
 
 	// Create temperature sensor or Eve Weather service that includes temperature characteristic
 	
@@ -226,7 +227,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 
 	// Create history service
-	this.historyService = new FakeGatoHistoryService("weather", this, this.fakegatoParameters);
+	this.historyService = new FakeGatoHistoryService("weather", this, this.platform.fakegatoParameters);
 	setTimeout(this.platform.addHistory.bind(this.platform), 10000);
 
 	// Start the weather update process
