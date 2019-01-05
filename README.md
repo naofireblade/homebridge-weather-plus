@@ -105,7 +105,9 @@ The **units** parameter is *optional* and sets the conventions used for reportin
 
 The **interval** parameter is *optional* and sets the update interval in minutes. The default is 4 minutes because the rate for free API keys is limited.
 
-The **displayName** parameter is *optional* and sets the accessory's name. The default is "Now". If the **forecast** parameter is present, then the names of the forecasts are prefixed with the **displayName** parameter.
+The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now".
+
+The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the **displayNameForecast** parameter.
 
 The **EveWeatherEmu** parameter is *optional*. By default, **Current Observations** and **Forecasts** are implemented as a standard Temperature service with added characteristics, so that at least temperature is visible also in Apple Home. If you use Elgato Eve, you may prefer the emulation of Elgato Eve Weather accessory, in which temperature, pressure and humidity are presented together as a combo accessory. In this case, set this parameter to **true**. Note that this will cause the accessory to appear as incompatible in Apple Home.
 
