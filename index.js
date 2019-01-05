@@ -194,7 +194,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 
 	// Create temperature sensor or Eve Weather service that includes temperature characteristic
 	
-	if (!this.EveWeatherEmu)
+	if (!this.platform.EveWeatherEmu)
 		this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	else
 		this.currentConditionsService = new CustomService.EveWeatherService(this.name);
@@ -264,7 +264,7 @@ function ForecastWeatherAccessory(platform, day) {
 	this.day = day;
 
 	// Create temperature sensor service that includes temperature characteristic
-	if (!this.EveWeatherEmu)
+	if (!this.platform.EveWeatherEmu)
 		this.forecastService = new Service.TemperatureSensor(this.name);
 	else
 		this.forecastService = new CustomService.EveWeatherService(this.name);
