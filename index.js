@@ -193,7 +193,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.platform = platform;
 	this.log = platform.log;
 	this.name = platform.displayName || "Now";
-	this.displayName = platform.config.name;  //needed by fakegato for proper logging and file naming
+	this.displayName = this.name;  //needed by fakegato for proper logging and file naming
 
 	// Create temperature sensor or Eve Weather service that includes temperature characteristic
 	
