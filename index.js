@@ -267,10 +267,8 @@ function ForecastWeatherAccessory(platform, day) {
 	this.day = day;
 
 	// Create temperature sensor service that includes temperature characteristic
-	if (!this.platform.EveWeatherEmu)
-		this.forecastService = new Service.TemperatureSensor(this.name);
-	else
-		this.forecastService = new CustomService.EveWeatherService(this.name);
+	this.forecastService = new Service.TemperatureSensor(this.name);
+	
 
 	// Fix negative temperatures not supported by homekit
 	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
