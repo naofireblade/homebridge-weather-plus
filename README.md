@@ -67,7 +67,7 @@ With the eve app you can view the history for
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo                                 |                   Weather Underground (legacy)                   |
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (legacy)                   |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | Current observation values |                      15                      |                                7                                 |                                10                                |                                13                                |
 | Forecast values            |                      16                      |                                9                                |                                4                                  |                                10                                |
@@ -107,9 +107,12 @@ The **interval** parameter is *optional* and sets the update interval in minutes
 
 The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now".
 
-The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the **displayNameForecast** parameter.
+The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the displayNameForecast parameter.
 
-The **EveWeatherEmu** parameter is *optional*. By default, **Current Observations** is implemented as a standard Temperature service with added characteristics, so that at least temperature is visible also in Apple Home. If you use Elgato Eve, you may prefer the emulation of Elgato Eve Weather accessory, in which temperature, pressure and humidity are presented together as a combo accessory. In this case, set this parameter to **true**. Note that this will cause the accessory to appear as incompatible in Apple Home.
+The **currentObservations** parameter is *optional* and sets how the 3 current observations temperature, humidity and pressure are displayed. You can choose one of these 2 options:
+
+- "eve" (this combines all 3 values into one row in the eve app but shows nothing in the Apple Home app)
+- "normal" (default, this shows all 3 values in a seperate row in the eve app and shows the temperature in the Apple Home app)
 
 The **fakegatoParameters** parameter is *optional*. By default, history is persisted on filesystem. You can pass your own parameters to *fakegato-history* module using this paramter, in order to change the location of the persisted file or use GoogleDrive persistance. See https://github.com/simont77/fakegato-history#file-system and https://github.com/simont77/fakegato-history#google-drive for more info. **IMPORTANT NOTE:** Do not modify the parameter for the fakegato internal timer.
 
