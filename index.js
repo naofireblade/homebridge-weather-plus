@@ -40,7 +40,7 @@ function WeatherStationPlatform(log, config, api) {
 	this.locationCity = config['locationCity'];
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
-	this.EveWeatherEmu = ('EveWeatherEmu' in config ? config['EveWeatherEmu'] : false);
+	this.currentObservationsMode = ('currentObservations' in config ? config['currentObservations'] : 'normal');
 	this.fakegatoParameters = ('fakegatoParameters' in config ? config['fakegatoParameters'] : {storage:'fs'});
 
 	// Custom Characteristics
@@ -197,7 +197,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 
 	// Create temperature sensor or Eve Weather service that includes temperature characteristic
 	
-	if (!this.platform.EveWeatherEmu)
+	if (this.platform.currentObservationsMode !== 'eve')
 		this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	else
 		this.currentConditionsService = new CustomService.EveWeatherService(this.name);
