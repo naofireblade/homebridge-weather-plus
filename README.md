@@ -213,7 +213,7 @@ The **location** parameter can be a city name or a zip. You can also use a stati
 Many thanks go to
 - [Kevin Harwood](https://github.com/kcharwood) for his original homebridge-weather-station
 - [Clark Endrizzi](https://github.com/cendrizzi) for his wundergroundnode library
-- [simont77](https://github.com/simont77) for his fakegato-history library
+- [simont77](https://github.com/simont77) for his fakegato-history library, the eve weather emulation and several other great improvements
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
 - [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
