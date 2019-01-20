@@ -8,25 +8,23 @@ const inherits = require('util').inherits,
         AirPressure: 'E863F10F-079E-48FF-8F27-9C2605A29F52',
 
         // Eve recognized UUIDs
-        Condition: 'cd65a9ab-85ad-494a-b2bd-2f380084134d',
-        Rain1h: '10c88f40-7ec4-478c-8d5a-bd0c3cce14b7',
-        RainDay: 'ccc04890-565b-4376-b39a-3113341d9e0f',
-        UVIndex: '05ba0fe0-b848-4226-906d-5b64272e05ce',
-        Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
-        WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
-        WindSpeed: '49C8AE5A-A3A5-41AB-BF1F-12D5654F9F41',
-
-        // Custom UUIDs
         CloudCover: '64392fed-1401-4f7a-9adb-1710dd6e3897',
+        Condition: 'cd65a9ab-85ad-494a-b2bd-2f380084134d',
         ConditionCategory: 'cd65a9ab-85ad-494a-b2bd-2f380084134c',
         DewPoint: '095c46e2-278e-4e3c-b9e7-364622a0f501',
         ForecastDay: '57f1d4b2-0e7e-4307-95b5-808750e2c1c7',
         ObservationStation: 'd1b2787d-1fc4-4345-a20e-7b5a74d693ed',
         ObservationTime: '234fd9f1-1d33-4128-b622-d052f0c402af',
         Ozone: 'bbeffddd-1bcd-4d75-b7cd-b57a90a04d13',
+        Rain1h: '10c88f40-7ec4-478c-8d5a-bd0c3cce14b7',
+        RainDay: 'ccc04890-565b-4376-b39a-3113341d9e0f',
         RainChance: 'fc01b24f-cf7e-4a74-90db-1b427af1ffa3',
         SolarRadiation: '1819a23e-ecab-4d39-b29a-7364d299310b',
         TemperatureMin: '707b78ca-51ab-4dc9-8630-80a58f07e419',
+        UVIndex: '05ba0fe0-b848-4226-906d-5b64272e05ce',
+        Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
+        WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
+        WindSpeed: '49C8AE5A-A3A5-41AB-BF1F-12D5654F9F41',
         WindSpeedMax: '6b8861e5-d6f3-425c-83b6-069945ffd1f1'
     };
 
