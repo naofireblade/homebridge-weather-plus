@@ -1,3 +1,4 @@
+/*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
 const DarkSky = require('dark-sky'),

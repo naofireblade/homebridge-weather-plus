@@ -1,13 +1,16 @@
+/*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 const darksky = require('./api/darksky'),
 	weatherunderground = require('./api/weatherunderground'),
 	openweathermap = require('./api/openweathermap'),
 	yahoo = require('./api/yahoo'),
-	debug = require('debug')('homebridge-weather-plus');
+	debug = require('debug')('homebridge-weather-plus'),
+	version = require('./package.json').version;
 
 var Service,
 	Characteristic,
 	CustomCharacteristic,
+	CustomService,
 	FakeGatoHistoryService;
 
 module.exports = function (homebridge) {
@@ -29,6 +32,7 @@ function WeatherStationPlatform(log, config, api) {
 	this.log = log;
 	this.config = config;
 	this.displayName = config['displayName'];
+	this.displayNameForecast = config['displayNameForecast'];
 	this.key = config['key'];
 	this.units = config['units'] || 'si';
 	this.location = config['location'];
@@ -36,9 +40,14 @@ function WeatherStationPlatform(log, config, api) {
 	this.locationCity = config['locationCity'];
 	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
 	this.language = ('language' in config ? config['language'] : 'en');
+	this.currentObservationsMode = ('currentObservations' in config ? config['currentObservations'] : 'normal');
+	this.fakegatoParameters = ('fakegatoParameters' in config ? config['fakegatoParameters'] : {storage:'fs'});
 
 	// Custom Characteristics
 	CustomCharacteristic = require('./util/characteristics')(api, this.units);
+	
+	// Custom Services
+	CustomService = require('./util/services')(api);
 
 	// API Service
 	let service = config['service'].toLowerCase().replace(/\s/g, '');
@@ -184,9 +193,14 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.platform = platform;
 	this.log = platform.log;
 	this.name = platform.displayName || "Now";
+	this.displayName = this.name;  //needed by fakegato for proper logging and file naming
 
-	// Create temperature sensor service that includes temperature characteristic
-	this.currentConditionsService = new Service.TemperatureSensor(this.name);
+	// Create temperature sensor or Eve Weather service that includes temperature characteristic
+	
+	if (this.platform.currentObservationsMode !== 'eve')
+		this.currentConditionsService = new Service.TemperatureSensor(this.name);
+	else
+		this.currentConditionsService = new CustomService.EveWeatherService(this.name);
 
 	// Fix negative temperatures not supported by homekit
 	this.currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
@@ -210,12 +224,11 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location);
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || 999)
+		.setCharacteristic(Characteristic.FirmwareRevision, version);
 
 	// Create history service
-	this.historyService = new FakeGatoHistoryService("weather", this, {
-		storage: 'fs'
-	});
+	this.historyService = new FakeGatoHistoryService("weather", this, this.platform.fakegatoParameters);
 	setTimeout(this.platform.addHistory.bind(this.platform), 10000);
 
 	// Start the weather update process
@@ -250,11 +263,12 @@ function ForecastWeatherAccessory(platform, day) {
 			this.name = "In " + day + " Days";
 			break;
 	}
-	if (this.platform.displayName) this.name = this.platform.displayName + ' ' + this.name;
+	if (this.platform.displayNameForecast) this.name = this.platform.displayNameForecast + ' ' + this.name;
 	this.day = day;
 
 	// Create temperature sensor service that includes temperature characteristic
 	this.forecastService = new Service.TemperatureSensor(this.name);
+	
 
 	// Fix negative temperatures not supported by homekit
 	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
@@ -278,7 +292,8 @@ function ForecastWeatherAccessory(platform, day) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location);
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || this.day)
+		.setCharacteristic(Characteristic.FirmwareRevision, version);
 }
 
 ForecastWeatherAccessory.prototype = {

@@ -1,3 +1,4 @@
+/*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
 const debug = require('debug')('homebridge-weather-plus');
@@ -34,6 +35,7 @@ var getConditionCategory = function (name) {
 		case "clear-night":
 		case "partly-cloudy-day":
 		case "partly-cloudy-night":
+			return 0;
 		default:
 			return 0;
 	}
@@ -118,7 +120,8 @@ var getConditionCategoryYahoo = function (code) {
         case 34:
         case 36:
         case 44:
-        case 3200:
+		case 3200:
+			return 0;
         default:
             return 0; // clear
     }
