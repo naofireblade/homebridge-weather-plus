@@ -52,7 +52,7 @@ function WeatherStationPlatform(log, config, api) {
 	CustomService = require('./util/services')(api);
 
 	// API Service
-	let service = config['service'].toLowerCase().replace(/\s/g, '');
+	let service = config.service.toLowerCase().replace(/\s/g, '');
 	if (service === 'darksky') {
 		debug("Using service dark sky");
 		// TODO adapt unit of characteristics
@@ -79,7 +79,7 @@ function WeatherStationPlatform(log, config, api) {
 	}
 
 	// Update interval
-	this.interval = ('interval' in config ? parseInt(config['interval']) : 4);
+	this.interval = ('interval' in config ? parseInt(config.interval) : 4);
 	this.interval = (typeof this.interval !== 'number' || (this.interval % 1) !== 0 || this.interval < 0) ? 4 : this.interval;
 }
 
@@ -220,7 +220,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
-			this.currentConditionsService.addCharacteristic(Characteristic['CurrentRelativeHumidity']);
+			this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 		}
 		// temperature is already in the service
 		else if (name !== 'Temperature') {
@@ -288,7 +288,7 @@ function ForecastWeatherAccessory(platform, day) {
 
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
-			this.forecastService.addCharacteristic(Characteristic['CurrentRelativeHumidity']);
+			this.forecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 		}
 		// temperature is already in the service
 		else if (name !== 'Temperature') {

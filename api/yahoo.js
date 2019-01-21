@@ -44,7 +44,7 @@ var update = function (callback) {
         if (!err) {
             // Current weather report
             const jsonObj = JSON.parse(body);
-            parseReport(jsonObj['query']['results']['channel'], callback);
+            parseReport(jsonObj.query.results.channel, callback);
         } else {
             log.error("Error retrieving weather report and forecast");
             log.error("Error Message: " + err);
@@ -55,25 +55,25 @@ var update = function (callback) {
 
 var parseReport = function (values, callback) {
     let report = {};
-    const timezone = geoTz(parseFloat(values['item']['lat']), parseFloat(values['item']['long']));
+    const timezone = geoTz(parseFloat(values.item.lat), parseFloat(values.item.long));
     debug("Using Timezone: " + timezone);
 
-    report.AirPressure = parseInt(values['atmosphere']['pressure']);
-    report.Condition = values['item']['condition']['text'];
-    report.ConditionCategory = converter.getConditionCategoryYahoo(parseInt(values['item']['condition']['code']));
-    report.ForecastDay = moment(values['item']['forecast'][0]['date'], "DD MMM YYYY").tz(timezone).format("dddd");
-    report.Humidity = parseInt(values['atmosphere']['humidity']);
-    report.ObservationTime = moment(values['item']['pubDate'].substr(17), "hh:mm A [CEST]").tz(timezone).format('HH:mm:ss');
-    report.Temperature = parseInt(values['item']['condition']['temp']);
-    report.TemperatureMin = parseInt(values['item']['forecast'][0]['low']);
-    report.Visibility = parseFloat(values['atmosphere']['visibility']);
-    report.WindDirection = converter.getWindDirection(parseInt(values['wind']['direction']));
-    report.WindSpeed = parseFloat(values['wind']['speed']);
+    report.AirPressure = parseInt(values.atmosphere.pressure);
+    report.Condition = values.item.condition.text;
+    report.ConditionCategory = converter.getConditionCategoryYahoo(parseInt(values.item.condition.code));
+    report.ForecastDay = moment(values.item.forecast[0].date, "DD MMM YYYY").tz(timezone).format("dddd");
+    report.Humidity = parseInt(values.atmosphere.humidity);
+    report.ObservationTime = moment(values.item.pubDate.substr(17), "hh:mm A [CEST]").tz(timezone).format('HH:mm:ss');
+    report.Temperature = parseInt(values.item.condition.temp);
+    report.TemperatureMin = parseInt(values.item.forecast[0].low);
+    report.Visibility = parseFloat(values.atmosphere.visibility);
+    report.WindDirection = converter.getWindDirection(parseInt(values.wind.direction));
+    report.WindSpeed = parseFloat(values.wind.speed);
 
     const weather = {};
     weather.report = report;
-    weather.forecasts = parseForecasts(values['item']['forecast'], timezone);
-    callback(null, weather)
+    weather.forecasts = parseForecasts(values.item.forecast, timezone);
+    callback(null, weather);
 };
 
 var parseForecasts = function (forecastObjs, timezone) {
@@ -81,11 +81,11 @@ var parseForecasts = function (forecastObjs, timezone) {
     for (let i = 0; i < forecastObjs.length; i++) {
         const values = forecastObjs[i];
         const forecast = {};
-        forecast.Condition = values['text'];
-        forecast.ConditionCategory = converter.getConditionCategoryOwm(parseInt(values['code']));
-        forecast.ForecastDay = moment(values['date'], "DD MMM YYYY").tz(timezone).format("dddd");
-        forecast.Temperature = values['high'];
-        forecast.TemperatureMin = values['low'];
+        forecast.Condition = values.text;
+        forecast.ConditionCategory = converter.getConditionCategoryOwm(parseInt(values.code));
+        forecast.ForecastDay = moment(values.date, "DD MMM YYYY").tz(timezone).format("dddd");
+        forecast.Temperature = values.high;
+        forecast.TemperatureMin = values.low;
         forecasts[forecasts.length] = forecast;
     }
     return forecasts;
