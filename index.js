@@ -42,6 +42,8 @@ function WeatherStationPlatform(log, config, api) {
 	this.language = ('language' in config ? config['language'] : 'en');
 	this.currentObservationsMode = ('currentObservations' in config ? config['currentObservations'] : 'normal');
 	this.fakegatoParameters = ('fakegatoParameters' in config ? config['fakegatoParameters'] : {storage:'fs'});
+	this.serial = config.serial || config.location || 999;
+
 
 	// Custom Characteristics
 	CustomCharacteristic = require('./util/characteristics')(api, this.units);
@@ -224,12 +226,12 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || 999)
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.serial)
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 
 	// Create history service
 	this.historyService = new FakeGatoHistoryService("weather", this, this.platform.fakegatoParameters);
-	setTimeout(this.platform.addHistory.bind(this.platform), 10000);
+	//setTimeout(this.platform.addHistory.bind(this.platform), 10000);
 
 	// Start the weather update process
 	this.platform.updateWeather();
@@ -292,7 +294,7 @@ function ForecastWeatherAccessory(platform, day) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || this.day)
+		.setCharacteristic(Characteristic.SerialNumber, this.serial + " Day " + this.day)
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 }
 
