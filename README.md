@@ -107,6 +107,8 @@ The **interval** parameter is *optional* and sets the update interval in minutes
 
 The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now".
 
+The **serial** parameter is *optional* and sets the Serial Number of the accessory. If it not provided the serial number will be set to **location** if present, or to 999 if not. Note that for proper operation of fakegato when multiple fakegato-enabled weather accessories are present in your system, the serial number must be unique.
+
 The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the displayNameForecast parameter.
 
 The **currentObservations** parameter is *optional* and sets how the 3 current observations temperature, humidity and pressure are displayed. You can choose one of these 2 options:
