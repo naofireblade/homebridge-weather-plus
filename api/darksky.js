@@ -85,12 +85,12 @@ var init = function (apiKey, language, locationGeo, l, d) {
     });
 };
 
-var update = function (callback) {
+var update = function (callback, requestedForecastDays) {
     let weather = {};
     weather.forecasts = [];
     let that = this;
 
-    updateCache(this.darkskyTimeMachine, function () {
+    updateCache(this.darkskyTimeMachine, requestedForecastDays, function () {
         debug("Updating weather with dark sky");
         that.darksky.get()
             .then(function (response) {
@@ -162,13 +162,13 @@ var parseForecast = function (values, timezone, i) {
     return forecast;
 };
 
-var updateCache = function (api, callback) {
+var updateCache = function (api, requestedForecastDays, callback) {
     if (typeof cache.lastUpdate === 'undefined' || new Date() - cache.lastUpdate > 3600000) {
         debug("Called hourly update of rain data");
         cache.lastUpdate = new Date();
 
         let now = moment();
-        let callbacks = 8;
+        let callbacks = requestedForecastDays + 1;
 
         doTimeMachineRequest(api, now, function (result) {
             cache.report.rainDay = result;
@@ -178,7 +178,7 @@ var updateCache = function (api, callback) {
             }
         }, true);
 
-        for (let i = 0; i <= 6; i++) {
+        for (let i = 0; i < requestedForecastDays; i++) {
             doTimeMachineRequest(api, now.clone().add(i, 'd'), function (result) {
                 cache.forecast['day' + i].rainDay = result;
                 callbacks--;

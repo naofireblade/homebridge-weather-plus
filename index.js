@@ -152,7 +152,7 @@ WeatherStationPlatform.prototype = {
 					}
 				}
 			}
-		});
+		}, this.forecastDays.length);
 		setTimeout(this.updateWeather.bind(this), (this.interval) * 60 * 1000);
 	},
 
