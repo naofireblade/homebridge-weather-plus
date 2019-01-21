@@ -31,17 +31,17 @@ function WeatherStationPlatform(log, config, api) {
 	debug("Init platform");
 	this.log = log;
 	this.config = config;
-	this.displayName = config['displayName'];
-	this.displayNameForecast = config['displayNameForecast'];
-	this.key = config['key'];
-	this.units = config['units'] || 'si';
-	this.location = config['location'];
-	this.locationGeo = config['locationGeo'];
-	this.locationCity = config['locationCity'];
-	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
-	this.language = ('language' in config ? config['language'] : 'en');
-	this.currentObservationsMode = ('currentObservations' in config ? config['currentObservations'] : 'normal');
-	this.fakegatoParameters = ('fakegatoParameters' in config ? config['fakegatoParameters'] : {storage:'fs'});
+	this.displayName = config.displayName;
+	this.displayNameForecast = config.displayNameForecast;
+	this.key = config.key;
+	this.units = config.units || 'si';
+	this.location = config.location;
+	this.locationGeo = config.locationGeo;
+	this.locationCity = config.locationCity;
+	this.forecastDays = ('forecast' in config ? config.forecast : []);
+	this.language = ('language' in config ? config.language : 'en');
+	this.currentObservationsMode = ('currentObservations' in config ? config.currentObservations : 'normal');
+	this.fakegatoParameters = ('fakegatoParameters' in config ? config.fakegatoParameters : {storage:'fs'});
 	this.serial = config.serial || config.location || 999;
 
 
@@ -172,27 +172,6 @@ WeatherStationPlatform.prototype = {
 			service.setCharacteristic(CustomCharacteristic[name], value);
 		}
 	},
-
-	// Add history entry
-	/*addHistory: function () {
-		debug("Saving history entry");
-
-		for (var i = 0; i < this.accessories.length; i++) {
-			if (this.accessories[i] !== undefined && this.accessories[i].currentConditionsService !== undefined) {
-				// Add entry to history
-				this.accessories[i].historyService.addEntry({
-					time: new Date().getTime() / 1000,
-					temp: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
-					pressure: this.accessories[i].currentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
-					humidity: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value
-				});
-				break;
-			}
-		}
-
-		// Call function every 9:50 minutes (a new entry every 10 minutes is required to avoid gaps in the graph)
-		setTimeout(this.addHistory.bind(this), (10 * 60 * 1000));
-	}*/
 };
 
 // ===============================
@@ -238,7 +217,6 @@ function CurrentConditionsWeatherAccessory(platform) {
 
 	// Create history service
 	this.historyService = new FakeGatoHistoryService("weather", this, this.platform.fakegatoParameters);
-	//setTimeout(this.platform.addHistory.bind(this.platform), 10000);
 
 	// Start the weather update process
 	this.platform.updateWeather();
