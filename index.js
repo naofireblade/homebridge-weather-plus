@@ -121,6 +121,13 @@ WeatherStationPlatform.prototype = {
 								const name = that.api.reportCharacteristics[i];
 								that.saveCharacteristic(service, name, data[name]);
 							}
+							debug("Saving history entry");
+							that.accessories[i].historyService.addEntry({
+								time: new Date().getTime() / 1000,
+								temp: that.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
+								pressure: that.accessories[i].currentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
+								humidity: that.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value
+							});
 						}
 						catch (error) {
 							that.log.error("Exception while parsing weather report: " + error);
@@ -167,7 +174,7 @@ WeatherStationPlatform.prototype = {
 	},
 
 	// Add history entry
-	addHistory: function () {
+	/*addHistory: function () {
 		debug("Saving history entry");
 
 		for (var i = 0; i < this.accessories.length; i++) {
@@ -184,8 +191,8 @@ WeatherStationPlatform.prototype = {
 		}
 
 		// Call function every 9:50 minutes (a new entry every 10 minutes is required to avoid gaps in the graph)
-		setTimeout(this.addHistory.bind(this), (10 * 60 * 1000) - 10000);
-	}
+		setTimeout(this.addHistory.bind(this), (10 * 60 * 1000));
+	}*/
 };
 
 // ===============================
