@@ -107,8 +107,6 @@ The **interval** parameter is *optional* and sets the update interval in minutes
 
 The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now".
 
-The **serial** parameter is *optional* and sets the Serial Number of the accessory. If it not provided the serial number will be set to **location** if present, or to 999 if not. Note that for proper operation of fakegato when multiple fakegato-enabled weather accessories are present in your system, the serial number must be unique.
-
 The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the displayNameForecast parameter.
 
 The **currentObservations** parameter is *optional* and sets how the 3 current observations temperature, humidity and pressure are displayed. You can choose one of these 2 options:
@@ -117,6 +115,8 @@ The **currentObservations** parameter is *optional* and sets how the 3 current o
 - "normal" (default, this shows all 3 values in a seperate row in the eve app and shows the temperature in the Apple Home app)
 
 The **fakegatoParameters** parameter is *optional*. By default, history is persisted on filesystem. You can pass your own parameters to *fakegato-history* module using this paramter, in order to change the location of the persisted file or use GoogleDrive persistance. See https://github.com/simont77/fakegato-history#file-system and https://github.com/simont77/fakegato-history#google-drive for more info. **IMPORTANT NOTE:** Do not modify the parameter for the fakegato internal timer.
+
+The **serial** parameter is *optional* and sets the Serial Number of the accessory. If it's not provided the serial number will be set to the **location** if present, or to 999 if not. Note that for proper operation of fakegato when multiple fakegato-enabled weather accessories are present in your system, the serial number must be unique.
 
 
 ### Dark Sky
