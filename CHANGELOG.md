@@ -120,6 +120,6 @@
 
 ## 2.6.0
 
-* Added optional "serial" parameter
-* Simplified fakegato timer
-* Optimized darksky requests for precipitation
+* Added option to set serial number
+* Changed history timer to make use of advantages in newer fakegato version
+* Fixed precipitation calculation in dark sky api
