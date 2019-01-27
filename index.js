@@ -31,17 +31,19 @@ function WeatherStationPlatform(log, config, api) {
 	debug("Init platform");
 	this.log = log;
 	this.config = config;
-	this.displayName = config['displayName'];
-	this.displayNameForecast = config['displayNameForecast'];
-	this.key = config['key'];
-	this.units = config['units'] || 'si';
-	this.location = config['location'];
-	this.locationGeo = config['locationGeo'];
-	this.locationCity = config['locationCity'];
-	this.forecastDays = ('forecast' in config ? config['forecast'] : []);
-	this.language = ('language' in config ? config['language'] : 'en');
-	this.currentObservationsMode = ('currentObservations' in config ? config['currentObservations'] : 'normal');
-	this.fakegatoParameters = ('fakegatoParameters' in config ? config['fakegatoParameters'] : {storage:'fs'});
+	this.displayName = config.displayName;
+	this.displayNameForecast = config.displayNameForecast;
+	this.key = config.key;
+	this.units = config.units || 'si';
+	this.location = config.location;
+	this.locationGeo = config.locationGeo;
+	this.locationCity = config.locationCity;
+	this.forecastDays = ('forecast' in config ? config.forecast : []);
+	this.language = ('language' in config ? config.language : 'en');
+	this.currentObservationsMode = ('currentObservations' in config ? config.currentObservations : 'normal');
+	this.fakegatoParameters = ('fakegatoParameters' in config ? config.fakegatoParameters : {storage:'fs'});
+	this.serial = config.serial || config.location || 999;
+
 
 	// Custom Characteristics
 	CustomCharacteristic = require('./util/characteristics')(api, this.units);
@@ -50,7 +52,7 @@ function WeatherStationPlatform(log, config, api) {
 	CustomService = require('./util/services')(api);
 
 	// API Service
-	let service = config['service'].toLowerCase().replace(/\s/g, '');
+	let service = config.service.toLowerCase().replace(/\s/g, '');
 	if (service === 'darksky') {
 		debug("Using service dark sky");
 		// TODO adapt unit of characteristics
@@ -77,7 +79,7 @@ function WeatherStationPlatform(log, config, api) {
 	}
 
 	// Update interval
-	this.interval = ('interval' in config ? parseInt(config['interval']) : 4);
+	this.interval = ('interval' in config ? parseInt(config.interval) : 4);
 	this.interval = (typeof this.interval !== 'number' || (this.interval % 1) !== 0 || this.interval < 0) ? 4 : this.interval;
 }
 
@@ -119,6 +121,13 @@ WeatherStationPlatform.prototype = {
 								const name = that.api.reportCharacteristics[i];
 								that.saveCharacteristic(service, name, data[name]);
 							}
+							debug("Saving history entry");
+							that.accessories[i].historyService.addEntry({
+								time: new Date().getTime() / 1000,
+								temp: that.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
+								pressure: that.accessories[i].currentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
+								humidity: that.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value
+							});
 						}
 						catch (error) {
 							that.log.error("Exception while parsing weather report: " + error);
@@ -143,7 +152,7 @@ WeatherStationPlatform.prototype = {
 					}
 				}
 			}
-		});
+		}, this.forecastDays.length);
 		setTimeout(this.updateWeather.bind(this), (this.interval) * 60 * 1000);
 	},
 
@@ -163,27 +172,6 @@ WeatherStationPlatform.prototype = {
 			service.setCharacteristic(CustomCharacteristic[name], value);
 		}
 	},
-
-	// Add history entry
-	addHistory: function () {
-		debug("Saving history entry");
-
-		for (var i = 0; i < this.accessories.length; i++) {
-			if (this.accessories[i] !== undefined && this.accessories[i].currentConditionsService !== undefined) {
-				// Add entry to history
-				this.accessories[i].historyService.addEntry({
-					time: new Date().getTime() / 1000,
-					temp: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
-					pressure: this.accessories[i].currentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
-					humidity: this.accessories[i].currentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value
-				});
-				break;
-			}
-		}
-
-		// Call function every 9:50 minutes (a new entry every 10 minutes is required to avoid gaps in the graph)
-		setTimeout(this.addHistory.bind(this), (10 * 60 * 1000) - 10000);
-	}
 };
 
 // ===============================
@@ -211,7 +199,7 @@ function CurrentConditionsWeatherAccessory(platform) {
 
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
-			this.currentConditionsService.addCharacteristic(Characteristic['CurrentRelativeHumidity']);
+			this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 		}
 		// temperature is already in the service
 		else if (name !== 'Temperature') {
@@ -224,12 +212,11 @@ function CurrentConditionsWeatherAccessory(platform) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || 999)
+		.setCharacteristic(Characteristic.SerialNumber, this.platform.serial)
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 
 	// Create history service
 	this.historyService = new FakeGatoHistoryService("weather", this, this.platform.fakegatoParameters);
-	setTimeout(this.platform.addHistory.bind(this.platform), 10000);
 
 	// Start the weather update process
 	this.platform.updateWeather();
@@ -279,7 +266,7 @@ function ForecastWeatherAccessory(platform, day) {
 
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
-			this.forecastService.addCharacteristic(Characteristic['CurrentRelativeHumidity']);
+			this.forecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 		}
 		// temperature is already in the service
 		else if (name !== 'Temperature') {
@@ -292,7 +279,7 @@ function ForecastWeatherAccessory(platform, day) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.api.attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.platform.location || this.day)
+		.setCharacteristic(Characteristic.SerialNumber, this.serial + " Day " + this.day)
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 }
 

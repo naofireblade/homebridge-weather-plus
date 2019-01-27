@@ -117,3 +117,9 @@
 * Added option to rename forecastAccessory
 * Added plugin version to Accessory Info
 * Updated debug dependency
+
+## 2.6.0
+
+* Added option to set serial number
+* Changed history timer to make use of advantages in newer fakegato version
+* Fixed precipitation calculation in dark sky api

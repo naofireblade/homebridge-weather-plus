@@ -85,24 +85,24 @@ var init = function (apiKey, language, locationGeo, l, d) {
     });
 };
 
-var update = function (callback) {
+var update = function (callback, requestedForecastDays) {
     let weather = {};
     weather.forecasts = [];
     let that = this;
 
-    updateCache(this.darkskyTimeMachine, function () {
+    updateCache(this.darkskyTimeMachine, requestedForecastDays, function () {
         debug("Updating weather with dark sky");
         that.darksky.get()
             .then(function (response) {
 
                 // Current weather report
-                response['currently']['rainDay'] = cache.report.rainDay; // Load rainDay from cache
-                weather.report = parseReport(response['currently'], response['timezone']);
+                response.currently.rainDay = cache.report.rainDay; // Load rainDay from cache
+                weather.report = parseReport(response.currently, response.timezone);
 
                 // Forecasts for today and next 6 days
                 for (let i = 0; i <= 6; i++) {
-                    response['daily']['data'][i]['rainDay'] = cache.forecast['day' + i].rainDay; // Load rainDay from cache
-                    weather.forecasts.push(parseForecast(response['daily']['data'][i], response['timezone']));
+                    response.daily.data[i].rainDay = cache.forecast['day' + i].rainDay; // Load rainDay from cache
+                    weather.forecasts.push(parseForecast(response.daily.data[i], response.timezone));
                 }
 
                 callback(null, weather);
@@ -118,22 +118,22 @@ var update = function (callback) {
 var parseReport = function (values, timezone) {
     let report = {};
 
-    report.AirPressure = parseInt(values['pressure']);
-    report.CloudCover = parseInt(values['cloudCover'] * 100);
-    report.Condition = values['summary'];
-    report.ConditionCategory = converter.getConditionCategory(values['icon']);
-    report.DewPoint = parseInt(values['dewPoint']);
-    report.Humidity = parseInt(values['humidity'] * 100);
-    report.ObservationTime = moment.unix(values['time']).tz(timezone).format('HH:mm:ss');
-    report.Ozone = parseInt(values['ozone']);
-    report.Rain1h = isNaN(parseInt(values['precipIntensity'])) ? 0 : parseInt(values['precipIntensity']);
-    report.RainDay = values['rainDay']
-    report.Temperature = values['temperature'];
-    report.UVIndex = isNaN(parseInt(values['uvIndex'])) ? 0 : parseInt(values['uvIndex']);
-    report.Visibility = isNaN(parseInt(values['visibility'])) ? 0 : parseInt(values['visibility']);
-    report.WindDirection = converter.getWindDirection(values['windBearing']);
-    report.WindSpeed = parseFloat(values['windSpeed']);
-    report.WindSpeedMax = parseFloat(values['windGust']);
+    report.AirPressure = parseInt(values.pressure);
+    report.CloudCover = parseInt(values.cloudCover * 100);
+    report.Condition = values.summary;
+    report.ConditionCategory = converter.getConditionCategory(values.icon);
+    report.DewPoint = parseInt(values.dewPoint);
+    report.Humidity = parseInt(values.humidity * 100);
+    report.ObservationTime = moment.unix(values.time).tz(timezone).format('HH:mm:ss');
+    report.Ozone = parseInt(values.ozone);
+    report.Rain1h = isNaN(parseInt(values.precipIntensity)) ? 0 : parseInt(values.precipIntensity);
+    report.RainDay = values.rainDay;
+    report.Temperature = values.temperature;
+    report.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
+    report.Visibility = isNaN(parseInt(values.visibility)) ? 0 : parseInt(values.visibility);
+    report.WindDirection = converter.getWindDirection(values.windBearing);
+    report.WindSpeed = parseFloat(values.windSpeed);
+    report.WindSpeedMax = parseFloat(values.windGust);
 
     return report;
 };
@@ -141,34 +141,34 @@ var parseReport = function (values, timezone) {
 var parseForecast = function (values, timezone, i) {
     let forecast = {};
 
-    forecast.AirPressure = parseInt(values['pressure']);
-    forecast.CloudCover = parseInt(values['cloudCover'] * 100);
-    forecast.Condition = values['summary'];
-    forecast.ConditionCategory = converter.getConditionCategory(values['icon']);
-    forecast.DewPoint = parseInt(values['dewPoint']);
-    forecast.ForecastDay = moment.unix(values['time']).tz(timezone).format('dddd');
-    forecast.Humidity = parseInt(values['humidity'] * 100);
-    forecast.Ozone = parseInt(values['ozone']);
-    forecast.RainChance = parseInt(values['precipProbability'] * 100);
-    forecast.RainDay = values['rainDay']
-    forecast.Temperature = values['temperatureHigh'];
-    forecast.TemperatureMin = values['temperatureLow'];
-    forecast.UVIndex = isNaN(parseInt(values['uvIndex'])) ? 0 : parseInt(values['uvIndex']);
-    forecast.Visibility = isNaN(parseInt(values['visibility'])) ? 0 : parseInt(values['visibility']);
-    forecast.WindDirection = converter.getWindDirection(values['windBearing']);
-    forecast.WindSpeed = parseFloat(values['windSpeed']);
-    forecast.WindSpeedMax = parseFloat(values['windGust']);
+    forecast.AirPressure = parseInt(values.pressure);
+    forecast.CloudCover = parseInt(values.cloudCover * 100);
+    forecast.Condition = values.summary;
+    forecast.ConditionCategory = converter.getConditionCategory(values.icon);
+    forecast.DewPoint = parseInt(values.dewPoint);
+    forecast.ForecastDay = moment.unix(values.time).tz(timezone).format('dddd');
+    forecast.Humidity = parseInt(values.humidity * 100);
+    forecast.Ozone = parseInt(values.ozone);
+    forecast.RainChance = parseInt(values.precipProbability * 100);
+    forecast.RainDay = values.rainDay;
+    forecast.Temperature = values.temperatureHigh;
+    forecast.TemperatureMin = values.temperatureLow;
+    forecast.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
+    forecast.Visibility = isNaN(parseInt(values.visibility)) ? 0 : parseInt(values.visibility);
+    forecast.WindDirection = converter.getWindDirection(values.windBearing);
+    forecast.WindSpeed = parseFloat(values.windSpeed);
+    forecast.WindSpeedMax = parseFloat(values.windGust);
 
     return forecast;
 };
 
-var updateCache = function (api, callback) {
+var updateCache = function (api, requestedForecastDays, callback) {
     if (typeof cache.lastUpdate === 'undefined' || new Date() - cache.lastUpdate > 3600000) {
         debug("Called hourly update of rain data");
         cache.lastUpdate = new Date();
 
         let now = moment();
-        let callbacks = 8;
+        let callbacks = requestedForecastDays + 1;
 
         doTimeMachineRequest(api, now, function (result) {
             cache.report.rainDay = result;
@@ -178,7 +178,7 @@ var updateCache = function (api, callback) {
             }
         }, true);
 
-        for (let i = 0; i <= 6; i++) {
+        for (let i = 0; i < requestedForecastDays; i++) {
             doTimeMachineRequest(api, now.clone().add(i, 'd'), function (result) {
                 cache.forecast['day' + i].rainDay = result;
                 callbacks--;
@@ -201,12 +201,12 @@ var doTimeMachineRequest = function (api, now, callback, limit = false) {
             // Current hour in time zone of weather location
             let hour = 24;
             if (limit) {
-                hour = now.tz(response['timezone']).format('H');
+                hour = now.tz(response.timezone).format('H');
             }
 
             // Sum all values for the requested day
-            debug("Accumulate rain for " + now.tz(response['timezone']).format('dddd') + (limit ? (' until ' + hour + ':00') : ''));
-            let result = converter.getRainAccumulated(response['hourly']['data'].slice(0, hour), 'precipIntensity');
+            debug("Accumulate rain for " + now.tz(response.timezone).format('dddd') + (limit ? (' until ' + hour + ':00') : ''));
+            let result = converter.getRainAccumulated(response.hourly.data.slice(0, hour), 'precipIntensity');
             debug("Accumulated rain: " + result);
             callback(result);
         })
