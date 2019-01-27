@@ -1,6 +1,6 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
-const darksky = require('./api/darksky'),
+const darksky = require('./api/darksky').DarkSkyAPI,
 	weatherunderground = require('./api/weatherunderground'),
 	openweathermap = require('./api/openweathermap'),
 	yahoo = require('./api/yahoo'),
@@ -59,8 +59,7 @@ function WeatherStationPlatform(log, config, api) {
 		if (this.location) {
 			this.locationGeo = this.location;
 		}
-		darksky.init(this.key, this.language, this.locationGeo, log, debug);
-		this.api = darksky;
+		this.api = new darksky(this.key, this.language, this.locationGeo, log, debug);
 	}
 	else if (service === 'weatherunderground') {
 		debug("Using service weather underground");
