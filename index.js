@@ -233,7 +233,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex) {
 
 	// Create temperature sensor or Eve Weather service that includes temperature characteristic
 	
-	if (this.platform.apis[stationIndex].currentObservationsMode !== 'eve')
+	if (this.config.currentObservationsMode !== 'eve')
 		this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	else
 		this.currentConditionsService = new CustomService.EveWeatherService(this.name);
@@ -286,6 +286,8 @@ function ForecastWeatherAccessory(platform, stationIndex, day) {
 	this.platform = platform;
 	this.log = platform.log;
 	this.config = platform.config.stations[stationIndex];
+	this.stationIndex = stationIndex;
+	
 
 	switch (day) {
 		case 0:
