@@ -196,7 +196,7 @@ WeatherStationPlatform.prototype = {
 						}
 					}
 				}
-			}.bind(this), this.apis[stationIndex].forecastDays.length);
+			}.bind(this), this.config.stations[stationIndex].forecast.length);
 		}.bind(this));
 		setTimeout(this.updateWeather.bind(this), (this.interval) * 60 * 1000);
 	},
