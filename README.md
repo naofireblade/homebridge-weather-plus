@@ -4,7 +4,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/naofireblade/homebridge-weather-plus.svg?style=flat-square)](https://github.com/naofireblade/homebridge-weather-plus)
 [![Weather](https://img.shields.io/badge/weather-sunny-edd100.svg?style=flat-square)](https://github.com/naofireblade/homebridge-weather-plus)
 
-This is a weather plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations, daily forecasts and history graphs. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-plus).
+This is a weather plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations, daily forecasts and history graphs. It is also possible to setup multiple weather accessories using different online weather services or for different locations. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-plus).
 
 If you **update from a version before 2.0.0** you have to adapt your config. See the samples below. You might consider switching your weather service to the newly supported dark sky service.
 
@@ -88,7 +88,57 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 ## Configuration
 
-Below are explanations for all parameters and examples for all weather apis. Most parameters are optional.
+Below are explanations for all parameters and examples for all weather apis. Most parameters are optional. If you want to setup multiple weather accessories, you config file must have a **stations** field containing an array of parameter sets, one set for each weather accessory. If you want to setup a single accessory, you can omit the **stations** field. In any case the **interval** parameter is global to all accessories, and must be set at the top level. See the examples below:
+
+**Multiple weather accessories**
+
+```json
+"platforms": [
+        {
+            "platform": "WeatherPlus",
+            "name": "WeatherPlus",
+            "interval": 5,
+            "stations":[{
+                "displayName":"Conditions OWM",
+                "displayNameForecast":"Forecast OWM",
+                "service": "openweathermap",
+                "key": "XXXXXXXXXXXXXXX",
+                "forecast": [1,2],
+                "locationGeo": [45.4999952, 9.3061655],
+                "serial": "OWM" 
+            },{
+                "displayName":"Conditions DS",
+                "displayNameForecast":"Forecast DS",
+                "service": "darksky",
+                "key": "XXXXXXXXXXXXXXX",
+                "forecast": [1,2],
+                "locationGeo": [45.4999952, 9.3061655],
+                "serial": "DS",
+            }]
+        }
+    ]
+```
+
+**Single weather accessory**
+
+```json
+"platforms": [
+        {
+            "platform": "WeatherPlus",
+            "name": "WeatherPlus",
+            "interval": 5,
+            "displayName":"Conditions OWM",
+            "displayNameForecast":"Forecast OWM",
+            "service": "openweathermap",
+            "key": "XXXXXXXXXXXXXXX",
+            "forecast": [1,2],
+            "locationGeo": [45.4999952, 9.3061655],
+            "serial": "OWM"                        
+        }
+    ]
+```
+
+The **interval** parameter is *optional* and sets the update interval in minutes. The default is 4 minutes because the rate for free API keys is limited. This parameter is global for all weather accessories.
 
 The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
@@ -103,11 +153,9 @@ The **units** parameter is *optional* and sets the conventions used for reportin
 - "ca" to report wind speeds in km/h instead of m/s
 - "uk" to report visibility in miles and wind speeds in km/h instead of m/s
 
-The **interval** parameter is *optional* and sets the update interval in minutes. The default is 4 minutes because the rate for free API keys is limited.
+The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now". **IMPORTANT NOTE:** If setting multiple weather accessories this property is mandatory, since each accessory has to have a unique name.
 
-The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now".
-
-The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the displayNameForecast parameter.
+The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the displayNameForecast parameter. **IMPORTANT NOTE:** If setting multiple weather accessories this property is mandatory, since each accessory has to have a unique name.
 
 The **currentObservations** parameter is *optional* and sets how the 3 current observations temperature, humidity and pressure are displayed. You can choose one of these 2 options:
 
