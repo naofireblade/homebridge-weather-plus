@@ -31,19 +31,10 @@ function WeatherStationPlatform(log, config, api) {
 	debug("Init WeatherStationPlus platform");
 	this.log = log;
 	this.debug = debug;
-	this.config = config;
-	this.displayName = config.displayName;
-	this.displayNameForecast = config.displayNameForecast;
-	this.key = config.key;
 	this.units = config.units || 'si';
-	this.location = config.location;
-	this.locationGeo = config.locationGeo;
-	this.locationCity = config.locationCity;
-	this.forecastDays = ('forecast' in config ? config.forecast : []);
-	this.language = ('language' in config ? config.language : 'en');
-	this.currentObservationsMode = ('currentObservations' in config ? config.currentObservations : 'normal');
-	this.fakegatoParameters = ('fakegatoParameters' in config ? config.fakegatoParameters : {storage:'fs'});
-	this.serial = config.serial || config.location || 999;
+	this.config = config;
+	this.interval = ('interval' in config ? parseInt(config.interval) : 4);
+	this.interval = (typeof this.interval !== 'number' || (this.interval % 1) !== 0 || this.interval < 0) ? 4 : this.interval;
 	this.apis = [];
 	this.accessoriesList = [];
 
@@ -53,59 +44,59 @@ function WeatherStationPlatform(log, config, api) {
 	// Custom Services
 	CustomService = require('./util/services')(api);
 
-	// API Service
-
-	if ('stations' in config)
+	//set default settings and provides backward compatibility with old config file
+	if (!('stations' in config))
 	{
-		config.stations.forEach(function(station, index){
-			let service = station.service.toLowerCase().replace(/\s/g, '');
-			if (service === 'darksky') {
-				debug("Using service dark sky");
-				// TODO adapt unit of characteristics
-				if (station.location) {
-					station.locationGeo = station.location;
-				}
-				this.apis.push(new darksky(station.key, station.language, station.locationGeo, this.log, this.debug));
-			}
-			else if (service === 'weatherunderground') {
-				debug("Using service weather underground");
-				weatherunderground.init(this.key, this.location, log, debug);
-				this.api = weatherunderground;
-			}
-			else if (service === 'openweathermap') {
-				debug("Using service OpenWeatherMap");
-				this.apis.push(new openweathermap(station.key, station.language, station.location, station.locationGeo, station.locationCity, this.log, this.debug));
-			}
-			else if (service === 'yahoo') {
-				debug("Using service Yahoo");
-				yahoo.init(this.location, log, debug);
-				this.api = yahoo;
-			}
-
-			this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this,index));
-
-			// Add all configured forecast days
-			for (let i = 0; i < station.forecast.length; i++) {
-				const day = station.forecast[i];
-				if (typeof day === 'number' && (day % 1) === 0 && day >= 1 && day <= this.apis[index].forecastDays) {
-					this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day - 1));
-				}
-				else {
-					debug("Ignoring forecast day: " + day);
-				}
-			}
-		}.bind(this));
+		this.config.stations = [{}];
+		this.config.stations[0].displayName = config.displayName || "Now";
+		this.config.stations[0].displayNameForecast = config.displayNameForecast;
+		this.config.stations[0].service = config.service;
+		this.config.stations[0].key = config.key;
+		this.config.stations[0].units = this.units;
+		this.config.stations[0].location = config.location;
+		this.config.stations[0].locationGeo = config.locationGeo;
+		this.config.stations[0].locationCity = config.locationCity;
+		this.config.stations[0].forecast = ('forecast' in config ? config.forecast : []);
+		this.config.stations[0].language = ('language' in config ? config.language : 'en');
+		this.config.stations[0].currentObservationsMode = ('currentObservations' in config ? config.currentObservations : 'normal');
+		this.config.stations[0].fakegatoParameters = ('fakegatoParameters' in config ? config.fakegatoParameters : {storage:'fs'});
+		this.config.stations[0].serial = config.serial || config.location || 999;
+		this.stationsNumber = 1;
 	}
 	else
 	{
-		let service = config.service.toLowerCase().replace(/\s/g, '');
+		this.stationsNumber = this.config.stations.length;
+		this.config.stations.forEach(function(station, stationIndex){
+			if (this.stationsNumber > 1)
+			{
+				station.displayName = station.displayName || ("Now" + " - " + (stationIndex+1));
+				station.serial = station.serial || station.location || ("999 - " + (stationIndex+1));
+			}
+			else
+			{
+				station.displayName = station.displayName || ("Now");
+				station.serial = station.serial || station.location || ("999");
+			}
+			
+			station.units = this.units;
+			station.forecast = ('forecast' in station ? station.forecast : []);
+			station.language = ('language' in station ? station.language : 'en');
+			station.currentObservationsMode = ('currentObservations' in station ? station.currentObservations : 'normal');
+			station.fakegatoParameters = ('fakegatoParameters' in station ? station.fakegatoParameters : {storage:'fs'});
+		}.bind(this));
+		
+	}
+
+	//create accessories
+	this.config.stations.forEach(function(station, index){
+		let service = station.service.toLowerCase().replace(/\s/g, '');
 		if (service === 'darksky') {
 			debug("Using service dark sky");
 			// TODO adapt unit of characteristics
-			if (this.location) {
-				this.locationGeo = this.location;
+			if (station.location) {
+				station.locationGeo = station.location;
 			}
-			this.api = new darksky(this.key, this.language, this.locationGeo, log, debug);
+			this.apis.push(new darksky(station.key, station.language, station.locationGeo, this.log, this.debug));
 		}
 		else if (service === 'weatherunderground') {
 			debug("Using service weather underground");
@@ -114,7 +105,7 @@ function WeatherStationPlatform(log, config, api) {
 		}
 		else if (service === 'openweathermap') {
 			debug("Using service OpenWeatherMap");
-			this.api = new openweathermap(this.key, this.language, this.location, this.locationGeo, this.locationCity, log, debug);
+			this.apis.push(new openweathermap(station.key, station.language, station.location, station.locationGeo, station.locationCity, this.log, this.debug));
 		}
 		else if (service === 'yahoo') {
 			debug("Using service Yahoo");
@@ -122,23 +113,21 @@ function WeatherStationPlatform(log, config, api) {
 			this.api = yahoo;
 		}
 
-		this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this));
+		this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this,index));
 
 		// Add all configured forecast days
-		for (let i = 0; i < this.forecastDays.length; i++) {
-			const day = this.forecastDays[i];
-			if (typeof day === 'number' && (day % 1) === 0 && day >= 1 && day <= this.api.forecastDays) {
-				this.accessoriesList.push(new ForecastWeatherAccessory(this, day - 1));
+		for (let i = 0; i < station.forecast.length; i++) {
+			const day = station.forecast[i];
+			if (typeof day === 'number' && (day % 1) === 0 && day >= 1 && day <= this.apis[index].forecastDays) {
+				this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day - 1));
 			}
 			else {
 				debug("Ignoring forecast day: " + day);
 			}
 		}
-	}
-
-	// Update interval
-	this.interval = ('interval' in config ? parseInt(config.interval) : 4);
-	this.interval = (typeof this.interval !== 'number' || (this.interval % 1) !== 0 || this.interval < 0) ? 4 : this.interval;
+	}.bind(this));
+	
+	//start updating
 	this.updateWeather();
 }
 
@@ -149,7 +138,7 @@ WeatherStationPlatform.prototype = {
 		callback(this.accessoriesList);
 	},
 
-	// Update the weather for all accessoriesList
+	// Update the weather for all accessories
 	updateWeather: function () {
 		this.apis.forEach(function(station,stationIndex){
 			station.update(function (error, weather) {
@@ -226,7 +215,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex) {
 	this.platform = platform;
 	this.log = platform.log;
 	this.config = platform.config.stations[stationIndex];
-	this.name = this.config.displayName || "Now";
+	this.name = this.config.displayName;
 	this.displayName = this.name;  //needed by fakegato for proper logging and file naming
 	this.stationIndex = stationIndex;
 	
@@ -287,7 +276,7 @@ function ForecastWeatherAccessory(platform, stationIndex, day) {
 	this.log = platform.log;
 	this.config = platform.config.stations[stationIndex];
 	this.stationIndex = stationIndex;
-	
+	this.serial = this.config.serial + " - Day " + day;
 
 	switch (day) {
 		case 0:
@@ -300,7 +289,12 @@ function ForecastWeatherAccessory(platform, stationIndex, day) {
 			this.name = "In " + day + " Days";
 			break;
 	}
-	if (this.config.displayNameForecast) this.name = this.config.displayNameForecast + ' ' + this.name;
+	if (this.config.displayNameForecast)
+		this.name = this.config.displayNameForecast + ' ' + this.name;
+	else
+		if (platform.stationsNumber > 1)
+			this.name = this.name + " - " + (stationIndex + 1); 
+
 	this.day = day;
 
 	// Create temperature sensor service that includes temperature characteristic
@@ -329,7 +323,7 @@ function ForecastWeatherAccessory(platform, stationIndex, day) {
 	this.informationService
 		.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
 		.setCharacteristic(Characteristic.Model, this.platform.apis[stationIndex].attribution)
-		.setCharacteristic(Characteristic.SerialNumber, this.config.serial + " Day " + this.day)
+		.setCharacteristic(Characteristic.SerialNumber, this.serial)
 		.setCharacteristic(Characteristic.FirmwareRevision, version);
 }
 
