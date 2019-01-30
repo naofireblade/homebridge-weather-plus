@@ -3,7 +3,7 @@
 const darksky = require('./api/darksky').DarkSkyAPI,
 	weatherunderground = require('./api/weatherunderground').WundergroundAPI,
 	openweathermap = require('./api/openweathermap').OpenWeatherMapAPI,
-	yahoo = require('./api/yahoo'),
+	yahoo = require('./api/yahoo').YahooAPI,
 	debug = require('debug')('homebridge-weather-plus'),
 	version = require('./package.json').version;
 
@@ -108,8 +108,7 @@ function WeatherStationPlatform(log, config, api) {
 		}
 		else if (service === 'yahoo') {
 			debug("Using service Yahoo");
-			yahoo.init(this.location, log, debug);
-			this.api = yahoo;
+			this.apis.push(new yahoo(this.location, log, debug));
 		}
 
 		this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this,index));
