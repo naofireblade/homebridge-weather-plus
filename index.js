@@ -1,7 +1,7 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 const darksky = require('./api/darksky').DarkSkyAPI,
-	weatherunderground = require('./api/weatherunderground'),
+	weatherunderground = require('./api/weatherunderground').WundergroundAPI,
 	openweathermap = require('./api/openweathermap').OpenWeatherMapAPI,
 	yahoo = require('./api/yahoo'),
 	debug = require('debug')('homebridge-weather-plus'),
@@ -100,8 +100,7 @@ function WeatherStationPlatform(log, config, api) {
 		}
 		else if (service === 'weatherunderground') {
 			debug("Using service weather underground");
-			weatherunderground.init(this.key, this.location, log, debug);
-			this.api = weatherunderground;
+			this.apis.push(new weatherunderground(this.key, this.location, log, debug));
 		}
 		else if (service === 'openweathermap') {
 			debug("Using service OpenWeatherMap");
