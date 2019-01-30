@@ -88,7 +88,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 ## Configuration
 
-Below are explanations for all parameters and examples for all weather apis. Most parameters are optional. If you want to setup multiple weather accessories, you config file must have a **stations** field containing an array of parameter sets, one set for each weather accessory. If you want to setup a single accessory, you can omit the **stations** field. In any case the **interval** parameter is global to all accessories, and must be set at the top level. See the examples below:
+Below are explanations for all parameters and examples for all weather apis. Most parameters are optional. If you want to setup multiple weather accessories, you config file must have a **stations** field containing an array of parameter sets, one set for each weather accessory. If you want to setup a single accessory, you can omit the **stations** field. In any case **interval** and **units** parameters are global to all accessories, and must be set at the top level. See the examples below:
 
 **Multiple weather accessories**
 
@@ -98,6 +98,7 @@ Below are explanations for all parameters and examples for all weather apis. Mos
             "platform": "WeatherPlus",
             "name": "WeatherPlus",
             "interval": 5,
+            "units": "si",
             "stations":[{
                 "displayName":"Conditions OWM",
                 "displayNameForecast":"Forecast OWM",
@@ -140,22 +141,22 @@ Below are explanations for all parameters and examples for all weather apis. Mos
 
 The **interval** parameter is *optional* and sets the update interval in minutes. The default is 4 minutes because the rate for free API keys is limited. This parameter is global for all weather accessories.
 
-The **key** parameter is the API key that you get by registering for a weather service in the table above.
-
-The **language** parameter is *optional* and sets the translation for the description of the day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). The default is en.
-
-The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. The default is none.
-
-The **units** parameter is *optional* and sets the conventions used for reporting values. The default is "metric". The choices are:
+The **units** parameter is *optional* and sets the conventions used for reporting values. The default is "metric". This parameter is global for all weather accessories. The choices are:
 
 - "si" (or "metric")
 - "us" (or "imperial")
 - "ca" to report wind speeds in km/h instead of m/s
 - "uk" to report visibility in miles and wind speeds in km/h instead of m/s
 
-The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now". **IMPORTANT NOTE:** If setting multiple weather accessories this property is mandatory, since each accessory has to have a unique name.
+The **key** parameter is the API key that you get by registering for a weather service in the table above.
 
-The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the displayNameForecast parameter. **IMPORTANT NOTE:** If setting multiple weather accessories this property is mandatory, since each accessory has to have a unique name.
+The **language** parameter is *optional* and sets the translation for the description of the day and the weather report for each API. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). The default is en.
+
+The **forecast** parameter is *optional* and defines a list of forecast days with 1 for today, 2 for tomorrow etc. The default is none.
+
+The **displayName** parameter is *optional* and sets the CurrentConditons accessory's name. The default is "Now". **IMPORTANT NOTE:** If setting multiple weather accessories, ensure that each accessory has a unique name, or you will get an error from *homebridge*. If you do not set this parameter the plugin will take care of that.
+
+The **displayNameForecast** parameter is *optional* and sets the Forecast accessories name. If the **forecast** parameter is present, then the names of the forecasts are prefixed with the displayNameForecast parameter. **IMPORTANT NOTE:** If setting multiple weather accessories, ensure that each accessory has a unique name, or you will get an error from *homebridge*. If you do not set this parameter the plugin will take care of that.
 
 The **currentObservations** parameter is *optional* and sets how the 3 current observations temperature, humidity and pressure are displayed. You can choose one of these 2 options:
 
