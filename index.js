@@ -100,7 +100,7 @@ function WeatherStationPlatform(log, config, api) {
 		}
 		else if (service === 'weatherunderground') {
 			debug("Using service weather underground");
-			this.apis.push(new weatherunderground(this.key, this.location, log, debug));
+			this.apis.push(new weatherunderground(station.key, station.location, log, debug));
 		}
 		else if (service === 'openweathermap') {
 			debug("Using service OpenWeatherMap");

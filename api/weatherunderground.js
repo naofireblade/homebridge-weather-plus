@@ -65,7 +65,7 @@ class WundergroundAPI {
                 callback(null, weather);
             }
             else {
-                this.log.error("Error retrieving weather report and forecast");
+                this.log.error("Error retrieving weather report and forecast for Weather Underground");
                 this.log.error("Error Message: " + error);
                 callback(error);
             }

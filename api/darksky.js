@@ -105,7 +105,7 @@ class DarkSkyAPI {
                     callback(null, weather);
                 })
                 .catch(function (error) {
-                    that.log.error("Error retrieving weather report and forecast");
+                    that.log.error("Error retrieving weather report and forecast for DarkSky");
                     that.log.error("Error Message: " + error);
                     callback(error);
                 });

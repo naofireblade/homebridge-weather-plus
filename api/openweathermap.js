@@ -70,7 +70,7 @@ class OpenWeatherMapAPI{
                 this.parseForecasts(weather, jsonObj, callback);
             }
             else {
-                this.log.error("Error retrieving weather forecast");
+                this.log.error("Error retrieving weather forecast for OpenWeatherMap");
                 this.log.error("Error Message: " + (err ? err : JSON.stringify(jsonObj)));
                 callback(err ? err : true);
             }
