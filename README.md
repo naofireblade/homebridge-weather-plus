@@ -67,15 +67,15 @@ With the eve app you can view the history for
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (legacy)                   |
-|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      15                      |                                7                                 |                                10                                |                                13                                |
-| Forecast values            |                      16                      |                                9                                |                                4                                  |                                10                                |
-| Forecast days              |                       7                      |                                 5                                |                                 10                               |                                 4                                |
-| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                            city name                             |                         city name or zip                         |
-| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                                :x:                               |                        :heavy_check_mark:                        |
-| Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        | :x: (only legacy accounts)                                       |
-| Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         |                    not needed                                    | [here](https://www.wunderground.com/weather/api/) |
+|                            |            Dark Sky (recommended)          |             OpenWeatherMap                    |      Yahoo (currently offline)  |      Weather Underground (legacy)                 |  Ambient Weather                    |
+|----------------------------|:------------------------------------------:|:---------------------------------------------:|:-------------------------------:|:-------------------------------------------------:|:-----------------------------------:|
+| Current observation values |                      15                    |                          7                    |                10               |                   13                              |        11                           |
+| Forecast values            |                      16                    |                          9                    |                 4               |                   10                              |         0                           |
+| Forecast days              |                       7                    |                          5                    |                10               |                    4                              |         0                           |
+| Location                   |                geo-coordinates             |          city name, city id, geo-coordinates  |             city name           |            city name or zip                       |        PWS                          |
+| Personal weather stations  |                      :x:                   |                  :heavy_check_mark:           |               :x:               |           :heavy_check_mark:                      | :heavy_check_mark:                  |
+| Free                       | :heavy_check_mark:                         |                  :heavy_check_mark:           |     :heavy_check_mark:          | :x: (only legacy accounts)                        | :heavy_check_mark:                  |
+| Register                   | [here](https://darksky.net/dev/register)   | [here](https://openweathermap.org/appid)      |     not needed                  | [here](https://www.wunderground.com/weather/api/) | [here](https://ambientweather.net/) |
 
 *You can add more services by forking the project and submitting a pull request.*
 
@@ -199,6 +199,23 @@ The **location** parameter can be a city name or a zip. You can also use a stati
 ]
 ```
 
+### Ambient Weather
+
+The [Ambient Weather dashboard](https://dashboard.ambientweather.net/) records the information sent by an [Ambient Weather](https://www.ambientweather.com/) weather station. Set the **key** parameter to your device's API key, available from your [account page](https://dashboard.ambientweather.net/account). Set the **timezone** parameter to your time zone, for example `America/Los_Angeles` or `Europe/Paris`. See the [list of time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). The Ambient Weather service does not support forecasts.
+
+
+```json
+"platforms": [
+	{
+		"platform": "WeatherPlus",
+		"name": "WeatherPlus",
+		"service": "ambientweather",
+		"key": "XXXXXXXXXXXXXXX",
+		"timezone": "America/Los_Angeles",
+	}
+]
+```
+
 ## Example use cases
 
 - Switch on a blue light in the morning when the chance for rain is above 20% today (or white when the forecast condition is snow / yellow when it's sunny).
@@ -227,3 +244,4 @@ This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwo
 - [Powered by Weather Underground](https://www.wunderground.com/)
 - [Powered by OpenWeatherMap](https://openweathermap.org/)
 - [Powered by Yahoo](https://yahoo.com/)
+- [Powered by Ambient Weather](https://www.ambientweather.net/)

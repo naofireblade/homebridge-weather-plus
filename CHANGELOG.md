@@ -123,3 +123,7 @@
 * Added option to set serial number
 * Changed history timer to make use of advantages in newer fakegato version
 * Fixed precipitation calculation in dark sky api
+
+## Future
+
+* Added support for Ambient Weather API

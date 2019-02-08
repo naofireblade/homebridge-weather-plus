@@ -4,6 +4,7 @@ const darksky = require('./api/darksky'),
 	weatherunderground = require('./api/weatherunderground'),
 	openweathermap = require('./api/openweathermap'),
 	yahoo = require('./api/yahoo'),
+        ambientweather = require('./api/ambientweather'),
 	debug = require('debug')('homebridge-weather-plus'),
 	version = require('./package.json').version;
 
@@ -38,6 +39,7 @@ function WeatherStationPlatform(log, config, api) {
 	this.location = config.location;
 	this.locationGeo = config.locationGeo;
 	this.locationCity = config.locationCity;
+	this.timezone = config.timezone;
 	this.forecastDays = ('forecast' in config ? config.forecast : []);
 	this.language = ('language' in config ? config.language : 'en');
 	this.currentObservationsMode = ('currentObservations' in config ? config.currentObservations : 'normal');
@@ -76,6 +78,11 @@ function WeatherStationPlatform(log, config, api) {
 		debug("Using service Yahoo");
         yahoo.init(this.location, log, debug);
 		this.api = yahoo;
+	}
+	else if (service == 'ambientweather') {
+		debug("Using service AmbientWeather");
+		ambientweather.init(this.key, this.timezone, log, debug);
+		this.api = ambientweather;
 	}
 
 	// Update interval
