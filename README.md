@@ -8,9 +8,17 @@ This is a weather plugin for [homebridge](https://github.com/nfarina/homebridge)
 
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-plus/issues).
 
+## Features
+- Get current observations and forecasts for up to 10 days
+- Choose from 4 different weather services
+- Add multiple locations/services
+- See the weather history in the Eve App
+- See translations and [icons](#screenshots) in the Eve App
+- Use all values in HomeKit rules with the Eve App
+
 ## Observations and Forecasts
 
-The following **19 observation and forecast values** can be displayed and used in HomeKit rules. Forecasts can be displayed for up to 10 days (depending on choosen weather service). Use a 3rd party app like Elgato Eve to see all values, translations and some nice [icons](#screenshots).
+The following **19 observation and forecast values** can be displayed and used in HomeKit rules.
 
 - Air Pressure
 - Cloud Cover
