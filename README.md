@@ -10,9 +10,9 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Features
 - Get current observations and forecasts for up to 10 days
-- Choose from 4 different weather services
-- Add multiple locations/services
-- See the weather history in the Eve App
+- Choose from 4 different weather [services](#choose-your-weather-service)
+- Add [multiple](#multiple-stations-configuration) locations/services
+- See the weather [history](#screenshots) in the Eve App
 - See translations and [icons](#screenshots) in the Eve App
 - Use all values in HomeKit rules with the Eve App
 
