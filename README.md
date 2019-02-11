@@ -62,7 +62,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 ## Installation
 
 1. Install homebridge using: `npm install -g homebridge`
-2. Install this plugin using: `npm install -g homebridge-weather-plus`
+2. Install this plugin using: `npm install -g homebridge-weather-plus` *Note: The installation might take 5 minutes.*
 3. Gather an API key for a weather service from the register link in the table above
 4. Update your configuration file. See the samples below.
 
