@@ -43,14 +43,6 @@ The following **19 observation and forecast values** can be displayed and used i
 - *Observation Station*
 - *Forecast day*
 
-## History
-
-With the eve app you can view the history for
-
-- Air Pressure
-- Humidity
-- Temperature
-
 ## Choose your Weather Service
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
