@@ -71,7 +71,7 @@ class DarkSkyAPI {
         this.log = l;
         this.debug = d;
         moment.locale(language);
-    
+
         this.darkskyTimeMachine = new DarkSky(apiKey);
         this.darkskyTimeMachine.options({
             latitude: locationGeo[0],

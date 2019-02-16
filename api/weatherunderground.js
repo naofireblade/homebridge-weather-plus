@@ -45,7 +45,7 @@ class WundergroundAPI {
         this.wunderground = new Wunderground(apiKey);
 
     }
-  
+
     update(callback) {
         this.debug("Updating weather with weather underground");
 

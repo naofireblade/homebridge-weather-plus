@@ -6,7 +6,7 @@ const Openweathermap = require('openweather-apis'),
     moment = require('moment-timezone'),
     geoTz = require('geo-tz');
 
-class OpenWeatherMapAPI{
+class OpenWeatherMapAPI {
     constructor(apiKey, language, location, locationGeo, locationCity, l, d) {
         Openweathermap.setLang(language);
         if (location) {
@@ -141,7 +141,7 @@ class OpenWeatherMapAPI{
      * @param timezone
      * @return {Array}
      */
-    prepareForecasts (forecasts, timezone) {
+    prepareForecasts(forecasts, timezone) {
         let forecastsFiltered = [];
         const endOfToday = moment.tz(timezone).endOf("day").unix();
         // Find one for today
