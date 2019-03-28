@@ -47,7 +47,7 @@ The following **19 observation and forecast values** can be displayed and used i
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (legacy)                   |
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (currently offline)                   |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | Current observation values |                      15                      |                                7                                 |                                10                                |                                13                                |
 | Forecast values            |                      16                      |                                9                                |                                4                                  |                                10                                |
