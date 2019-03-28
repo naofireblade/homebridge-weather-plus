@@ -126,3 +126,6 @@
 
 ## 2.7.0
 * Added support for multiple weather stations
+
+## 2.7.1
+* Fixed crash of homebridge when using expired weather underground api
