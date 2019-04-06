@@ -129,3 +129,6 @@
 
 ## 2.7.1
 * Fixed crash of homebridge when using expired weather underground api
+
+## 2.7.2
+* Updated openweathermap dependency to v4.0.0
