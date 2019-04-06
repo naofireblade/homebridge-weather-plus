@@ -109,7 +109,7 @@ The **locationGeo** parameter must be a list with the latitude longitude for you
 		"key": "XXXXXXXXXXXXXXX",
 		"location": 2950159,
 		"locationCity": "Berlin, DE",
-		"locationGeo": [52.5200066, 13.404954],
+		"locationGeo": [52.5200066, 13.404954]
 	}
 ]
 ```
@@ -228,7 +228,7 @@ You can set up multiple stations for different locations and/or weather services
                 "key": "XXXXXXXXXXXXXXX",
                 "forecast": [1,2],
                 "locationGeo": [45.4999952, 9.3061655],
-                "serial": "DS",
+                "serial": "DS"
             }]
         }
     ]
