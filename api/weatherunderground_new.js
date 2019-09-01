@@ -39,6 +39,7 @@ class WundergroundAPI_new {
         */
         
         this.debug = d;
+        this.log = l;
 
         this.location = location;
         this.apiKey = apiKey;
@@ -46,9 +47,8 @@ class WundergroundAPI_new {
         				'us': 'e', 
         				"uk": 'h', 
         				'ca': 'm'}[units];
-        this.debug("units:" + this.units);
+        this.log.error("units:" + this.units);
         
-        this.log = l;
 
     }
 
