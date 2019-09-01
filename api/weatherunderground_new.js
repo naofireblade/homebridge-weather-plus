@@ -60,7 +60,7 @@ class WundergroundAPI_new {
             if (!err) {
                 // Current weather report
                 const jsonObj = JSON.parse(body);
-        		this.debug(values.stringify(obj, null, 2));
+        		this.log.error(values.stringify(obj, null, 2));
                 
                 this.parseReport(jsonObj, callback);
             } else {
