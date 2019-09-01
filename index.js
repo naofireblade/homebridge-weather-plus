@@ -2,6 +2,7 @@
 "use strict";
 const darksky = require('./api/darksky').DarkSkyAPI,
 	weatherunderground = require('./api/weatherunderground').WundergroundAPI,
+	weatherunderground_new = require('./api/weatherunderground_new').WundergroundAPI,
 	openweathermap = require('./api/openweathermap').OpenWeatherMapAPI,
 	yahoo = require('./api/yahoo').YahooAPI,
 	debug = require('debug')('homebridge-weather-plus'),
@@ -98,9 +99,13 @@ function WeatherStationPlatform(log, config, api) {
 			debug("Using service weather underground");
 			this.apis.push(new weatherunderground(station.key, station.location, log, debug));
 		}
+		else if (service === 'weatherunderground_new') {
+			debug("Using service weather underground");
+			this.apis.push(new weatherunderground_new(station.key, station.location, log, debug));
+		}
 		else if (service === 'openweathermap') {
 			debug("Using service OpenWeatherMap");
-			this.apis.push(new openweathermap(station.key, station.language, station.location, station.locationGeo, station.locationCity, this.log, this.debug));
+			this.apis.push(new openweathermap(station.key, station.language, station.units, station.locationGeo, station.locationCity, this.log, this.debug));
 		}
 		else if (service === 'yahoo') {
 			debug("Using service Yahoo");
@@ -184,7 +189,7 @@ WeatherStationPlatform.prototype = {
 		setTimeout(this.updateWeather.bind(this), (this.interval) * 60 * 1000);
 	},
 
-	// Save changes from update in characteristics
+	// Save changes from update in characteristics 
 	saveCharacteristic: function (service, name, value) {
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
