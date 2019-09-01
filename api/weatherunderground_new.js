@@ -4,7 +4,7 @@ const request = require('request'),
 	converter = require('../util/converter');
 
 class WundergroundAPI_new {
-    constructor(apiKey, location, l, d) {
+    constructor(apiKey, location, units, l, d) {
         this.attribution = 'Powered by Weather Underground';
         this.reportCharacteristics = [
             'ObservationStation',
@@ -40,6 +40,10 @@ class WundergroundAPI_new {
         
         this.location = location;
         this.apiKey = apiKey;
+        this.units = [	'si': 's', 
+        				'us': 'e', 
+        				"uk": 'h', 
+        				'ca': 'm'][units];
         
         this.log = l;
         this.debug = d;
@@ -48,8 +52,8 @@ class WundergroundAPI_new {
 
     update(callback) {
         this.debug("Updating weather with weather underground");
-
-        const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units=s";
+        
+        const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units="+ units +";
         request(encodeURI(queryUri), function (err, response, body) {
             if (!err) {
                 // Current weather report
@@ -100,7 +104,16 @@ class WundergroundAPI_new {
 
         try {
         	var observation = values.observations[0]
-            var metric = observation.metric_si;
+            var metric;
+            if (this.units=='s') {
+            	metric = observation.metric_si;
+            } else if (this.units=='m') {
+            	metric = observation.metric;
+            } else if (this.units=='e') {
+            	metric = observation.imperial;
+            } else { // 'h'
+            	metric = observation.uk_hybrid;
+            };
         	
             report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
             report.ObservationTime = observation.obsTimeUtc.split(' ')[4];
