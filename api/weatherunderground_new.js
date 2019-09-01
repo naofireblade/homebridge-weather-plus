@@ -38,6 +38,8 @@ class WundergroundAPI_new {
         this.forecastDays = 4;
         */
         
+        this.debug = d;
+
         this.location = location;
         this.apiKey = apiKey;
         this.units = {	'si': 's', 
@@ -47,7 +49,6 @@ class WundergroundAPI_new {
         this.debug("units:" + this.units);
         
         this.log = l;
-        this.debug = d;
 
     }
 
