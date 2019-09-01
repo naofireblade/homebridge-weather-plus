@@ -54,7 +54,7 @@ class WundergroundAPI_new {
     update(callback) {
         this.debug("Updating weather with weather underground");
         
-this.log.error("units:" + this.units);
+//this.log.error("units:" + this.units);
 
         const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units="+ this.units;
         request(encodeURI(queryUri), function (err, response, body) {
@@ -124,13 +124,13 @@ this.log.error( JSON.stringify(jsonObj, null, 2));
             report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
             report.ObservationTime = observation.obsTimeUtc.split(' ')[4];
 
-        	report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.wind_dir)) ? 0 : parseInt(values.wind_dir));
-            report.Humidity 		= isNaN(parseInt(observation.humidity)) ? 0 : parseInt(values.humidity);
+        	report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.wind_dir)) ? 0 : parseInt(observation.wind_dir));
+            report.Humidity 		= isNaN(parseInt(observation.humidity)) ? 0 : parseInt(observation.humidity);
             report.SolarRadiation 	= isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
             report.UVIndex 			= isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
             
- this.log.error("Temperature:" + this.units);
- this.log.error("Temperature:" + metric.temp);
+ //this.log.error("Temperature:" + this.units);
+ //this.log.error("Temperature:" + metric.temp);
             report.Temperature 		= isNaN(parseInt(metric.temp)) ? 0 : parseInt(metric.temp);
             report.DewPoint 		= isNaN(parseInt(metric.dewpt)) ? 0 : parseInt(metric.dewpt);
             report.AirPressure 		= isNaN(parseInt(metric.pressure)) ? 0 : parseInt(metric.pressure);
