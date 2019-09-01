@@ -43,8 +43,6 @@ class WundergroundAPI_new {
         this.log = l;
         this.debug = d;
 
-        this.wunderground = new Wunderground(apiKey);
-
     }
 
     update(callback) {
