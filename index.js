@@ -2,7 +2,7 @@
 "use strict";
 const darksky = require('./api/darksky').DarkSkyAPI,
 	weatherunderground = require('./api/weatherunderground').WundergroundAPI,
-	weatherunderground_new = require('./api/weatherunderground_new').WundergroundAPI,
+	weatherunderground_new = require('./api/weatherunderground_new').WundergroundAPI_new,
 	openweathermap = require('./api/openweathermap').OpenWeatherMapAPI,
 	yahoo = require('./api/yahoo').YahooAPI,
 	debug = require('debug')('homebridge-weather-plus'),
