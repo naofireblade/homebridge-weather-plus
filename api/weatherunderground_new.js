@@ -39,6 +39,7 @@ class WundergroundAPI_new {
         */
         
         this.debug = d;
+        this.russDebug = this.log.error;
         this.log = l;
 
         this.location = location;
@@ -47,7 +48,7 @@ class WundergroundAPI_new {
         				'us': 'e', 
         				"uk": 'h', 
         				'ca': 'm'}[units];
-        this.log.error("units:" + this.units);
+        this.russDebug("units:" + this.units);
         
 
     }
@@ -60,7 +61,7 @@ class WundergroundAPI_new {
             if (!err) {
                 // Current weather report
                 const jsonObj = JSON.parse(body);
-        		this.log.error( JSON.stringify(jsonObj, null, 2));
+        		this.russDebug( JSON.stringify(jsonObj, null, 2));
                 
                 this.parseReport(jsonObj, callback);
             } else {
@@ -128,6 +129,7 @@ class WundergroundAPI_new {
             report.SolarRadiation 	= isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
             report.UVIndex 			= isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
             
+        this.russDebug("Temperature:" + this.units);
             report.Temperature 		= isNaN(parseInt(metric.temp)) ? 0 : parseInt(metric.temp);
             report.DewPoint 		= isNaN(parseInt(metric.dewpt)) ? 0 : parseInt(metric.dewpt);
             report.AirPressure 		= isNaN(parseInt(metric.pressure)) ? 0 : parseInt(metric.pressure);
