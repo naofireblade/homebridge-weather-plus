@@ -54,7 +54,7 @@ class WundergroundAPI_new {
             if (!err) {
                 // Current weather report
                 const jsonObj = JSON.parse(body);
-                this.parseReport(jsonObj.query.results.channel, callback);
+                this.parseReport(jsonObj, callback);
             } else {
                 this.log.error("Error retrieving weather report and forecast");
                 this.log.error("Error Message: " + err);
