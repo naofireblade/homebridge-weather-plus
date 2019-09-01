@@ -100,21 +100,21 @@ class WundergroundAPI_new {
 
         try {
         	var observation = values.observations[0]
-            var metric_si = observation.metric;
+            var metric = observation.metric_si;
         	
             report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
             report.ObservationTime = observation.obsTimeUtc.split(' ')[4];
 
         	report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.wind_dir)) ? 0 : parseInt(values.wind_dir));
-            report.Humidity = isNaN(parseInt(observation.humidity)) ? 0 : parseInt(values.humidity);
-            report.SolarRadiation = isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
-            report.UVIndex = isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
+            report.Humidity 		= isNaN(parseInt(observation.humidity)) ? 0 : parseInt(values.humidity);
+            report.SolarRadiation 	= isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
+            report.UVIndex 			= isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
             
-            report.Temperature = values.metric.temp;
-            report.DewPoint = parseInt(metric.dewpt);
-            report.AirPressure = parseInt(metric.pressure);
-            report.WindSpeed = parseFloat(metric.windSpeed);
-            report.WindSpeedMax = parseFloat(metric.windGusts);
+            report.Temperature 		= isNaN(parseInt(metric.temp)) ? 0 : parseInt(metric.temp);
+            report.DewPoint 		= isNaN(parseInt(metric.dewpt)) ? 0 : parseInt(metric.dewpt);
+            report.AirPressure 		= isNaN(parseInt(metric.pressure)) ? 0 : parseInt(metric.pressure);
+            report.WindSpeed 		= isNaN(parseInt(metric.windSpeed)) ? 0 : parseInt(metric.windSpeed);
+            report.WindSpeedMax 	= isNaN(parseInt(metric.windGusts)) ? 0 : parseInt(metric.windGusts);
         }
         catch(error) {
             this.log.error("Error retrieving weather report for Weather Underground");
