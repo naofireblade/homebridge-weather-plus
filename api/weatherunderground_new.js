@@ -53,7 +53,7 @@ class WundergroundAPI_new {
     update(callback) {
         this.debug("Updating weather with weather underground");
         
-        const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units="+ units +";
+        const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units="+ this.units;
         request(encodeURI(queryUri), function (err, response, body) {
             if (!err) {
                 // Current weather report
