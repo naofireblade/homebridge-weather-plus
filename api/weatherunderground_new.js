@@ -40,10 +40,10 @@ class WundergroundAPI_new {
         
         this.location = location;
         this.apiKey = apiKey;
-        this.units = [	'si': 's', 
+        this.units = {	'si': 's', 
         				'us': 'e', 
         				"uk": 'h', 
-        				'ca': 'm'][units];
+        				'ca': 'm'}[units];
         
         this.log = l;
         this.debug = d;
