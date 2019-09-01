@@ -44,6 +44,7 @@ class WundergroundAPI_new {
         				'us': 'e', 
         				"uk": 'h', 
         				'ca': 'm'}[units];
+        this.debug("units:" + this.units);
         
         this.log = l;
         this.debug = d;
@@ -58,6 +59,8 @@ class WundergroundAPI_new {
             if (!err) {
                 // Current weather report
                 const jsonObj = JSON.parse(body);
+        		this.debug(values.stringify(obj, null, 2));
+                
                 this.parseReport(jsonObj, callback);
             } else {
                 this.log.error("Error retrieving weather report and forecast");
@@ -68,6 +71,7 @@ class WundergroundAPI_new {
     }
 
     parseReport(values) {
+
         let report = {};
         
         /* EXAMPLE values
