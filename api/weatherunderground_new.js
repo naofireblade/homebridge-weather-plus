@@ -126,7 +126,7 @@ class WundergroundAPI_new {
  			debug("AirPressure:" + report.AirPressure);
             report.WindSpeed 		= isNaN(parseInt(metric.windSpeed)) ? 0 : parseInt(metric.windSpeed);
  			debug("WindSpeed:" + report.WindSpeed);
-            report.WindSpeedMax 	= isNaN(parseInt(metric.windGusts)) ? 0 : parseInt(metric.windGusts);
+            report.WindSpeedMax 	= isNaN(parseInt(metric.windGust)) ? 0 : parseInt(metric.windGust);
  			debug("WindSpeedMax:" + report.WindSpeedMax);
         }
         catch(error) {
