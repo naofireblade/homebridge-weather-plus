@@ -20,25 +20,7 @@ class WundergroundAPI_new {
             'WindSpeed',
             'WindSpeedMax'
         ];
-        
-        /* no example data for forecasts */
-        /*
-        this.forecastCharacteristics = [
-            'Condition',
-            'ConditionCategory',
-            'ForecastDay',
-            'Humidity',
-            'RainChance',
-            'RainDay',
-            'Temperature',
-            'TemperatureMin',
-            'WindDirection',
-            'WindSpeed',
-            'WindSpeedMax'
-        ];
-        this.forecastDays = 4;
-        */
-        
+                
         this.debug = d;
         this.log = l;
 
@@ -48,15 +30,12 @@ class WundergroundAPI_new {
         				'us': 'e', 
         				"uk": 'h', 
         				'ca': 'm'}[units];
-        
-
     }
 
     update(callback) {
         this.debug("Updating weather with weather underground");
+        let weather = {};
         
-//this.log.error("units:" + this.units);
-
         const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units="+ this.units;
         request(encodeURI(queryUri), function (err, response, body) {
             if (!err) {
@@ -64,7 +43,8 @@ class WundergroundAPI_new {
                 const jsonObj = JSON.parse(body);
 				debug( JSON.stringify(jsonObj, null, 2));
                 
-                this.parseReport(jsonObj, callback);
+                weather.report = this.parseReport(jsonObj, callback);
+                callback(null, weather);
             } else {
                 this.log.error("Error retrieving weather report and forecast");
                 this.log.error("Error Message: " + err);
