@@ -112,6 +112,7 @@ class WundergroundAPI_new {
         try {
         	var observation = values.observations[0]
             var metric;
+			debug("Units:" + this.units);
             if (this.units=='s') {
             	metric = observation.metric_si;
             } else if (this.units=='m') {
@@ -122,7 +123,7 @@ class WundergroundAPI_new {
             	metric = observation.uk_hybrid;
             };
         	
-			debug("Station:" + report.ObservationStation + " : " + observation.neighborhood);
+			debug("Station:" + report.stationID + " : " + observation.neighborhood);
             report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
             report.ObservationTime = observation.obsTimeUtc.split(' ')[4];
 
