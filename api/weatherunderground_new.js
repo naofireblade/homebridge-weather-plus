@@ -1,7 +1,8 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 const request = require('request'),
-	converter = require('../util/converter');
+	converter = require('../util/converter'),
+	debug = require('debug')('homebridge-weather-plus');
 
 class WundergroundAPI_new {
     constructor(apiKey, location, units, l, d) {
@@ -61,7 +62,7 @@ class WundergroundAPI_new {
             if (!err) {
                 // Current weather report
                 const jsonObj = JSON.parse(body);
-this.log.error( JSON.stringify(jsonObj, null, 2));
+				debug( JSON.stringify(jsonObj, null, 2));
                 
                 this.parseReport(jsonObj, callback);
             } else {
@@ -95,7 +96,7 @@ this.log.error( JSON.stringify(jsonObj, null, 2));
 				winddir	326
 				humidity	49
 				qcStatus	1
-				metric_si	# imperial | metric | metric_si | uk_hybrid	(I always fetch metric_si)
+				metric_si	# imperial(e) | metric(m) | metric_si(s) | uk_hybrid(h)
 					temp	30
 					heatIndex	31
 					dewpt	18
@@ -121,16 +122,18 @@ this.log.error( JSON.stringify(jsonObj, null, 2));
             	metric = observation.uk_hybrid;
             };
         	
+			debug("Station:" + report.ObservationStation + " : " + observation.neighborhood);
             report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
             report.ObservationTime = observation.obsTimeUtc.split(' ')[4];
 
+			debug("WindDirection:" + observation.wind_dir);
         	report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.wind_dir)) ? 0 : parseInt(observation.wind_dir));
             report.Humidity 		= isNaN(parseInt(observation.humidity)) ? 0 : parseInt(observation.humidity);
             report.SolarRadiation 	= isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
             report.UVIndex 			= isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
             
- //this.log.error("Temperature:" + this.units);
- //this.log.error("Temperature:" + metric.temp);
+			debug("Temperature:" + this.units);
+ 			debug("Temperature:" + metric.temp);
             report.Temperature 		= isNaN(parseInt(metric.temp)) ? 0 : parseInt(metric.temp);
             report.DewPoint 		= isNaN(parseInt(metric.dewpt)) ? 0 : parseInt(metric.dewpt);
             report.AirPressure 		= isNaN(parseInt(metric.pressure)) ? 0 : parseInt(metric.pressure);
