@@ -191,18 +191,21 @@ WeatherStationPlatform.prototype = {
 
 	// Save changes from update in characteristics 
 	saveCharacteristic: function (service, name, value) {
-		debug("Characteristic:" + name + ":" + value);
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
+			debug("Characteristic:" + name + ":" + value);
 			service.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
 		}
 		// temperature not a custom but a general apple home kit characteristic
 		else if (name === 'Temperature') {
+			debug("Characteristic:" + name + ":" + value);
 			service.setCharacteristic(Characteristic.CurrentTemperature, value);
 		}
 		// all other custom characteristics
 		else {
 			if (CustomCharacteristic[name]._unitvalue) value = CustomCharacteristic[name]._unitvalue(value);
+			
+			debug("CustomCharacteristic:" + CustomCharacteristic[name] + ":" + value);
 			service.setCharacteristic(CustomCharacteristic[name], value);
 		}
 	},
