@@ -5,7 +5,7 @@ const request = require('request'),
 	debug = require('debug')('homebridge-weather-plus');
 
 class WundergroundAPI_new {
-    constructor(apiKey, location, units, l, d) {
+    constructor(apiKey, location, l, d) {
         this.attribution = 'Powered by Weather Underground';
         this.reportCharacteristics = [
             'ObservationStation',
@@ -27,13 +27,7 @@ class WundergroundAPI_new {
         this.location = location;
         this.apiKey = apiKey;
         
-        /*
-        this.units = 'si'; // HOMEKIT EXPECTS THIS! Not sure why the API takes units.
-        this.units = {	'si': 's', 
-        				'us': 'e', 
-        				"uk": 'h', 
-        				'ca': 'm'}[this.units];
-        */
+		//Characteristic code expect all result in 'si' as far as I can tell.
     	this.units = 's';
     }
 
