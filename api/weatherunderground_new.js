@@ -27,7 +27,7 @@ class WundergroundAPI_new {
         this.location = location;
         this.apiKey = apiKey;
         
-		//Characteristic code expect all result in 'si' as far as I can tell.
+		//Characteristic code expect all result in 'si'.
     	this.units = 's';
     }
 
@@ -35,7 +35,7 @@ class WundergroundAPI_new {
         this.debug("Updating weather with weather underground");
         let weather = {};
         
-        const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units="+ this.units;
+        const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey="+this.apiKey+"&stationId="+this.location+"&format=json&units=s;
         request(encodeURI(queryUri), function (err, response, body) {
             if (!err) {
                 // Current weather report
@@ -135,7 +135,7 @@ class WundergroundAPI_new {
         let forecasts = [];
         var observation = values.observations[0]
 
-    /* I DON'T HAVE AN EXAMPLE WITH FORECASTS*/
+    /* NO FORCAST DATA FROM API*/
     /*
         for (let i = 0; i < forecastObjs.length; i++) {
             const values = forecastObjs[i];

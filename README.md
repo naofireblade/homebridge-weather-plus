@@ -47,15 +47,15 @@ The following **19 observation and forecast values** can be displayed and used i
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (currently offline)                   |
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (New)                      |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      15                      |                                7                                 |                                10                                |                                13                                |
-| Forecast values            |                      16                      |                                9                                |                                4                                  |                                10                                |
-| Forecast days              |                       7                      |                                 5                                |                                 10                               |                                 4                                |
-| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                            city name                             |                         city name or zip                         |
+| Current observation values |                      15                      |                                7                                 |                                10                                |                                11                                |
+| Forecast values            |                      16                      |                                9                                 |                                4                                 |                                 0                                |
+| Forecast days              |                       7                      |                                 5                                |                                 10                               |                                 0                                |
+| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                            city name                             |                           Station ID                             |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                                :x:                               |                        :heavy_check_mark:                        |
-| Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        | :x: (only legacy accounts)                                       |
-| Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         |                    not needed                                    | [here](https://www.wunderground.com/weather/api/) |
+| Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
+| Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         |                    not needed                                    | [here](https://www.wunderground.com/member/api-keys)             |
 
 *You can add more services by forking the project and submitting a pull request.*
 
@@ -138,14 +138,31 @@ The **key** parameter is the API key that you get by registering for the Weather
 
 ```json
 "platforms": [
-	{
-		"platform": "WeatherPlus",
-		"name": "WeatherPlus",
-		"service": "weatherunderground",
-		"key": "XXXXXXXXXXXXXXX",
-		"location": "New York",
-		"forecast": [1,2,3,4]
-	}
+{
+"platform": "WeatherPlus",
+"name": "WeatherPlus",
+"service": "weatherunderground",
+"key": "XXXXXXXXXXXXXXX",
+"location": "New York",
+"forecast": [1,2,3,4]
+}
+]
+```
+### Weather Underground - New API
+
+The **location** parameter is the Weather Underground StationID. 
+
+The **key** parameter is the API key that you get by registering for the Weather Underground service--see  https://www.wunderground.com/member/api-keys
+
+```json
+"platforms": [
+{
+"platform": "WeatherPlus",
+"name": "WeatherPlus",
+"service": "weatherunderground_new",
+"key": "XXXXXXXXXXXXXXX",
+"location": "XXX STATION ID XXX"
+}
 ]
 ```
 
