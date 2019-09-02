@@ -191,6 +191,7 @@ WeatherStationPlatform.prototype = {
 
 	// Save changes from update in characteristics 
 	saveCharacteristic: function (service, name, value) {
+		debug("Characteristic:" + name + ":" + value);
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
 			service.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
@@ -232,6 +233,8 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex) {
 	// Add additional characteristics to temperature sensor that are supported by the selected api
 	for (let i = 0; i < this.platform.apis[stationIndex].reportCharacteristics.length; i++) {
 		const name = this.platform.apis[stationIndex].reportCharacteristics[i];
+
+		debug("Characteristic-name:" + name);
 
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
