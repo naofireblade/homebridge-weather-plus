@@ -125,6 +125,8 @@ class WundergroundAPI_new {
             report.AirPressure 		= isNaN(parseInt(metric.pressure)) ? 0 : parseInt(metric.pressure);
             report.WindSpeed 		= isNaN(parseInt(metric.windSpeed)) ? 0 : parseInt(metric.windSpeed);
             report.WindSpeedMax 	= isNaN(parseInt(metric.windGusts)) ? 0 : parseInt(metric.windGusts);
+ 			debug("Temperature:" + report.WindSpeed);
+ 			debug("Temperature:" + report.WindSpeedMax);
         }
         catch(error) {
             this.log.error("Error retrieving weather report for Weather Underground");
