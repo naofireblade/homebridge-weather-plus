@@ -205,7 +205,7 @@ WeatherStationPlatform.prototype = {
 		else {
 			if (CustomCharacteristic[name]._unitvalue) value = CustomCharacteristic[name]._unitvalue(value);
 			
-			debug("CustomCharacteristic:" + CustomCharacteristic[name] + ":" + value);
+			debug("CustomCharacteristic:" + name + ":" + value);
 			service.setCharacteristic(CustomCharacteristic[name], value);
 		}
 	},
