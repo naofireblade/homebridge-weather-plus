@@ -123,12 +123,13 @@ class WundergroundAPI_new {
             	metric = observation.uk_hybrid;
             };
         	
-			debug("Station:" + report.stationID + " : " + observation.neighborhood);
+			debug("Station:" + observation.stationID + " : " + observation.neighborhood);
             report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
             report.ObservationTime = observation.obsTimeUtc.split(' ')[4];
 
-			debug("WindDirection:" + observation.wind_dir);
-        	report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.wind_dir)) ? 0 : parseInt(observation.wind_dir));
+			debug("WindDirection:" + observation.winddir);
+			debug("Humidity:" + observation.humidity);
+        	report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.winddir)) ? 0 : parseInt(observation.winddir));
             report.Humidity 		= isNaN(parseInt(observation.humidity)) ? 0 : parseInt(observation.humidity);
             report.SolarRadiation 	= isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
             report.UVIndex 			= isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
