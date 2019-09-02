@@ -134,7 +134,6 @@ class WundergroundAPI_new {
             report.SolarRadiation 	= isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
             report.UVIndex 			= isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
             
-			debug("Temperature:" + this.units);
  			debug("Temperature:" + metric.temp);
             report.Temperature 		= isNaN(parseInt(metric.temp)) ? 0 : parseInt(metric.temp);
             report.DewPoint 		= isNaN(parseInt(metric.dewpt)) ? 0 : parseInt(metric.dewpt);
