@@ -27,11 +27,14 @@ class WundergroundAPI_new {
         this.location = location;
         this.apiKey = apiKey;
         
-        this.units = 'si'; //  HOMEKIT EXPECTS THIS! Not sure why the API takes units.
+        /*
+        this.units = 'si'; // HOMEKIT EXPECTS THIS! Not sure why the API takes units.
         this.units = {	'si': 's', 
         				'us': 'e', 
         				"uk": 'h', 
-        				'ca': 'm'}[units];
+        				'ca': 'm'}[this.units];
+        */
+    	this.units = 's';
     }
 
     update(callback) {
