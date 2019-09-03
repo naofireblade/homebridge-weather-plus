@@ -2,6 +2,7 @@
 "use strict";
 const request = require('request'),
 	converter = require('../util/converter'),
+    moment = require('moment-timezone'),
 	debug = require('debug')('homebridge-weather-plus');
 
 class WundergroundAPI {
@@ -104,7 +105,7 @@ class WundergroundAPI {
         	
 			debug("Station:" + observation.stationID + " : " + observation.neighborhood);
             report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
-            report.ObservationTime = observation.obsTimeUtc.split(' ')[4];
+            report.ObservationTime = moment(Date.parse(observation.obsTimeUtc));
 
 			debug("WindDirection:" + observation.winddir);
 			debug("Humidity:" + observation.humidity);
