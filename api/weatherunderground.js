@@ -19,7 +19,8 @@ class WundergroundAPI {
             'DewPoint',
             'AirPressure',
             'WindSpeed',
-            'WindSpeedMax'
+            'WindSpeedMax',
+            'RainDay'
         ];
                 
         this.debug = d;
@@ -57,42 +58,49 @@ class WundergroundAPI {
 
         let report = {};
         
-        /* EXAMPLE values
+        /* EXAMPLE : Weather Underground payload 
         	
-		observations	
-			0	
-				stationID	"KCASANJO898"
-				obsTimeUtc	"2019-09-01T19:03:41Z"
-				obsTimeLocal	"2019-09-01 12:03:41"
-				neighborhood	"West San Jose - Casa de la Niles"
-				softwareType	"WS-1002 V2.4.6"
-				country	"US"
-				solarRadiation	719.2
-				lon	-122.01569366
-				realtimeFrequency	null
-				epoch	1567364621
-				lat	37.30566025
-				uv	9
-				winddir	326
-				humidity	49
-				qcStatus	1
-				metric_si	# imperial(e) | metric(m) | metric_si(s) | uk_hybrid(h)
-					temp	30
-					heatIndex	31
-					dewpt	18
-					windChill	30
-					windSpeed	3
-					windGust	3
-					pressure	1010.16
-					precipRate	0
-					precipTotal	0
-					elev	105
+		   {
+		     "observations": [
+		       {
+		         "stationID": "KCASANJO898",
+		         "obsTimeUtc": "2019-09-03T01:15:59Z",
+		         "obsTimeLocal": "2019-09-02 18:15:59",
+		         "neighborhood": "West San Jose - Casa de la Niles",
+		         "softwareType": "WS-1002 V2.4.6",
+		         "country": "US",
+		         "solarRadiation": 451.7,
+		         "lon": -122.01569366,
+		         "realtimeFrequency": null,
+		         "epoch": 1567473359,
+		         "lat": 37.30566025,
+		         "uv": 1,
+		         "winddir": 0,
+		         "humidity": 67,
+		         "qcStatus": 1,
+		         "metric_si": { // other variants based on request: imperial(e) | metric(m) | metric_si(s) | uk_hybrid(h)
+		           "temp": 23,
+		           "heatIndex": 23,
+		           "dewpt": 16,
+		           "windChill": 23,
+		           "windSpeed": 3,
+		           "windGust": 3,
+		           "pressure": 1010.84,
+		           "precipRate": 0,
+		           "precipTotal": 0,
+		           "elev": 105
+		         }
+		       }
+		     ]
+		   }
+  
 		*/
 
         try {
         	var observation = values.observations[0]
             var metric;
 			debug("Units:" + this.units);
+			/*always just get metric_si...but if we ever change that.*/
             if (this.units=='s') {
             	metric = observation.metric_si;
             } else if (this.units=='m') {
@@ -123,6 +131,9 @@ class WundergroundAPI {
  			debug("WindSpeed:" + report.WindSpeed);
             report.WindSpeedMax 	= isNaN(parseInt(metric.windGust)) ? 0 : parseInt(metric.windGust);
  			debug("WindSpeedMax:" + report.WindSpeedMax);
+            report.RainDay 	= isNaN(metric.precipTotal) ? 0 : metric.precipTotal;
+ 			debug("RainDay:" + report.RainDay);
+
         }
         catch(error) {
             this.log.error("Error retrieving weather report for Weather Underground");
@@ -133,23 +144,8 @@ class WundergroundAPI {
     }
 
     parseForecasts(forecastObjs, timezone) {
-        let forecasts = [];
-        var observation = values.observations[0]
-
-    /* NO FORCAST DATA FROM API*/
-    /*
-        for (let i = 0; i < forecastObjs.length; i++) {
-            const values = forecastObjs[i];
-            const forecast = {};
-            forecast.Condition = values.text;
-            forecast.ConditionCategory = converter.getConditionCategoryOwm(parseInt(values.code));
-            forecast.ForecastDay = moment(values.date, "DD MMM YYYY").tz(timezone).format("dddd");
-            forecast.Temperature = values.high;
-            forecast.TemperatureMin = values.low;
-            forecasts[forecasts.length] = forecast;
-        }
-    */
-        return forecasts;
+        /* NO FORCAST DATA FROM API*/
+        return [];
     }
 }
 
