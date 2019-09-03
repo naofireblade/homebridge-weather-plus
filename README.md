@@ -47,7 +47,7 @@ The following **19 observation and forecast values** can be displayed and used i
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (New)                      |
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground                            |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | Current observation values |                      15                      |                                7                                 |                                10                                |                                11                                |
 | Forecast values            |                      16                      |                                9                                 |                                4                                 |                                 0                                |
@@ -130,25 +130,9 @@ The **location** parameter is a text for finding a location with YQL (see [here]
 ]
 ```
 
-### Weather Underground
+### Weather Underground 
 
-The **location** parameter can be a city name or a zip. You can also use a station from the **[Personal Weather Station Network](https://www.wunderground.com/weatherstation/overview.asp)** to receive weather information. Just enter pws:YOURID.
-
-The **key** parameter is the API key that you get by registering for the Weather Underground service
-
-```json
-"platforms": [
-{
-"platform": "WeatherPlus",
-"name": "WeatherPlus",
-"service": "weatherunderground",
-"key": "XXXXXXXXXXXXXXX",
-"location": "New York",
-"forecast": [1,2,3,4]
-}
-]
-```
-### Weather Underground - New API
+This supports the new Weather Underground (Online in Jan 2019.) The old API was turned off by Weather Underground in March 2019 and was replaced with a newer API. The current API, unlike the one it replaced, does not provide forecast data. The location info is also changed, you need to provide a StationID, users who post their own feed data to Weather Underground all have a StationID.
 
 The **location** parameter is the Weather Underground StationID. 
 
@@ -159,7 +143,7 @@ The **key** parameter is the API key that you get by registering for the Weather
 {
 "platform": "WeatherPlus",
 "name": "WeatherPlus",
-"service": "weatherunderground_new",
+"service": "weatherunderground",
 "key": "XXXXXXXXXXXXXXX",
 "location": "XXX STATION ID XXX"
 }
@@ -272,6 +256,7 @@ Many thanks go to
 - [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
 - [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
 - [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
+- [Russell Sonnenschein](https://github.com/ctgreybeard) replacement of obsolete weatherunderground with new one
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
