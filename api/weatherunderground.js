@@ -47,8 +47,8 @@ class WundergroundAPI {
                 weather.report = this.parseReport(jsonObj, callback);
                 callback(null, weather);
             } else {
-                this.log.error("Error retrieving weather report and forecast");
-                this.log.error("Error Message: " + err);
+                debug("Error retrieving weather report and forecast");
+                debug("Error Message: " + err);
                 callback(err);
             }
         }.bind(this));
@@ -136,8 +136,8 @@ class WundergroundAPI {
 
         }
         catch(error) {
-            this.log.error("Error retrieving weather report for Weather Underground");
-            this.log.error("Error Message: " + error);
+            debug("Error retrieving weather report for Weather Underground");
+            debug("Error Message: " + error);
         }
 
         return report;
