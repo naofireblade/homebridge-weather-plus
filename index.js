@@ -100,7 +100,7 @@ function WeatherStationPlatform(log, config, api) {
 		}
 		else if (service === 'openweathermap') {
 			debug("Using service OpenWeatherMap");
-			this.apis.push(new openweathermap(station.key, station.language, station.location, station.locationGeo, station.locationCity, this.log, this.debug));
+			this.apis.push(new openweathermap(station.key, station.language, station.locationGeo, station.locationCity, this.log, this.debug));
 		}
 		else if (service === 'yahoo') {
 			debug("Using service Yahoo");
@@ -184,19 +184,23 @@ WeatherStationPlatform.prototype = {
 		setTimeout(this.updateWeather.bind(this), (this.interval) * 60 * 1000);
 	},
 
-	// Save changes from update in characteristics
+	// Save changes from update in characteristics 
 	saveCharacteristic: function (service, name, value) {
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
+			debug("Characteristic:" + name + ":" + value);
 			service.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
 		}
 		// temperature not a custom but a general apple home kit characteristic
 		else if (name === 'Temperature') {
+			debug("Characteristic:" + name + ":" + value);
 			service.setCharacteristic(Characteristic.CurrentTemperature, value);
 		}
 		// all other custom characteristics
 		else {
 			if (CustomCharacteristic[name]._unitvalue) value = CustomCharacteristic[name]._unitvalue(value);
+			
+			debug("CustomCharacteristic:" + name + ":" + value);
 			service.setCharacteristic(CustomCharacteristic[name], value);
 		}
 	},
@@ -227,6 +231,8 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex) {
 	// Add additional characteristics to temperature sensor that are supported by the selected api
 	for (let i = 0; i < this.platform.apis[stationIndex].reportCharacteristics.length; i++) {
 		const name = this.platform.apis[stationIndex].reportCharacteristics[i];
+
+		debug("Characteristic-name:" + name);
 
 		// humidity not a custom but a general apple home kit characteristic
 		if (name === 'Humidity') {
