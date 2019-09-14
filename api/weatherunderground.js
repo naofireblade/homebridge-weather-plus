@@ -54,12 +54,12 @@ class WundergroundAPI {
         }.bind(this));
     }
 
-    parseReport(values) {
+    parseReport(json) {
 
         let report = {};
 
         try {
-            let observation = values.observations[0];
+            let observation = json.observations[0];
             let values;
             debug("Units: " + this.units);
 
