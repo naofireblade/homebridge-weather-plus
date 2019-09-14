@@ -132,3 +132,7 @@
 
 ## 2.7.2
 * Updated openweathermap dependency to v4.0.0
+
+## 2.8.0
+* Removed old weather underground api (pre March 2019)
+* Added new weather underground api (post January 2019)

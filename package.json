@@ -1,6 +1,6 @@
 {
   "name": "homebridge-weather-plus",
-  "version": "2.7.2",
+  "version": "2.8.0",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
@@ -72,6 +72,10 @@
     {
       "name": "Bill Waggoner",
       "url": "https://github.com/ctgreybeard"
+    },
+    {
+      "name": "Russell Sonnenschein",
+      "url": "https://github.com/ctgreybeard"
     }
   ],
   "repository": {
@@ -86,7 +90,6 @@
     "moment-timezone": "^0.5.21",
     "underscore": "1.8.3",
     "openweather-apis": "^4.0.0",
-    "request": "^2.88.0",
-    "wundergroundnode": "~0.9"
+    "request": "^2.88.0"
   }
 }
