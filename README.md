@@ -47,14 +47,14 @@ The following **19 observation and forecast values** can be displayed and used i
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground                            |
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |                            Yahoo (currently offline)             |                   Weather Underground (only if you can provide weather data in exchange)                           |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | Current observation values |                      15                      |                                7                                 |                                10                                |                                12                                |
 | Forecast values            |                      16                      |                                9                                 |                                4                                 |                                 0                                |
 | Forecast days              |                       7                      |                                 5                                |                                 10                               |                                 0                                |
-| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                            city name                             |                           Station ID                             |
+| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                            city name                             |                           station id                             |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                                :x:                               |                        :heavy_check_mark:                        |
-| Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
+| Free                       | :heavy_check_mark:                           |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
 | Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         |                    not needed                                    | [here](https://www.wunderground.com/member/api-keys)             |
 
 *You can add more services by forking the project and submitting a pull request.*
@@ -132,11 +132,11 @@ The **location** parameter is a text for finding a location with YQL (see [here]
 
 ### Weather Underground 
 
-This supports the new Weather Underground (Online in Jan 2019.) The old API was turned off by Weather Underground in March 2019 and was replaced with a newer API. The current API, unlike the one it replaced, does not provide forecast data. The location info is also changed, you need to provide a StationID, users who post their own feed data to Weather Underground all have a StationID.
+Since March 2019 you need to register your own weather station with Weather Underground to get weather data in exchange. After you registered your weather device ([here](https://www.wunderground.com/member/devices)), you can use the API.
 
-The **location** parameter is the Weather Underground StationID. 
+The **location** parameter is your personal StationID. 
 
-The **key** parameter is the API key that you get by registering for the Weather Underground service--see  https://www.wunderground.com/member/api-keys
+The **key** parameter is the API key that you get from ([here](https://www.wunderground.com/member/api-keys))
 
 ```json
 "platforms": [
@@ -256,7 +256,7 @@ Many thanks go to
 - [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
 - [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
 - [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
-- [Russell Sonnenschein](https://github.com/ctgreybeard) replacement of obsolete weatherunderground with new one
+- [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
