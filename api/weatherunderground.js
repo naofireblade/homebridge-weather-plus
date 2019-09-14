@@ -36,6 +36,7 @@ class WundergroundAPI {
     update(callback) {
         this.debug("Updating weather with weather underground");
         let weather = {};
+        let that = this;
 
         const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey=" + this.apiKey + "&stationId=" + this.location + "&format=json&units=" + this.units;
         request(encodeURI(queryUri), function (err, response, body) {
@@ -44,7 +45,7 @@ class WundergroundAPI {
                 const jsonObj = JSON.parse(body);
                 debug(JSON.stringify(jsonObj, null, 2));
 
-                weather.report = this.parseReport(jsonObj, callback);
+                weather.report = that.parseReport(jsonObj);
                 callback(null, weather);
             } else {
                 debug("Error retrieving weather report and forecast");
