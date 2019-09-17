@@ -92,7 +92,7 @@ The **locationGeo** parameter must be a list with the latitude longitude for you
 
 The **key** parameter is the API key that you get by registering for the OpenWeather service
 
-**Please choose from one of these location properties.**
+**Please choose from *one* of these location properties.**
 
 The **location** parameter must be a numerical unique city-id (can be found [here](https://openweathermap.org/find))
 

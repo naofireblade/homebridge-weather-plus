@@ -100,7 +100,7 @@ function WeatherStationPlatform(log, config, api) {
 		}
 		else if (service === 'openweathermap') {
 			debug("Using service OpenWeatherMap");
-			this.apis.push(new openweathermap(station.key, station.language, station.locationGeo, station.locationCity, this.log, this.debug));
+			this.apis.push(new openweathermap(station.key, station.language, station.location, station.locationGeo, station.locationCity, this.log, this.debug));
 		}
 		else if (service === 'yahoo') {
 			debug("Using service Yahoo");

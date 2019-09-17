@@ -1,6 +1,6 @@
 {
   "name": "homebridge-weather-plus",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
@@ -84,7 +84,7 @@
   },
   "dependencies": {
     "dark-sky": "^1.1.4",
-    "debug": "^2.6.9",
+    "debug": "^4.1.1",
     "fakegato-history": "^0.5.2",
     "geo-tz": "^4.0.1",
     "moment-timezone": "^0.5.21",

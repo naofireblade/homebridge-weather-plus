@@ -136,3 +136,6 @@
 ## 2.8.0
 * Removed old weather underground api (pre March 2019)
 * Added new weather underground api (post January 2019)
+
+## 2.8.1
+* Fixed crash in openweathermap api that occured since v2.8.0
