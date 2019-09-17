@@ -77,7 +77,7 @@ Below are example configurations for all weather apis.
 
 The **key** parameter is the API key that you get by registering for the Dark Sky service.
 
-The **locationGeo** parameter must be a list with the latitude longitude for your location (dont forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net/en.
+The **locationGeo** parameter must be a list with the latitude longitude for your location (don't forget the square brackets). You can use this page to find your coordinates: http://www.mapcoordinates.net/en.
 
 ```json
 "platforms": [
@@ -85,7 +85,7 @@ The **locationGeo** parameter must be a list with the latitude longitude for you
 		"platform": "WeatherPlus",
 		"name": "WeatherPlus",
 		"service": "darksky",
-		"key": "XXXXXXXXXXXXXXX",
+		"key": "YOUR_API_KEY",
 		"locationGeo": [52.5200066, 13.404954]
 	}
 ]
@@ -109,7 +109,7 @@ The **locationGeo** parameter must be a list with the latitude longitude for you
 		"platform": "WeatherPlus",
 		"name": "WeatherPlus",
 		"service": "openweathermap",
-		"key": "XXXXXXXXXXXXXXX",
+		"key": "YOUR_API_KEY",
 		"location": 2950159,
 		"locationCity": "Berlin, DE",
 		"locationGeo": [52.5200066, 13.404954]
@@ -143,13 +143,13 @@ The **key** parameter is the API key that you get from ([here](https://www.wunde
 
 ```json
 "platforms": [
-{
-"platform": "WeatherPlus",
-"name": "WeatherPlus",
-"service": "weatherunderground",
-"key": "XXXXXXXXXXXXXXX",
-"location": "XXX STATION ID XXX"
-}
+    {
+        "platform": "WeatherPlus",
+        "name": "WeatherPlus",
+        "service": "weatherunderground",
+        "key": "YOUR_API_KEY",
+        "location": "YOUR_STATION_ID"
+    }
 ]
 ```
 
@@ -221,7 +221,7 @@ You can set up multiple stations for different locations and/or weather services
                 "displayName":"Conditions OWM",
                 "displayNameForecast":"Forecast OWM",
                 "service": "openweathermap",
-                "key": "XXXXXXXXXXXXXXX",
+                "key": "YOUR_API_KEY",
                 "forecast": [1,2],
                 "locationGeo": [45.4999952, 9.3061655],
                 "serial": "OWM" 
@@ -229,7 +229,7 @@ You can set up multiple stations for different locations and/or weather services
                 "displayName":"Conditions DS",
                 "displayNameForecast":"Forecast DS",
                 "service": "darksky",
-                "key": "XXXXXXXXXXXXXXX",
+                "key": "YOUR_API_KEY",
                 "forecast": [1,2],
                 "locationGeo": [45.4999952, 9.3061655],
                 "serial": "DS"
