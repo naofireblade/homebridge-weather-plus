@@ -139,3 +139,6 @@
 
 ## 2.8.1
 * Fixed crash in openweathermap api that occured since v2.8.0
+
+## 2.8.2
+* Fixed crash in weatherunderground on malformed/missing server response

@@ -42,11 +42,18 @@ class WundergroundAPI {
         request(encodeURI(queryUri), function (err, response, body) {
             if (!err) {
                 // Current weather report
-                const jsonObj = JSON.parse(body);
-                debug(JSON.stringify(jsonObj, null, 2));
+                try
+                {
+                    const jsonObj = JSON.parse(body);
+                    debug(JSON.stringify(jsonObj, null, 2));
 
-                weather.report = that.parseReport(jsonObj);
-                callback(null, weather);
+                    weather.report = that.parseReport(jsonObj);
+                    callback(null, weather);
+                } catch (e) {
+                    debug("Error retrieving weather report and forecast");
+                    debug("Error Message: " + e);
+                    callback(e);
+                }
             } else {
                 debug("Error retrieving weather report and forecast");
                 debug("Error Message: " + err);
