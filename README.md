@@ -61,9 +61,9 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Free                       |               :heavy_check_mark:             |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
 | Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
 
-<b name="a1">1</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
+> <b name="a1">1</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
 
-*You can add more services easily by forking the project and submitting a pull request for a new api file.*
+> *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 ## Installation
 
@@ -109,7 +109,7 @@ City name and optional country code, can be found [here](https://openweathermap.
 **locationGeo**<sup>[2](#a2)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
-<b name="a2">2</b> You need only **one** of these location options.
+> <b name="a2">2</b> You need only **one** of these location options.
 
 ```json
 "platforms": [
