@@ -111,7 +111,6 @@ City name and optional country code, can be found [here](https://openweathermap.
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
 <b name="a2">2</b> You need only **one** of these location options.
-****
 
 ```json
 "platforms": [
