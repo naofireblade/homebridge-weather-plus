@@ -51,7 +51,7 @@ The following **19 observation and forecast values** can be displayed and used i
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 | Weather Underground (only if you can provide weather data in exchange)|
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |            Weather Underground <sup>[1](#a1)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | Current observation values |                      15                      |                                7                                 |                                12                                |
 | Forecast values            |                      16                      |                                9                                 |                                 0                                |
@@ -61,7 +61,9 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Free                       |               :heavy_check_mark:             |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
 | Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
 
-*You can add more services by forking the project and submitting a pull request.*
+<b name="a1">1</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
+
+*You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 ## Installation
 
@@ -99,16 +101,16 @@ List with the latitude and longitude for your location (don't forget the square 
 **key**  
 The API key that you get by [registering](https://openweathermap.org/appid) for the Dark Sky service.
 
-**location**<sup>[1](#a1)</sup>  
+**location**<sup>[2](#a2)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
 
-**locationCity**<sup>[1](#a1)</sup>  
+**locationCity**<sup>[2](#a2)</sup>  
 City name and optional country code, can be found [here](https://openweathermap.org/find).
 
-**locationGeo**<sup>[1](#a1)</sup>  
+**locationGeo**<sup>[2](#a2)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
-<b name="a1">1</b> You need only **one** of the location options.
+<b name="a2">2</b> You need only **one** of these location options.
 ****
 
 ```json
