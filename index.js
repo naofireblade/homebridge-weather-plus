@@ -58,6 +58,11 @@ function WeatherStationPlatform(log, config, api) {
 		this.config.stations[0].forecast = ('forecast' in config ? config.forecast : []);
 		this.config.stations[0].language = ('language' in config ? config.language : 'en');
 		this.config.stations[0].currentObservationsMode = ('currentObservations' in config ? config.currentObservations : 'normal');
+
+		this.hiddenServices = '';
+		this.hiddenServices = ('disabled' in config ? config['disabled'] : this.hiddenServices);
+		this.hiddenServices = ('hidden' in config ? config['hidden'] : this.hiddenServices);
+
 		this.config.stations[0].fakegatoParameters = ('fakegatoParameters' in config ? config.fakegatoParameters : { storage: 'fs' });
 		this.config.stations[0].serial = config.serial || config.location || 999;
 		this.stationsNumber = 1;
@@ -77,7 +82,9 @@ function WeatherStationPlatform(log, config, api) {
 			station.units = this.units;
 			station.forecast = ('forecast' in station ? station.forecast : []);
 			station.language = ('language' in station ? station.language : 'en');
-			station.currentObservationsMode = ('currentObservations' in station ? station.currentObservations : 'normal');
+			station.compatibility = 'mix';
+			station.compatibility = ('currentObservations' in station ? station.currentObservations : station.compatibility); // old config key word
+			station.compatibility = ('compatibility' in station ? station.currentObservations : station.compatibility);
 			station.fakegatoParameters = ('fakegatoParameters' in station ? station.fakegatoParameters : { storage: 'fs' });
 		}.bind(this));
 
@@ -220,7 +227,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex) {
 
 	// Create temperature sensor or Eve Weather service that includes temperature characteristic
 
-	if (this.config.currentObservationsMode !== 'eve')
+	if (this.config.compatibility !== 'eve')
 		this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	else
 		this.currentConditionsService = new CustomService.EveWeatherService(this.name);

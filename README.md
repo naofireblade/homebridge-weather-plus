@@ -173,73 +173,76 @@ Name for the current condition accessory. The default is `"Now"`. You can also s
 **displayNameForecast**  
 Name for the forecast accessories. Adds a prefix to the forecast days.
 
-**currentObservations**  
-parameter is *optional* and sets how the 3 current observations temperature, humidity and pressure are displayed. You can choose one of these 2 options:  
-`"eve"` (this combines all 3 values into one row in the eve app but shows nothing in the Apple Home app)  
-`"normal"` (default, this shows all 3 values in a seperate row in the eve app and shows the temperature in the Apple Home app)  
+**compatibility**  
+Compatibility for the Apple Home app, the Eve app or a mix of both. This is required due to limitations in the Apple Home app recognized weather conditions.  
+`"mix"` Temperature and humidity are displayed in the Apple Home app. All conditions are displayed in the Eve app.  
+`"eve"` Nothing is displayed in the Apple Home app. All conditions are displayed in the Eve app (temperature, humidity and pressure are combined into one row).  
 
-The **fakegatoParameters** parameter is *optional*. By default, history is persisted on filesystem. You can pass your own parameters to *fakegato-history* module using this paramter, in order to change the location of the persisted file or use GoogleDrive persistance. See https://github.com/simont77/fakegato-history#file-system and https://github.com/simont77/fakegato-history#google-drive for more info. **IMPORTANT NOTE:** Do not modify the parameter for the fakegato internal timer.
+**fakegatoParameters**  
+Customization of the history storage system. By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the [location of the persisted file](https://github.com/simont77/fakegato-history#file-system) or to use [GoogleDrive](https://github.com/simont77/fakegato-history#google-drive).
+ **Do not** modify the parameter for the fakegato internal timer.
 
-The **serial** parameter is *optional* and sets the Serial Number of the accessory. If it's not provided the serial number will be set to the **location** if present, or to 999 if not. Note that for proper operation of fakegato when multiple fakegato-enabled weather accessories are present in your system, the serial number must be unique.
+**serial**  
+Change the Serial Number of your weather accessory. If it's not provided the serial number will be set to the **location** if present, or to 999 if not. Note that for proper operation of fakegato when multiple fakegato-enabled weather accessories are present in your system, the serial number must be unique.
 
 ### Example
 
 ```json
 "platforms": [
-        {
-            "platform": "WeatherPlus",
-            "name": "WeatherPlus",
-            "forecast": [1,2],            
-            "interval": 5,
-            "units": "metric",
-            "language": 
-            "displayName":"Conditions OWM",
-            "displayNameForecast":"Forecast OWM",
-            "service": "openweathermap",
-            "key": "XXXXXXXXXXXXXXX",
-            
-            "locationGeo": [45.4999952, 9.3061655],
-            "serial": "OWM"                        
-        }
-    ]
+    {
+        "platform": "WeatherPlus",
+        "name": "WeatherPlus",
+        "service": "darksky",
+        "key": "XXXXXXXXXXXXXXX",
+        "locationGeo": [52.5200066,13.404954],
+        "forecast": [1,2],
+        "interval": 5,
+        "units": "metric",
+        "language": "en",
+        "displayName": "New York",
+        "displayNameForecast": "New York Forecast",
+        "compatibility": "mix",
+        "serial": "1337"
+    }
+]
 ```
 
 ## Multiple Stations Configuration
 
-You can set up multiple stations for different locations and/or weather services by putting your configuration in an **stations** array. The parameters **interval** and **units** are global to all accessories, and must be set at the top level. 
+You can set up multiple stations for different locations and weather services by putting your configuration in a **stations** array.
+The following parameters are global and must be placed outside of the array: `platform`, `name`, `interval`, `units`.
 
-**IMPORTANT NOTE:** If setting multiple weather accessories, ensure that each accessory has a unique name, or you will get an error from *homebridge*. If you do not set this parameter the plugin will take care of that.
-
-**IMPORTANT NOTE:** If setting multiple weather accessories, ensure that each accessory has a unique name, or you will get an error from *homebridge*. If you do not set this parameter the plugin will take care of that.
+Each stations must have a unique displayName. If you don't set one, the plugin will take care of that.
 
 ### Example
 
 ```json
 "platforms": [
-        {
-            "platform": "WeatherPlus",
-            "name": "WeatherPlus",
-            "interval": 5,
-            "units": "si",
-            "stations":[{
-                "displayName":"Conditions OWM",
-                "displayNameForecast":"Forecast OWM",
-                "service": "openweathermap",
+    {
+        "platform": "WeatherPlus",
+        "name": "WeatherPlus",
+        "interval": 5,
+        "units": "si",
+        "stations": [
+            {
+                "displayName": "New York",
+                "displayNameForecast": "New York forefacst",
+                "service": "darksky",
                 "key": "YOUR_API_KEY",
-                "forecast": [1,2],
-                "locationGeo": [45.4999952, 9.3061655],
-                "serial": "OWM" 
-            },{
-                "displayName":"Conditions DS",
-                "displayNameForecast":"Forecast DS",
+                "forecast": [1,2,3,4,5],
+                "locationGeo": [52.5200066,13.404954]
+            },
+            {
+                "displayName": "Los Angeles",
+                "displayNameForecast": "Los Angeles forecast",
                 "service": "darksky",
                 "key": "YOUR_API_KEY",
                 "forecast": [1,2],
-                "locationGeo": [45.4999952, 9.3061655],
-                "serial": "DS"
-            }]
-        }
-    ]
+                "locationGeo": [34.0536909,-118.2427666]
+            }
+        ]
+    }
+]
 ```
 
 ## Example Use Cases
@@ -256,8 +259,6 @@ You can set up multiple stations for different locations and/or weather services
 
 ## Contributors
 Many thanks go to
-- [Kevin Harwood](https://github.com/kcharwood) for his original homebridge-weather-station
-- [Clark Endrizzi](https://github.com/cendrizzi) for his wundergroundnode library
 - [simont77](https://github.com/simont77) for his fakegato-history library, the eve weather emulation, the multiple stations feature and several other great improvements
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
@@ -265,7 +266,7 @@ Many thanks go to
 - [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
 - [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
 
-This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one is a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
+This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one was a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
 ## Attribution
 - [Powered by Dark Sky](https://darksky.net/poweredby/)
