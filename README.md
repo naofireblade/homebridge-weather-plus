@@ -88,7 +88,6 @@ List with the latitude and longitude for your location (don't forget the square 
 "platforms": [
 	{
 		"platform": "WeatherPlus",
-		"name": "WeatherPlus",
 		"service": "darksky",
 		"key": "YOUR_API_KEY",
 		"locationGeo": [52.5200066, 13.404954]
@@ -116,7 +115,6 @@ List with the latitude and longitude for your location (don't forget the square 
 "platforms": [
 	{
 		"platform": "WeatherPlus",
-		"name": "WeatherPlus",
 		"service": "openweathermap",
 		"key": "YOUR_API_KEY",
 		"location": 2950159,
@@ -140,7 +138,6 @@ Your personal StationID.
 "platforms": [
     {
         "platform": "WeatherPlus",
-        "name": "WeatherPlus",
         "service": "weatherunderground",
         "key": "YOUR_API_KEY",
         "location": "YOUR_STATION_ID"
@@ -192,7 +189,6 @@ Change the Serial Number of your weather accessory. If it's not provided the ser
 "platforms": [
     {
         "platform": "WeatherPlus",
-        "name": "WeatherPlus",
         "service": "darksky",
         "key": "XXXXXXXXXXXXXXX",
         "locationGeo": [52.5200066,13.404954],
@@ -211,7 +207,7 @@ Change the Serial Number of your weather accessory. If it's not provided the ser
 ## Multiple Stations Configuration
 
 You can set up multiple stations for different locations and weather services by putting your configuration in a **stations** array.
-The following parameters are global and must be placed outside of the array: `platform`, `name`, `interval`, `units`.
+The following parameters are global and must be placed outside of the array: `platform`, `interval`, `units`.
 
 Each stations must have a unique displayName. If you don't set one, the plugin will take care of that.
 
@@ -221,7 +217,6 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
 "platforms": [
     {
         "platform": "WeatherPlus",
-        "name": "WeatherPlus",
         "interval": 5,
         "units": "si",
         "stations": [
