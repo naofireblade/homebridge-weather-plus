@@ -3,11 +3,13 @@
 
 const DarkSky = require('dark-sky'),
 	converter = require('../util/converter'),
-	moment = require('moment-timezone');
+	moment = require('moment-timezone'),
+	debug = require('debug')('homebridge-weather-plus');
+
 
 class DarkSkyAPI
 {
-	constructor(apiKey, language, locationGeo, l, d)
+	constructor(apiKey, language, locationGeo, l)
 	{
 		this.attribution = 'Powered by Dark Sky';
 		this.reportCharacteristics =
@@ -71,7 +73,6 @@ class DarkSkyAPI
 			exclude: ['minutely', 'hourly', 'alerts', 'flags']
 		});
 		this.log = l;
-		this.debug = d;
 		moment.locale(language);
 
 		this.darkskyTimeMachine = new DarkSky(apiKey);
@@ -92,7 +93,7 @@ class DarkSkyAPI
 
 		this.updateCache(this.darkskyTimeMachine, requestedForecastDays, function ()
 		{
-			that.debug("Updating weather with dark sky");
+			debug("Updating weather with dark sky");
 			that.darksky.get()
 			.then(function (response)
 			{
@@ -172,7 +173,7 @@ class DarkSkyAPI
 	{
 		if (typeof this.cache.lastUpdate === 'undefined' || new Date() - this.cache.lastUpdate > 3600000)
 		{
-			this.debug("Called hourly update of rain data");
+			debug("Called hourly update of rain data");
 			this.cache.lastUpdate = new Date();
 
 			let now = moment();
@@ -222,9 +223,9 @@ class DarkSkyAPI
 			}
 
 			// Sum all values for the requested day
-			this.debug("Accumulate rain for " + now.tz(response.timezone).format('dddd') + (limit ? (' until ' + hour + ':00') : ''));
+			debug("Accumulate rain for " + now.tz(response.timezone).format('dddd') + (limit ? (' until ' + hour + ':00') : ''));
 			let result = converter.getRainAccumulated(response.hourly.data.slice(0, hour), 'precipIntensity');
-			this.debug("Accumulated rain: " + result);
+			debug("Accumulated rain: " + result);
 			callback(result);
 		}.bind(this))
 		.catch(function (error)

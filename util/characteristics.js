@@ -30,7 +30,8 @@ const inherits = require('util').inherits,
 
 var CustomCharacteristic = {};
 
-module.exports = function (homebridge, units) {
+module.exports = function (Characteristic, units) {
+
     units =                    // rainfail    temperature    visibility    windspeed
       { ca       : 'ca'        //    mm       celsius        kilometers    km/hour
       , imperial : 'imperial'  //  inches     fahrenheit       miles       miles/hour
@@ -100,8 +101,6 @@ module.exports = function (homebridge, units) {
            : (units === 'ca') ? mtos2kmh (val)
                               : mtos2mih(val);
     };
-
-    var Characteristic = homebridge.hap.Characteristic;
 
     CustomCharacteristic.AirPressure = function () {
         Characteristic.call(this, 'Air Pressure', CustomUUID.AirPressure);

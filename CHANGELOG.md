@@ -142,3 +142,10 @@
 
 ## 2.8.2
 * Fixed crash in weatherunderground on malformed/missing server response
+
+## 3.0.0
+* Changed readme to improve comprehensibility
+* Changed naming of some parameters (all backwards compatible, you don't need to change your config)
+* Removed serial parameter (automatic assigned now)
+
+* Weather history graphs will be cleared and start from scratch with this update

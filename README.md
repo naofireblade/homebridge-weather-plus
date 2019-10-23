@@ -6,7 +6,7 @@
 
 This is a weather plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations, daily forecasts and history graphs for multiple locations and services. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-plus).  
 
-If you like this plugin, I would be very grateful for your support:
+If you like this plugin and find it useful, I would be forever grateful for your support:
 
 <a href="https://www.buymeacoffee.com/2D1nUuK36" target="_blank"><img width="140" src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee"></a>
 
@@ -100,7 +100,7 @@ List with the latitude and longitude for your location (don't forget the square 
 **key**  
 The API key that you get by [registering](https://openweathermap.org/appid) for the Dark Sky service.
 
-**location**<sup>[2](#a2)</sup>  
+**locationId**<sup>[2](#a2)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
 
 **locationCity**<sup>[2](#a2)</sup>  
@@ -117,7 +117,7 @@ List with the latitude and longitude for your location (don't forget the square 
 		"platform": "WeatherPlus",
 		"service": "openweathermap",
 		"key": "YOUR_API_KEY",
-		"location": 2950159,
+		"locationId": 2950159,
 		"locationCity": "Berlin, DE",
 		"locationGeo": [52.5200066, 13.404954]
 	}
@@ -131,7 +131,7 @@ Since March 2019 you need to register your own weather station with Weather Unde
 **key**  
 The API key that you get by [registering](https://www.wunderground.com/member/api-keys) for the Weather Underground service.
 
-**location**  
+**stationId**  
 Your personal StationID.
 
 ```json
@@ -140,7 +140,7 @@ Your personal StationID.
         "platform": "WeatherPlus",
         "service": "weatherunderground",
         "key": "YOUR_API_KEY",
-        "location": "YOUR_STATION_ID"
+        "stationId": "YOUR_STATION_ID"
     }
 ]
 ```
@@ -165,23 +165,23 @@ Conversions used for reporting values. The default is `"metric"`. The options ar
 **language**  
 Translation for the current day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). The default is `en`.
 
-**displayName**  
-Name for the current condition accessory. The default is `"Now"`. You can also set this to your city name.
+**nameNow**  
+Name for the current condition accessory. The default is `"Now"`. You can also set this to your city name or weather service type.
 
-**displayNameForecast**  
+**nameForecast**  
 Name for the forecast accessories. Adds a prefix to the forecast days.
 
 **compatibility**  
 Compatibility for the Apple Home app, the Eve app or a mix of both. This is required due to limitations in the Apple Home app recognized weather conditions.  
 `"mix"` Temperature and humidity are displayed in the Apple Home app. All conditions are displayed in the Eve app.  
-`"eve"` Nothing is displayed in the Apple Home app. All conditions are displayed in the Eve app (temperature, humidity and pressure are combined into one row).  
+`"eve"` The device will be shown as unsupported in Apple Home app. All conditions are displayed in the Eve app (temperature, humidity and pressure are combined into one row).  
+
+**hidden**  
+// TODO, description and example update
 
 **fakegatoParameters**  
 Customization of the history storage system. By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the [location of the persisted file](https://github.com/simont77/fakegato-history#file-system) or to use [GoogleDrive](https://github.com/simont77/fakegato-history#google-drive).
  **Do not** modify the parameter for the fakegato internal timer.
-
-**serial**  
-Change the Serial Number of your weather accessory. If it's not provided the serial number will be set to the **location** if present, or to 999 if not. Note that for proper operation of fakegato when multiple fakegato-enabled weather accessories are present in your system, the serial number must be unique.
 
 ### Example
 

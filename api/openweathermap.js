@@ -4,11 +4,12 @@
 const Openweathermap = require('openweather-apis'),
 	converter = require('../util/converter'),
 	moment = require('moment-timezone'),
-	geoTz = require('geo-tz');
+	geoTz = require('geo-tz'),
+	debug = require('debug')('homebridge-weather-plus');
 
 class OpenWeatherMapAPI
 {
-	constructor(apiKey, language, location, locationGeo, locationCity, l, d)
+	constructor(apiKey, language, location, locationGeo, locationCity, l)
 	{
 		Openweathermap.setLang(language);
 		if (location)
@@ -51,12 +52,11 @@ class OpenWeatherMapAPI
 		];
 		this.forecastDays = 5;
 		this.log = l;
-		this.debug = d;
 	}
 
 	update(callback)
 	{
-		this.debug("Updating weather with OpenWeatherMap");
+		debug("Updating weather with OpenWeatherMap");
 
 		let weather = {};
 		Openweathermap.getAllWeather(function (err, jsonObj)

@@ -9,12 +9,10 @@ const CustomUUID = {
 
 var CustomService = {};
 
-module.exports = function (homebridge) {
-
-	var Service = homebridge.hap.Service;
-	var Characteristic = homebridge.hap.Characteristic;
-
-	CustomService.EveWeatherService = function (displayName, subtype) {
+module.exports = function (Service, Characteristic)
+{
+	CustomService.EveWeatherService = function (displayName, subtype)
+	{
 		Service.call(this, displayName, CustomUUID.EveWeather, subtype);
 		this.addCharacteristic(Characteristic.CurrentTemperature);
 	};

@@ -4,12 +4,13 @@
 const request = require('request'),
 	converter = require('../util/converter'),
 	moment = require('moment-timezone'),
-	geoTz = require('geo-tz');
+	geoTz = require('geo-tz'),
+    debug = require('debug')('homebridge-weather-plus');
 
 
 class YahooAPI
 {
-	constructor(location, l, d)
+	constructor(location, l)
 	{
 		this.attribution = 'Powered by Yahoo';
 		this.reportCharacteristics = [
@@ -35,12 +36,11 @@ class YahooAPI
 
 		this.location = location;
 		this.log = l;
-		this.debug = d;
 	}
 
 	update(callback)
 	{
-		this.debug("Updating weather with Yahoo");
+		debug("Updating weather with Yahoo");
 
 		const queryUri = `https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where u='c' AND woeid in (select woeid from geo.places(1) where text="${this.location}")&format=json`;
 		request(encodeURI(queryUri), function (err, response, body)
@@ -64,7 +64,7 @@ class YahooAPI
 	{
 		let report = {};
 		const timezone = geoTz(parseFloat(values.item.lat), parseFloat(values.item.long));
-		this.debug("Using Timezone: " + timezone);
+		debug("Using Timezone: " + timezone);
 
 		report.AirPressure = parseInt(values.atmosphere.pressure);
 		report.Condition = values.item.condition.text;
