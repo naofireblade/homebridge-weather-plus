@@ -223,9 +223,8 @@ class DarkSkyAPI
 			}
 
 			// Sum all values for the requested day
-			debug("Accumulate rain for " + now.tz(response.timezone).format('dddd') + (limit ? (' until ' + hour + ':00') : ''));
 			let result = converter.getRainAccumulated(response.hourly.data.slice(0, hour), 'precipIntensity');
-			debug("Accumulated rain: " + result);
+			debug("Accumulated rain for " + now.tz(response.timezone).format('dddd') + (limit ? (' until ' + hour + ':00') : '') + ": " + Math.round(result * 100) / 100);
 			callback(result);
 		}.bind(this))
 		.catch(function (error)

@@ -190,7 +190,6 @@ var getWindDirection = function (degree) {
 		default:
 			dir = 'Variable';
 	}
-	debug("Converted wind direction from " + degree + " degress to direction " + dir);
 	return dir;
 };
 
