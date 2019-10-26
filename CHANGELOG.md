@@ -145,7 +145,11 @@
 
 ## 3.0.0
 * Changed readme to improve comprehensibility
-* Changed naming of some parameters (all backwards compatible, you don't need to change your config)
+* Changed naming of some parameters (all backwards compatible, no need to update your config)
+* Fixed unsupported forecast day would throw an error in the darksky api
+* Fixed incorrect condition category for mostly cloudy days in the darksky api (was 0, is now 1)
 * Removed serial parameter (automatic assigned now)
 
+
 * Weather history graphs will be cleared and start from scratch with this update
+

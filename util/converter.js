@@ -26,15 +26,15 @@ const getConditionCategory = function (name)
 		case "fog":
 		case "hazy":
 		case "wind":
-			return 1;
+		case "partly-cloudy-day":
+		case "partly-cloudy-night":
 		case "partlycloudy":
+			return 1;
 		case "mostlysunny":
 		case "sunny":
 		case "clear":
 		case "clear-day":
 		case "clear-night":
-		case "partly-cloudy-day":
-		case "partly-cloudy-night":
 			return 0;
 		default:
 			return 0;

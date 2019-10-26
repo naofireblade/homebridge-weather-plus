@@ -193,7 +193,6 @@ class DarkSkyAPI
 			{
 				this.doTimeMachineRequest(api, now.clone().add(i, 'd'), function (result)
 				{
-					debug(this.cache.forecast);
 					this.cache.forecast['day' + i].rainDay = result;
 					callbacks--;
 					if (callbacks === 0)
