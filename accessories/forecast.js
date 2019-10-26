@@ -5,8 +5,6 @@ let Service,
 	Characteristic,
 	CustomCharacteristic;
 
-// TODO Refactoren (lambda foreach, kommentare, bind(this) entfernen, etc
-
 module.exports = function (_Service, _Characteristic, _CustomCharacteristic)
 {
 	Service = _Service;
@@ -22,8 +20,11 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 	this.log = platform.log;
 	this.config = platform.stationConfigs[stationIndex];
 	this.stationIndex = stationIndex;
+	this.day = day;
 	this.serial = this.config.serial + " - Day " + day;
 
+	// TODO Multilang
+	// Get a nice name for the forecast day
 	switch (day)
 	{
 		case 0:
@@ -36,37 +37,44 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 			this.name = "In " + day + " Days";
 			break;
 	}
+
+	// Add prefix (if configured) or suffix (if multiple stations) to forecast day
 	if (this.config.nameForecast)
+	{
 		this.name = this.config.nameForecast + " " + this.name;
+	}
 	else if (platform.stationConfigs.length > 1)
+	{
 		this.name = this.name + (stationIndex > 0 ? (" - " + (stationIndex + 1)) : "");
+	}
 
-
-	this.day = day;
-
-	// Create temperature sensor service that includes temperature characteristic
+	// Create temperature sensor service
 	this.forecastService = new Service.TemperatureSensor(this.name);
 
-
-	// Fix negative temperatures not supported by homekit
+	// Fix for negative temperatures, because they are not supported by homekit
 	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 
-	// Add additional characteristics to temperature sensor that are supported by the selected api
-	for (let i = 0; i < this.platform.stations[stationIndex].forecastCharacteristics.length; i++)
+	// Get all forecast characteristics that are supported by the selected api
+	this.platform.stations[stationIndex].forecastCharacteristics.forEach((characteristicName) =>
 	{
-		const name = this.platform.stations[stationIndex].forecastCharacteristics[i];
-
-		// humidity not a custom but a general apple home kit characteristic
-		if (name === "Humidity")
+		// Temperature is an official homekit characteristic
+		if (characteristicName === "Temperature")
 		{
+			// Do nothing, this characteristic is in the temperature service by default
+		}
+		// Humidity is an official homekit characteristic
+		else if (characteristicName === "Humidity")
+		{
+			// Add humidity to the temperature service
 			this.forecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 		}
-		// temperature is already in the service
-		else if (name !== "Temperature")
+		// Everything else is a custom characteristic
+		else
 		{
-			this.forecastService.addCharacteristic(CustomCharacteristic[name]);
+			// Add custom charactersitic to the temperature service
+			this.forecastService.addCharacteristic(CustomCharacteristic[characteristicName]);
 		}
-	}
+	});
 
 	// Create information service
 	this.informationService = new Service.AccessoryInformation();

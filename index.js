@@ -66,15 +66,15 @@ function WeatherPlusPlatform(_log, _config)
 		switch (config.service)
 		{
 			case "darksky":
-				debug("Adding station with weather service: Dark Sky");
+				this.log("Adding station with weather service Dark Sky named '" + config.nameNow + "'");
 				this.stations.push(new darksky(config.key, config.language, config.locationGeo || config.locationId, this.log));
 				break;
 			case "weatherunderground":
-				debug("Adding station with weather service: Weather Underground");
+				this.log("Adding station with weather service Weather Underground named '" + config.nameNow + "'");
 				this.stations.push(new weatherunderground(config.key, config.locationId, this.log));
 				break;
 			case "openweathermap":
-				debug("Adding station with weather service: OpenWeatherMap");
+				this.log("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
 				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, this.log));
 				break;
 			default:
@@ -88,13 +88,13 @@ function WeatherPlusPlatform(_log, _config)
 		config.forecast.forEach((day) =>
 		{
 			// Check if day is a number and within range of supported forecast days for the selected weather service
-			if (typeof day === "number" && (day % 1) === 0 && day >= 1 && day <= this.stations[index].forecastDays)
+			if (typeof day === "number" && (day % 1) === 0 && day >= 0 && day <= this.stations[index].forecastDays)
 			{
-				this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day - 1));
+				this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day));
 			}
 			else
 			{
-				debug("Ignoring forecast day: " + day);
+				debug("Ignoring forecast day: %s", day);
 			}
 		});
 	});
@@ -107,7 +107,6 @@ WeatherPlusPlatform.prototype = {
 	// Get the current condition accessory and all forecast accessories
 	accessories: function (callback)
 	{
-		debug("WeatherStationPlus: accessoriesList readed");
 		callback(this.accessoriesList);
 	},
 
@@ -133,7 +132,7 @@ WeatherPlusPlatform.prototype = {
 		station.nameNow = stationConfig.nameNow || station.nameNow;
 
 		// Station forecast name. Multiple parameter names are possible for backwards compatiblity
-		station.nameForecast = ""; // TODO testen mit mehreren Stations die Forecaste haben
+		station.nameForecast = "";
 		station.nameForecast = stationConfig.displayNameForecast || station.nameForecast;
 		station.nameForecast = stationConfig.nameForecast || station.nameForecast;
 
@@ -171,8 +170,7 @@ WeatherPlusPlatform.prototype = {
 							{
 								let service = accessory.currentConditionsService;
 								let data = weather.report;
-								debug("Current Conditions for station '" + accessory.name + "':");
-								debug(data);
+								debug("Current Conditions for station '%s': %O", accessory.name, data);
 
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.reportCharacteristics.forEach((characteristicName) =>
@@ -200,8 +198,7 @@ WeatherPlusPlatform.prototype = {
 							{
 								let service = accessory.forecastService;
 								let data = weather.forecasts[accessory.day];
-								debug("Forecast for station '" + accessory.name + "':");
-								debug(data);
+								debug("Forecast for station '%s': %O", accessory.name, data);
 
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.forecastCharacteristics.forEach((characteristicName) =>

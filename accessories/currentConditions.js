@@ -7,8 +7,6 @@ let Service,
 	CustomCharacteristic,
 	FakeGatoHistoryService;
 
-// TODO Refactoren (lambda foreach, kommentare, bind(this) entfernen, etc
-
 module.exports = function (_Service, _Characteristic, _CustomService, _CustomCharacteristic, _FakeGatoHistoryService)
 {
 	Service = _Service;
@@ -26,45 +24,44 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	this.log = platform.log;
 	this.config = platform.stationConfigs[stationIndex];
 	this.name = this.config.nameNow;
-	this.nameNow = this.name;  //needed by fakegato for proper logging and file naming
+	this.displayName  = this.config.nameNow;
 	this.stationIndex = stationIndex;
 
-	// History service FakeGato
-
-	// Create temperature sensor or Eve Weather service that includes temperature characteristic
-
-	if (this.config.compatibility !== "eve")
+	// Use homekit temperature service or eve weather service depending on compatibility setting
+	debug("Using compatibility mode '%s'", this.config.compatibility);
+	if (this.config.compatibility === "eve")
 	{
-		this.currentConditionsService = new Service.TemperatureSensor(this.name);
-		debug("Using mixed mode for compatibility");
+		this.currentConditionsService = new CustomService.EveWeatherService(this.name);
 	}
 	else
 	{
-		this.currentConditionsService = new CustomService.EveWeatherService(this.name);
-		debug("Using eve mode for compatibility");
+		this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	}
 
-	// Fix negative temperatures not supported by homekit
+	// Fix for negative temperatures, because they are not supported by homekit
 	this.currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 
-	// Add additional characteristics to temperature sensor that are supported by the selected api
-	for (let i = 0; i < this.platform.stations[stationIndex].reportCharacteristics.length; i++)
+	// Get all current condition characteristics that are supported by the selected api
+	this.platform.stations[stationIndex].reportCharacteristics.forEach((characteristicName) =>
 	{
-		const name = this.platform.stations[stationIndex].reportCharacteristics[i];
-
-		debug("Characteristic-name:" + name);
-
-		// humidity not a custom but a general apple home kit characteristic
-		if (name === "Humidity")
+		// Temperature is an official homekit characteristic
+		if (characteristicName === "Temperature")
 		{
+			// Do nothing, this characteristic is in the temperature service by default
+		}
+		// Humidity is an official homekit characteristic
+		else if (characteristicName === "Humidity")
+		{
+			// Add humidity to the temperature service
 			this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 		}
-		// temperature is already in the service
-		else if (name !== "Temperature")
+		// Everything else is a custom characteristic
+		else
 		{
-			this.currentConditionsService.addCharacteristic(CustomCharacteristic[name]);
+			// Add custom charactersitic to the temperature service
+			this.currentConditionsService.addCharacteristic(CustomCharacteristic[characteristicName]);
 		}
-	}
+	});
 
 	// Create information service
 	this.informationService = new Service.AccessoryInformation();

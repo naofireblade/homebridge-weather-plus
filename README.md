@@ -168,10 +168,10 @@ Conversions used for reporting values. The default is `"metric"`. The options ar
 Translation for the current day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). The default is `en`.
 
 **nameNow**  
-Name for the current condition accessory. The default is `"Now"`. You can also set this to your city name or weather service type.
+Name for the current condition accessory. The default is `"Now"`. You could set this to your city name or weather service type.
 
 **nameForecast**  
-Name for the forecast accessories. Adds a prefix to the forecast days.
+Name for the forecast accessories. Adds a prefix to the forecast days. You could set this to your city name or weather service type as well.
 
 **compatibility**  
 Compatibility for the Apple Home app, the Eve app or a mix of both. This is required due to limitations in the Apple Home app recognized weather conditions.  
