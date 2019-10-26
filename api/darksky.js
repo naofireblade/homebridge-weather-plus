@@ -9,7 +9,7 @@ const DarkSky = require('dark-sky'),
 
 class DarkSkyAPI
 {
-	constructor(apiKey, language, locationGeo, l)
+	constructor(apiKey, language, locationGeo, log)
 	{
 		this.attribution = 'Powered by Dark Sky';
 		this.reportCharacteristics =
@@ -72,7 +72,7 @@ class DarkSkyAPI
 			units: 'si',
 			exclude: ['minutely', 'hourly', 'alerts', 'flags']
 		});
-		this.log = l;
+		this.log = log;
 		moment.locale(language);
 
 		this.darkskyTimeMachine = new DarkSky(apiKey);

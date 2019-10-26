@@ -3,7 +3,6 @@
 const darksky = require("./api/darksky").DarkSkyAPI,
 	weatherunderground = require("./api/weatherunderground").WundergroundAPI,
 	openweathermap = require("./api/openweathermap").OpenWeatherMapAPI,
-	yahoo = require("./api/yahoo").YahooAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	version = require("./package.json").version;
 
@@ -11,15 +10,16 @@ let Service,
 	Characteristic,
 	CustomService,
 	CustomCharacteristic,
+	ForecastWeatherAccessory,
 	FakeGatoHistoryService;
 
 module.exports = function (homebridge)
 {
-	// Homekit Services and Characteristics
+	// Homekit services and characteristics
 	Service = homebridge.hap.Service;
 	Characteristic = homebridge.hap.Characteristic;
 
-	// History Service
+	// History service
 	FakeGatoHistoryService = require("fakegato-history")(homebridge);
 
 	// Start platform
@@ -46,16 +46,10 @@ function WeatherPlusPlatform(log, config)
 	// Custom Services and Characteristics
 	CustomService = require("./util/services")(Service, Characteristic);
 	CustomCharacteristic = require("./util/characteristics")(Characteristic, this.units);
+	ForecastWeatherAccessory = require("./accessories/forecast")(Service, Characteristic, CustomCharacteristic);
 
-	// Create weather stations
-	if ("stations" in config)
-	{
-		this.stations = this.config.stations;
-	}
-	else
-	{
-		this.stations = [{}];
-	}
+	// Create weather stations, create default one if no stations array given
+	this.stations = this.config.stations || [{}];
 
 	// Parse config for each station
 	this.stations.forEach((station, index) =>
@@ -65,40 +59,34 @@ function WeatherPlusPlatform(log, config)
 	});
 
 	// Create accessories
-	this.stations.forEach(function (station, index)
+	this.stations.forEach((station, index) =>
 	{
-		if (station.service === "darksky")
+		// Use api depending on selected weather service
+		switch (station.service)
 		{
-			debug("Using service dark sky");
-			// TODO adapt unit of characteristics
-			if (station.locationId)
-			{
-				station.locationGeo = station.locationId;
-			}
-			this.apis.push(new darksky(station.key, station.language, station.locationGeo, this.log, this.debug));
-		}
-		else if (station.service === "weatherunderground")
-		{
-			debug("Using service weather underground");
-			this.apis.push(new weatherunderground(station.key, station.locationId, log, debug));
-		}
-		else if (station.service === "openweathermap")
-		{
-			debug("Using service OpenWeatherMap");
-			this.apis.push(new openweathermap(station.key, station.language, station.locationId, station.locationGeo, station.locationCity, this.log, this.debug));
-		}
-		else if (station.service === "yahoo")
-		{
-			debug("Using service Yahoo");
-			this.apis.push(new yahoo(this.locationId, log, debug));
+			case "darksky":
+				debug("Adding station with weather service: Dark Sky");
+				this.apis.push(new darksky(station.key, station.language, station.locationGeo || station.locationId, this.log));
+				break;
+			case "weatherunderground":
+				debug("Adding station with weather service: Weather Underground");
+				this.apis.push(new weatherunderground(station.key, station.locationId, this.log));
+				break;
+			case "openweathermap":
+				debug("Adding station with weather service: OpenWeatherMap");
+				this.apis.push(new openweathermap(station.key, station.language, station.locationId, station.locationGeo, station.locationCity, this.log));
+				break;
+			default:
+				this.log.error("Unsupported weather service: " + station.service);
 		}
 
+		// Create accessory for current weather conditions
 		this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this, index));
 
-		// Add all configured forecast days
-		for (let i = 0; i < station.forecast.length; i++)
+		// Create accessories for each weather forecast day
+		station.forecast.forEach((day) =>
 		{
-			const day = station.forecast[i];
+			// Check if day is a number and within range of supported forecast days for the selected weather service
 			if (typeof day === "number" && (day % 1) === 0 && day >= 1 && day <= this.apis[index].forecastDays)
 			{
 				this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day - 1));
@@ -107,10 +95,10 @@ function WeatherPlusPlatform(log, config)
 			{
 				debug("Ignoring forecast day: " + day);
 			}
-		}
-	}.bind(this));
+		});
+	});
 
-	// Start update timer
+	// Start update interval
 	this.updateWeather();
 }
 
@@ -122,6 +110,7 @@ WeatherPlusPlatform.prototype = {
 		callback(this.accessoriesList);
 	},
 
+	// Parse the station config and make sure older config versions work as well
 	parseStationConfig (station)
 	{
 		let stationConfig = JSON.parse(JSON.stringify(station));
@@ -129,7 +118,7 @@ WeatherPlusPlatform.prototype = {
 		// Weather service
 		station.service = stationConfig.service.toLowerCase().replace(/\s/g, "");
 
-		// Location id. Multiple parameter names are possible for backwards compatiblity
+		// Location id. Multiple parameter names are possible for backwards compatiblity, locationGeo and locationCity are copied
 		station.locationId = "";
 		station.locationId = stationConfig.location || station.locationId;
 		station.locationId = stationConfig.stationId || station.locationId;
@@ -318,80 +307,5 @@ CurrentConditionsWeatherAccessory.prototype = {
 	getServices: function ()
 	{
 		return [this.informationService, this.currentConditionsService, this.historyService];
-	}
-};
-
-// ======================
-// = Forecast Accessory =
-// ======================
-function ForecastWeatherAccessory(platform, stationIndex, day)
-{
-	this.platform = platform;
-	this.log = platform.log;
-	this.config = platform.stations[stationIndex];
-	this.stationIndex = stationIndex;
-	this.serial = this.config.serial + " - Day " + day;
-
-	switch (day)
-	{
-		case 0:
-			this.name = "Today";
-			break;
-		case 1:
-			this.name = "In 1 Day";
-			break;
-		default:
-			this.name = "In " + day + " Days";
-			break;
-	}
-	if (this.config.nameForecast)
-		this.name = this.config.nameForecast + " " + this.name;
-	else if (platform.stations.length > 1)
-		this.name = this.name + " - " + (stationIndex + 1);
-
-	this.day = day;
-
-	// Create temperature sensor service that includes temperature characteristic
-	this.forecastService = new Service.TemperatureSensor(this.name);
-
-
-	// Fix negative temperatures not supported by homekit
-	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
-
-	// Add additional characteristics to temperature sensor that are supported by the selected api
-	for (let i = 0; i < this.platform.apis[stationIndex].forecastCharacteristics.length; i++)
-	{
-		const name = this.platform.apis[stationIndex].forecastCharacteristics[i];
-
-		// humidity not a custom but a general apple home kit characteristic
-		if (name === "Humidity")
-		{
-			this.forecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
-		}
-		// temperature is already in the service
-		else if (name !== "Temperature")
-		{
-			this.forecastService.addCharacteristic(CustomCharacteristic[name]);
-		}
-	}
-
-	// Create information service
-	this.informationService = new Service.AccessoryInformation();
-	this.informationService
-	.setCharacteristic(Characteristic.Manufacturer, "github.com naofireblade")
-	.setCharacteristic(Characteristic.Model, this.platform.apis[stationIndex].attribution)
-	.setCharacteristic(Characteristic.SerialNumber, this.serial)
-	.setCharacteristic(Characteristic.FirmwareRevision, version);
-}
-
-ForecastWeatherAccessory.prototype = {
-	identify: function (callback)
-	{
-		callback();
-	},
-
-	getServices: function ()
-	{
-		return [this.informationService, this.forecastService];
 	}
 };

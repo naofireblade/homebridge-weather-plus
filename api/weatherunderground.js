@@ -7,7 +7,7 @@ const request = require('request'),
 
 class WundergroundAPI
 {
-	constructor(apiKey, location, l)
+	constructor(apiKey, location, log)
 	{
 		this.attribution = 'Powered by Weather Underground';
 		this.reportCharacteristics = [
@@ -25,7 +25,7 @@ class WundergroundAPI
 			'RainDay'
 		];
 
-		this.log = l;
+		this.log = log;
 
 		this.location = location;
 		this.apiKey = apiKey;

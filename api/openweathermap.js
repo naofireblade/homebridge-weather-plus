@@ -9,7 +9,7 @@ const Openweathermap = require('openweather-apis'),
 
 class OpenWeatherMapAPI
 {
-	constructor(apiKey, language, location, locationGeo, locationCity, l)
+	constructor(apiKey, language, location, locationGeo, locationCity, log)
 	{
 		Openweathermap.setLang(language);
 		if (location)
@@ -51,7 +51,7 @@ class OpenWeatherMapAPI
 			'WindSpeed'
 		];
 		this.forecastDays = 5;
-		this.log = l;
+		this.log = log;
 	}
 
 	update(callback)
