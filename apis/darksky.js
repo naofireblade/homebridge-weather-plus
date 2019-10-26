@@ -51,7 +51,7 @@ class DarkSkyAPI
 				'WindSpeed',
 				'WindSpeedMax'
 			];
-		this.forecastDays = 7;
+		this.forecastDays = 6;
 		this.cache = {
 			report: {},
 			forecast: {
@@ -193,9 +193,10 @@ class DarkSkyAPI
 			{
 				this.doTimeMachineRequest(api, now.clone().add(i, 'd'), function (result)
 				{
+					debug(this.cache.forecast);
 					this.cache.forecast['day' + i].rainDay = result;
 					callbacks--;
-					if (callbacks == 0)
+					if (callbacks === 0)
 					{
 						callback();
 					}

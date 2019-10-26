@@ -85,7 +85,7 @@ function WeatherPlusPlatform(_log, _config)
 		this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this, index));
 
 		// Create accessories for each weather forecast day
-		config.forecast.forEach((day) =>
+		config.forecast.forEach((day, i, array) =>
 		{
 			// Check if day is a number and within range of supported forecast days for the selected weather service
 			if (typeof day === "number" && (day % 1) === 0 && day >= 0 && day <= this.stations[index].forecastDays)
@@ -95,6 +95,7 @@ function WeatherPlusPlatform(_log, _config)
 			else
 			{
 				debug("Ignoring forecast day: %s", day);
+				array.splice(i, 1);
 			}
 		});
 	});
