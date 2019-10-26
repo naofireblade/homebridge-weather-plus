@@ -12,6 +12,8 @@ If you like this plugin and find it useful, I would be forever grateful for your
 
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-plus/issues).
 
+// TODO Neue Screenshots machen und hier direkt anzeigen
+
 ## Features
 - Get current observations and forecasts for up to 10 days
 - Choose from 4 different weather [services](#choose-your-weather-service)
@@ -196,8 +198,8 @@ Customization of the history storage system. By default the history is persisted
         "interval": 5,
         "units": "metric",
         "language": "en",
-        "displayName": "New York",
-        "displayNameForecast": "New York Forecast",
+        "displayName": "Berlin",
+        "displayNameForecast": "Berlin Forecast",
         "compatibility": "mix",
         "serial": "1337"
     }
@@ -221,8 +223,8 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
         "units": "si",
         "stations": [
             {
-                "displayName": "New York",
-                "displayNameForecast": "New York forefacst",
+                "displayName": "Berlin",
+                "displayNameForecast": "Berlin forefacst",
                 "service": "darksky",
                 "key": "YOUR_API_KEY",
                 "forecast": [1,2,3,4,5],

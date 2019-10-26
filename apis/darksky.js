@@ -85,13 +85,13 @@ class DarkSkyAPI
 		});
 	}
 
-	update(callback, requestedForecastDays)
+	update(forecastDays, callback)
 	{
 		let weather = {};
 		weather.forecasts = [];
 		let that = this;
 
-		this.updateCache(this.darkskyTimeMachine, requestedForecastDays, function ()
+		this.updateCache(this.darkskyTimeMachine, forecastDays, function ()
 		{
 			debug("Updating weather with dark sky");
 			that.darksky.get()
@@ -169,7 +169,7 @@ class DarkSkyAPI
 		return forecast;
 	}
 
-	updateCache(api, requestedForecastDays, callback)
+	updateCache(api, forecastDays, callback)
 	{
 		if (typeof this.cache.lastUpdate === 'undefined' || new Date() - this.cache.lastUpdate > 3600000)
 		{
@@ -177,7 +177,7 @@ class DarkSkyAPI
 			this.cache.lastUpdate = new Date();
 
 			let now = moment();
-			let callbacks = requestedForecastDays + 1;
+			let callbacks = forecastDays + 1;
 
 			this.doTimeMachineRequest(api, now, function (result)
 			{
@@ -189,7 +189,7 @@ class DarkSkyAPI
 				}
 			}.bind(this), true);
 
-			for (let i = 0; i < requestedForecastDays; i++)
+			for (let i = 0; i < forecastDays; i++)
 			{
 				this.doTimeMachineRequest(api, now.clone().add(i, 'd'), function (result)
 				{

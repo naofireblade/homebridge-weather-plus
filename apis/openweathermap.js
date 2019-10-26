@@ -54,7 +54,7 @@ class OpenWeatherMapAPI
 		this.log = log;
 	}
 
-	update(callback)
+	update(forecastDays, callback)
 	{
 		debug("Updating weather with OpenWeatherMap");
 

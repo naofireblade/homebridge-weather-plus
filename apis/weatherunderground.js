@@ -34,7 +34,7 @@ class WundergroundAPI
 		this.units = 's';
 	}
 
-	update(callback)
+	update(forecastDays, callback)
 	{
 		debug("Updating weather with weather underground");
 		let weather = {};

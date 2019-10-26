@@ -38,7 +38,7 @@ class YahooAPI
 		this.log = l;
 	}
 
-	update(callback)
+	update(forecastDays, callback)
 	{
 		debug("Updating weather with Yahoo");
 
