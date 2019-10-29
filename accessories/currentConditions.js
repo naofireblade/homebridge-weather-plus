@@ -44,22 +44,25 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	// Get all current condition characteristics that are supported by the selected api
 	this.platform.stations[stationIndex].reportCharacteristics.forEach((characteristicName) =>
 	{
-		// Temperature is an official homekit characteristic
-		if (characteristicName === "Temperature")
+		if (this.config.hidden.indexOf(characteristicName) === -1)
 		{
-			// Do nothing, this characteristic is in the temperature service by default
-		}
-		// Humidity is an official homekit characteristic
-		else if (characteristicName === "Humidity")
-		{
-			// Add humidity to the temperature service
-			this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
-		}
-		// Everything else is a custom characteristic
-		else
-		{
-			// Add custom charactersitic to the temperature service
-			this.currentConditionsService.addCharacteristic(CustomCharacteristic[characteristicName]);
+			// Temperature is an official homekit characteristic
+			if (characteristicName === "Temperature")
+			{
+				// Do nothing, this characteristic is in the temperature service by default
+			}
+			// Humidity is an official homekit characteristic
+			else if (characteristicName === "Humidity")
+			{
+				// Add humidity to the temperature service
+				this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+			}
+			// Everything else is a custom characteristic
+			else
+			{
+				// Add custom charactersitic to the temperature service
+				this.currentConditionsService.addCharacteristic(CustomCharacteristic[characteristicName]);
+			}
 		}
 	});
 

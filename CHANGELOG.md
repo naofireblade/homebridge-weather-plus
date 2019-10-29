@@ -144,6 +144,7 @@
 * Fixed crash in weatherunderground on malformed/missing server response
 
 ## 3.0.0
+* Added option to hide observation and forecast values 
 * Changed readme to improve comprehensibility
 * Changed naming of some parameters (all backwards compatible, no need to update your config)
 * Fixed unsupported forecast day would throw an error in the darksky api

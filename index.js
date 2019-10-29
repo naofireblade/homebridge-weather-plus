@@ -26,9 +26,7 @@ module.exports = function (homebridge)
 	homebridge.registerPlatform("homebridge-weather-plus", "WeatherPlus", WeatherPlusPlatform);
 };
 
-// ============
-// = Platform =
-// ============
+// TODO v3.0.0 features
 function WeatherPlusPlatform(_log, _config)
 {
 	debug("Init WeatherPlus platform");
@@ -147,6 +145,10 @@ WeatherPlusPlatform.prototype = {
 		station.language = stationConfig.language || "en";
 		station.fakegatoParameters = stationConfig.fakegatoParameters || {storage: "fs"};
 		station.hidden = stationConfig.hidden || [];
+		// station.hidden.forEach((hidden) => {
+		// 	hidden = hidden.toLowerCase();
+		// });
+		debug(station.hidden);
 		station.serial = station.service + " - " + (station.locationId || '') + (station.locationGeo || '') + (station.locationCity || '');
 	},
 
@@ -176,7 +178,7 @@ WeatherPlusPlatform.prototype = {
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.reportCharacteristics.forEach((characteristicName) =>
 								{
-									this.saveCharacteristic(service, characteristicName, data[characteristicName]);
+									this.saveCharacteristic(accessory.config, service, characteristicName, data[characteristicName]);
 								});
 
 								debug("Saving history entry");
@@ -204,7 +206,7 @@ WeatherPlusPlatform.prototype = {
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.forecastCharacteristics.forEach((characteristicName) =>
 								{
-									this.saveCharacteristic(service, characteristicName, data[characteristicName]);
+									this.saveCharacteristic(accessory.config, service, characteristicName, data[characteristicName]);
 								});
 							} catch (error)
 							{
@@ -221,23 +223,26 @@ WeatherPlusPlatform.prototype = {
 	},
 
 	// Save changes from update in characteristics
-	saveCharacteristic: function (service, name, value)
+	saveCharacteristic: function (config, service, name, value)
 	{
-		// Temperature is an official homekit characteristic
-		if (name === "Temperature")
+		if (config.hidden.indexOf(name) === -1 || name === "Temperature")
 		{
-			service.setCharacteristic(Characteristic.CurrentTemperature, value);
-		}
-		// Humidity is an official homekit characteristic
-		else if (name === "Humidity")
-		{
-			service.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
-		}
-		// Everything else is a custom characteristic
-		else
-		{
-			value = CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
-			service.setCharacteristic(CustomCharacteristic[name], value);
+			// Temperature is an official homekit characteristic
+			if (name === "Temperature")
+			{
+				service.setCharacteristic(Characteristic.CurrentTemperature, value);
+			}
+			// Humidity is an official homekit characteristic
+			else if (name === "Humidity")
+			{
+				service.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+			}
+			// Everything else is a custom characteristic
+			else
+			{
+				value = CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
+				service.setCharacteristic(CustomCharacteristic[name], value);
+			}
 		}
 	}
 };

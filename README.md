@@ -151,18 +151,19 @@ Your personal StationID.
 
 Below are explanations for a lot of advanced parameters to adjust the plugin to your needs. All parameters are *optional*.
 
+**compatibility**  
+Compatibility for the Apple Home app, the Eve app or a mix of both. This is required due to limitations in the Apple Home app recognized weather conditions.  
+`"mix"` Temperature and humidity are displayed in the Apple Home app. All conditions are displayed in the Eve app.  
+`"eve"` The device will be shown as unsupported in Apple Home app. All conditions are displayed in the Eve app (temperature, humidity and pressure are combined into one row).  
+
 **forecast**  
 List of forecast days with 1 for today, 2 for tomorrow etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
 
+**hidden**  
+List of observation and forecast values that should not be displayed. Possible options are `"AirPressure"`, `"CloudCover"`, `"Condition"`, `"ConditionCategory"`, `"DewPoint"`, `"ForecastDay"`, `"Humidity"`, `"ObservationStation"`, `"ObservationTime"`, `"Ozone"`, `"Rain1h"`, `"RainChance"`, `"RainDay"`, `"SolarRadiation"`, `"TemperatureMin"`, `"UVIndex"`, `"Visibility"`, `"WindDirection"`, `"WindSpeed"`, `"WindSpeedMax"`. Don't forget the square brackets.
+
 **interval**  
 Update interval in minutes. The default is `4` minutes because the rate for free API keys is limited.
-
-**units**  
-Conversions used for reporting values. The default is `"metric"`. The options are:  
-`"si"` or `"metric"`  
-`"us"` or `"imperial"`  
-`"ca"` to report wind speeds in km/h instead of m/s  
-`"uk"` to report visibility in miles and wind speeds in km/h instead of m/s
 
 **language**  
 Translation for the current day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). The default is `en`.
@@ -173,13 +174,12 @@ Name for the current condition accessory. The default is `"Now"`. You could set 
 **nameForecast**  
 Name for the forecast accessories. Adds a prefix to the forecast days. You could set this to your city name or weather service type as well.
 
-**compatibility**  
-Compatibility for the Apple Home app, the Eve app or a mix of both. This is required due to limitations in the Apple Home app recognized weather conditions.  
-`"mix"` Temperature and humidity are displayed in the Apple Home app. All conditions are displayed in the Eve app.  
-`"eve"` The device will be shown as unsupported in Apple Home app. All conditions are displayed in the Eve app (temperature, humidity and pressure are combined into one row).  
-
-**hidden**  
-// TODO, description and example update
+**units**  
+Conversions used for reporting values. The default is `"metric"`. The options are:  
+`"si"` or `"metric"`  
+`"us"` or `"imperial"`  
+`"ca"` to report wind speeds in km/h instead of m/s  
+`"uk"` to report visibility in miles and wind speeds in km/h instead of m/s
 
 **fakegatoParameters**  
 Customization of the history storage system. By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the [location of the persisted file](https://github.com/simont77/fakegato-history#file-system) or to use [GoogleDrive](https://github.com/simont77/fakegato-history#google-drive).
@@ -194,14 +194,14 @@ Customization of the history storage system. By default the history is persisted
         "service": "darksky",
         "key": "XXXXXXXXXXXXXXX",
         "locationGeo": [52.5200066,13.404954],
-        "forecast": [1,2],
-        "interval": 5,
-        "units": "metric",
-        "language": "en",
-        "displayName": "Berlin",
-        "displayNameForecast": "Berlin Forecast",
         "compatibility": "mix",
-        "serial": "1337"
+        "forecast": [1,2],
+        "hidden": ["CloudCover", "DewPoint"],
+        "interval": 5,
+        "language": "en",
+        "nameNow": "Berlin",
+        "nameForecast": "Berlin Forecast",
+        "units": "metric",
     }
 ]
 ```
