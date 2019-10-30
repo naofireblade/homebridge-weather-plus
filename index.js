@@ -65,15 +65,15 @@ function WeatherPlusPlatform(_log, _config)
 		{
 			case "darksky":
 				this.log("Adding station with weather service Dark Sky named '" + config.nameNow + "'");
-				this.stations.push(new darksky(config.key, config.language, config.locationGeo || config.locationId, this.log));
+				this.stations.push(new darksky(config.key, config.language, config.locationGeo || config.locationId, config.conditionDetail, this.log));
 				break;
 			case "weatherunderground":
 				this.log("Adding station with weather service Weather Underground named '" + config.nameNow + "'");
-				this.stations.push(new weatherunderground(config.key, config.locationId, this.log));
+				this.stations.push(new weatherunderground(config.key, config.locationId, config.conditionDetail, this.log));
 				break;
 			case "openweathermap":
 				this.log("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
-				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, this.log));
+				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, config.conditionDetail, this.log));
 				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
@@ -139,6 +139,9 @@ WeatherPlusPlatform.prototype = {
 		station.compatibility = "mix";
 		station.compatibility = stationConfig.currentObservations || station.compatibility;
 		station.compatibility = stationConfig.compatibility || station.compatibility;
+
+		// Condition detail level
+		station.conditionDetail = stationConfig.conditionCategory || "simple";
 
 		// Other options
 		station.forecast = stationConfig.forecast || [];

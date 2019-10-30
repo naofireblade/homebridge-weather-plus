@@ -29,7 +29,7 @@ The following **19 observation and forecast values** can be displayed and used i
 - Air Pressure
 - Cloud Cover
 - Condition
-- Condition Category (Sun = 0, Clouds = 1, Rain = 2, Snow = 3)
+- Condition Category <sup>[1](#a1), </sup><sup>[2](#a2)</sup>
 - Dew Point
 - Humidity
 - Ozone
@@ -49,11 +49,14 @@ The following **19 observation and forecast values** can be displayed and used i
 - *Observation Station*
 - *Forecast day*
 
+> <b name="a1">1</b> Simple: clear(0), overcast(1), rain (2), snow (3)  
+> <b name="a2">2</b> Detailed: clear(0), few clouds(1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather(9)
+
 ## Choose your Weather Service
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |            Weather Underground <sup>[1](#a1)</sup>               |
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |            Weather Underground <sup>[3](#a3)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | Current observation values |                      15                      |                                7                                 |                                12                                |
 | Forecast values            |                      16                      |                                9                                 |                                 0                                |
@@ -63,7 +66,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Free                       |               :heavy_check_mark:             |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
 | Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
 
-> <b name="a1">1</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
+> <b name="a3">3</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
 
 > *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
@@ -102,16 +105,16 @@ List with the latitude and longitude for your location (don't forget the square 
 **key**  
 The API key that you get by [registering](https://openweathermap.org/appid) for the Dark Sky service.
 
-**locationId**<sup>[2](#a2)</sup>  
+**locationId**<sup>[4](#a4)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
 
-**locationCity**<sup>[2](#a2)</sup>  
+**locationCity**<sup>[4](#a4)</sup>  
 City name and optional country code, can be found [here](https://openweathermap.org/find).
 
-**locationGeo**<sup>[2](#a2)</sup>  
+**locationGeo**<sup>[4](#a4)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
-> <b name="a2">2</b> You need only **one** of these location options.
+> <b name="a4">4</b> You need only **one** of these location options.
 
 ```json
 "platforms": [
@@ -156,6 +159,11 @@ Compatibility for the Apple Home app, the Eve app or a mix of both. This is requ
 `"mix"` Temperature and humidity are displayed in the Apple Home app. All conditions are displayed in the Eve app.  
 `"eve"` The device will be shown as unsupported in Apple Home app. All conditions are displayed in the Eve app (temperature, humidity and pressure are combined into one row).  
 
+**conditionCategory**  
+Detail level of the condition category. Not available for WeatherUnderground. Default is `simple`.  
+`"simple""` [4 different categories](#a1)  
+`"detailed""` [10 different categories](#a2)
+
 **forecast**  
 List of forecast days with 1 for today, 2 for tomorrow etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
 
@@ -195,6 +203,7 @@ Customization of the history storage system. By default the history is persisted
         "key": "XXXXXXXXXXXXXXX",
         "locationGeo": [52.5200066,13.404954],
         "compatibility": "mix",
+        "conditionCategory": "detailed",
         "forecast": [1,2],
         "hidden": ["CloudCover", "DewPoint"],
         "interval": 5,

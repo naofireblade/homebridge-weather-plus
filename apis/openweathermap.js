@@ -9,7 +9,7 @@ const Openweathermap = require('openweather-apis'),
 
 class OpenWeatherMapAPI
 {
-	constructor(apiKey, language, location, locationGeo, locationCity, log)
+	constructor(apiKey, language, location, locationGeo, locationCity, conditionDetail, log)
 	{
 		Openweathermap.setLang(language);
 		if (location)
@@ -51,6 +51,7 @@ class OpenWeatherMapAPI
 			'WindSpeed'
 		];
 		this.forecastDays = 5;
+		this.conditionDetail = conditionDetail;
 		this.log = log;
 	}
 
@@ -97,7 +98,7 @@ class OpenWeatherMapAPI
 		report.AirPressure = parseInt(values.main.pressure);
 		report.CloudCover = parseInt(values.clouds.all);
 		report.Condition = values.weather[0].description;
-		report.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id);
+		report.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id, this.conditionDetail);
 		report.Humidity = parseInt(values.main.humidity);
 		report.ObservationTime = moment.unix(values.dt).tz(timezone).format('HH:mm:ss');
 		report.Temperature = values.main.temp;
@@ -137,7 +138,7 @@ class OpenWeatherMapAPI
 		forecast.AirPressure = parseInt(values.main.pressure);
 		forecast.CloudCover = parseInt(values.clouds.all);
 		forecast.Condition = values.weather[0].description;
-		forecast.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id);
+		forecast.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id, this.conditionDetail);
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		forecast.Humidity = parseInt(values.main.humidity);
 		forecast.Temperature = values.main.temp_max;

@@ -62,6 +62,12 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				// Add custom charactersitic to the temperature service
 				this.currentConditionsService.addCharacteristic(CustomCharacteristic[characteristicName]);
+
+				// Increase upper limit if condition category is set to detailed
+				if (characteristicName === "ConditionCategory" && this.config.conditionDetail === "detailed")
+				{
+					this.currentConditionsService.getCharacteristic(CustomCharacteristic[characteristicName]).props.maxValue = 9;
+				}
 			}
 		}
 	});

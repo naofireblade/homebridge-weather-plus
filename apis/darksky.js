@@ -9,7 +9,7 @@ const DarkSky = require('dark-sky'),
 
 class DarkSkyAPI
 {
-	constructor(apiKey, language, locationGeo, log)
+	constructor(apiKey, language, locationGeo, conditionDetail, log)
 	{
 		this.attribution = 'Powered by Dark Sky';
 		this.reportCharacteristics =
@@ -72,6 +72,7 @@ class DarkSkyAPI
 			units: 'si',
 			exclude: ['minutely', 'hourly', 'alerts', 'flags']
 		});
+		this.conditionDetail = conditionDetail;
 		this.log = log;
 		moment.locale(language);
 
@@ -127,7 +128,7 @@ class DarkSkyAPI
 		report.AirPressure = parseInt(values.pressure);
 		report.CloudCover = parseInt(values.cloudCover * 100);
 		report.Condition = values.summary;
-		report.ConditionCategory = converter.getConditionCategory(values.icon);
+		report.ConditionCategory = converter.getConditionCategoryDarkSky(values.icon, this.conditionDetail);
 		report.DewPoint = parseInt(values.dewPoint);
 		report.Humidity = parseInt(values.humidity * 100);
 		report.ObservationTime = moment.unix(values.time).tz(timezone).format('HH:mm:ss');
@@ -144,14 +145,14 @@ class DarkSkyAPI
 		return report;
 	}
 
-	parseForecast(values, timezone, i)
+	parseForecast(values, timezone)
 	{
 		let forecast = {};
 
 		forecast.AirPressure = parseInt(values.pressure);
 		forecast.CloudCover = parseInt(values.cloudCover * 100);
 		forecast.Condition = values.summary;
-		forecast.ConditionCategory = converter.getConditionCategory(values.icon);
+		forecast.ConditionCategory = converter.getConditionCategoryDarkSky(values.icon, this.conditionDetail);
 		forecast.DewPoint = parseInt(values.dewPoint);
 		forecast.ForecastDay = moment.unix(values.time).tz(timezone).format('dddd');
 		forecast.Humidity = parseInt(values.humidity * 100);

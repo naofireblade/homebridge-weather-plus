@@ -75,6 +75,12 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 			{
 				// Add custom charactersitic to the temperature service
 				this.forecastService.addCharacteristic(CustomCharacteristic[characteristicName]);
+
+				// Increase upper limit if condition category is set to detailed
+				if (characteristicName === "ConditionCategory" && this.config.conditionDetail === "detailed")
+				{
+					this.forecastService.getCharacteristic(CustomCharacteristic[characteristicName]).props.maxValue = 9;
+				}
 			}
 		}
 	});
