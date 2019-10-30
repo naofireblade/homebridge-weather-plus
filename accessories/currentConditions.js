@@ -62,7 +62,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			// Humidity is an official homekit characteristic
 			else if (characteristicName === "Humidity")
 			{
-				if (this.config.extraHumidity)
+				if (!this.config.extraHumidity)
 				{
 					// Add humidity to the temperature service
 					this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
