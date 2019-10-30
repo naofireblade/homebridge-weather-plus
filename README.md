@@ -171,7 +171,7 @@ Separate humidity from the weather accessory to an own accessory if set to `true
 List of forecast days with 1 for today, 2 for tomorrow etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
 
 **hidden**  
-List of observation and forecast values that should not be displayed. Possible options are `"AirPressure"`, `"CloudCover"`, `"Condition"`, `"ConditionCategory"`, `"DewPoint"`, `"ForecastDay"`, `"Humidity"`, `"ObservationStation"`, `"ObservationTime"`, `"Ozone"`, `"Rain1h"`, `"RainChance"`, `"RainDay"`, `"SolarRadiation"`, `"TemperatureMin"`, `"UVIndex"`, `"Visibility"`, `"WindDirection"`, `"WindSpeed"`, `"WindSpeedMax"`. Don't forget the square brackets.
+List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainChance", "RainDay", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
 
 **interval**  
 Update interval in minutes. The default is `4` minutes because the rate for free API keys is limited.
