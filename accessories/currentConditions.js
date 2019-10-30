@@ -38,6 +38,14 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 		this.currentConditionsService = new Service.TemperatureSensor(this.name);
 	}
 
+	// Separate humidity into a single service if configurated
+	this.currentHumidityService = null;
+	if (this.config.extraHumidity)
+	{
+		debug("Separating humidity into an extra service");
+		this.currentHumidityService = new Service.HumiditySensor(this.name + " Humidity")
+	}
+
 	// Fix for negative temperatures, because they are not supported by homekit
 	this.currentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 
@@ -54,8 +62,11 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			// Humidity is an official homekit characteristic
 			else if (characteristicName === "Humidity")
 			{
-				// Add humidity to the temperature service
-				this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+				if (this.config.extraHumidity)
+				{
+					// Add humidity to the temperature service
+					this.currentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+				}
 			}
 			// Everything else is a custom characteristic
 			else
@@ -92,6 +103,11 @@ CurrentConditionsWeatherAccessory.prototype = {
 
 	getServices: function ()
 	{
-		return [this.informationService, this.currentConditionsService, this.historyService];
+		let services = [this.informationService, this.currentConditionsService, this.historyService];
+		if (this.currentHumidityService != null)
+		{
+			services.push(this.currentHumidityService);
+		}
+		return services;
 	}
 };

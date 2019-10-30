@@ -143,6 +143,10 @@ WeatherPlusPlatform.prototype = {
 		// Condition detail level
 		station.conditionDetail = stationConfig.conditionCategory || "simple";
 
+		// Separate
+		station.extraHumidity = stationConfig.extraHumidity || false;
+		station.extraHumidity = station.compatibility !== "eve" ? station.extraHumidity : false; // Dont allow extraHumidity with eve mode
+
 		// Other options
 		station.forecast = stationConfig.forecast || [];
 		station.language = stationConfig.language || "en";
@@ -151,7 +155,6 @@ WeatherPlusPlatform.prototype = {
 		// station.hidden.forEach((hidden) => {
 		// 	hidden = hidden.toLowerCase();
 		// });
-		debug(station.hidden);
 		station.serial = station.service + " - " + (station.locationId || '') + (station.locationGeo || '') + (station.locationCity || '');
 	},
 
@@ -174,14 +177,13 @@ WeatherPlusPlatform.prototype = {
 						{
 							try
 							{
-								let service = accessory.currentConditionsService;
 								let data = weather.report;
 								debug("Current Conditions for station '%s': %O", accessory.name, data);
 
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.reportCharacteristics.forEach((characteristicName) =>
 								{
-									this.saveCharacteristic(accessory.config, service, characteristicName, data[characteristicName]);
+									this.saveCharacteristic(accessory, characteristicName, data[characteristicName], "current");
 								});
 
 								debug("Saving history entry");
@@ -202,14 +204,13 @@ WeatherPlusPlatform.prototype = {
 						{
 							try
 							{
-								let service = accessory.forecastService;
 								let data = weather.forecasts[accessory.day];
 								debug("Forecast for station '%s': %O", accessory.name, data);
 
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.forecastCharacteristics.forEach((characteristicName) =>
 								{
-									this.saveCharacteristic(accessory.config, service, characteristicName, data[characteristicName]);
+									this.saveCharacteristic(accessory, characteristicName, data[characteristicName], "forecast");
 								});
 							} catch (error)
 							{
@@ -226,8 +227,11 @@ WeatherPlusPlatform.prototype = {
 	},
 
 	// Save changes from update in characteristics
-	saveCharacteristic: function (config, service, name, value)
+	saveCharacteristic: function (accessory, name, value, type)
 	{
+		let config = accessory.config;
+		let service = type === "current" ? accessory.currentConditionsService : accessory.forecastService;
+
 		if (config.hidden.indexOf(name) === -1 || name === "Temperature")
 		{
 			// Temperature is an official homekit characteristic
@@ -238,7 +242,14 @@ WeatherPlusPlatform.prototype = {
 			// Humidity is an official homekit characteristic
 			else if (name === "Humidity")
 			{
-				service.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+				if (type === "current" && config.extraHumidity)
+				{
+					accessory.currentHumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+				}
+				else
+				{
+					service.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+				}
 			}
 			// Everything else is a custom characteristic
 			else

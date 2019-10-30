@@ -157,12 +157,15 @@ Below are explanations for a lot of advanced parameters to adjust the plugin to 
 **compatibility**  
 Compatibility for the Apple Home app, the Eve app or a mix of both. This is required due to limitations in the Apple Home app recognized weather conditions.  
 `"mix"` Temperature and humidity are displayed in the Apple Home app. All conditions are displayed in the Eve app.  
-`"eve"` The device will be shown as unsupported in Apple Home app. All conditions are displayed in the Eve app (temperature, humidity and pressure are combined into one row).  
+`"eve"` The device will be shown as unsupported in Apple Home app. All conditions are displayed in the Eve app while temperature, humidity and pressure are combined into a single row.
 
 **conditionCategory**  
-Detail level of the condition category. Not available for WeatherUnderground. Default is `simple`.  
+Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
 `"simple""` [4 different categories](#a1)  
 `"detailed""` [10 different categories](#a2)
+
+**extraHumidity**  
+Separate humidity from the weather accessory to an own accessory. Default is `false`. Not available for compatibility mode `"eve"`.
 
 **forecast**  
 List of forecast days with 1 for today, 2 for tomorrow etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).

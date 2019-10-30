@@ -146,6 +146,7 @@
 ## 3.0.0
 * Added option to hide observation and forecast values 
 * Added option to have more detailed condition categories
+* Added option to show humidity as an extra accessory
 * Changed readme to improve comprehensibility
 * Changed naming of some parameters (all backwards compatible, no need to update your config)
 * Fixed unsupported forecast day would throw an error in the darksky api
