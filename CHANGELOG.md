@@ -143,7 +143,7 @@
 ## 2.8.2
 * Fixed crash in weatherunderground on malformed/missing server response
 
-## 3.0.0
+## 3.0.0-beta.1
 * Added option to hide observation and forecast values 
 * Added option to have more detailed condition categories
 * Added option to show humidity as an extra accessory
@@ -152,7 +152,7 @@
 * Fixed unsupported forecast day would throw an error in the darksky api
 * Fixed incorrect condition category for mostly cloudy days in the darksky api (was 0, is now 1)
 * Removed serial parameter (automatic assigned now)
-
-
 * Weather history graphs will be cleared and start from scratch with this update
 
+## 3.0.0-beta.2
+* Fixed error on startup when using only one station

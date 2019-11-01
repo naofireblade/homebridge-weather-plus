@@ -48,7 +48,7 @@ function WeatherPlusPlatform(_log, _config)
 	ForecastWeatherAccessory = require("./accessories/forecast")(Service, Characteristic, CustomCharacteristic);
 
 	// Create weather stations, create default one if no stations array given
-	this.stationConfigs = this.config.stations || [{}];
+	this.stationConfigs = this.config.stations || [this.config];
 
 	// Parse config for each station
 	this.stationConfigs.forEach((station, index) =>
