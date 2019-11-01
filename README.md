@@ -16,7 +16,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Features
 - Get current observations and forecasts for up to 10 days
-- Choose from 4 different weather [services](#choose-your-weather-service)
+- Choose from 3 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
 - See translations and [icons](#screenshots) in the Eve App
@@ -161,17 +161,17 @@ Compatibility for the Apple Home app, the Eve app or a mix of both. This is requ
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
-`"simple""` [4 different categories](#a1)  
-`"detailed""` [10 different categories](#a2)
+`"simple"` [4 different categories](#a1)  
+`"detailed"` [10 different categories](#a2)
 
 **extraHumidity**  
-Separate humidity from the weather accessory to an own accessory. Default is `false`. Not available for compatibility mode `"eve"`.
+Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Not available for compatibility mode `"eve"`.
 
 **forecast**  
 List of forecast days with 1 for today, 2 for tomorrow etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
 
 **hidden**  
-List of observation and forecast values that should not be displayed. Possible options are `"AirPressure"`, `"CloudCover"`, `"Condition"`, `"ConditionCategory"`, `"DewPoint"`, `"ForecastDay"`, `"Humidity"`, `"ObservationStation"`, `"ObservationTime"`, `"Ozone"`, `"Rain1h"`, `"RainChance"`, `"RainDay"`, `"SolarRadiation"`, `"TemperatureMin"`, `"UVIndex"`, `"Visibility"`, `"WindDirection"`, `"WindSpeed"`, `"WindSpeedMax"`. Don't forget the square brackets.
+List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainChance", "RainDay", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
 
 **interval**  
 Update interval in minutes. The default is `4` minutes because the rate for free API keys is limited.
@@ -207,7 +207,7 @@ Customization of the history storage system. By default the history is persisted
         "locationGeo": [52.5200066,13.404954],
         "compatibility": "mix",
         "conditionCategory": "detailed",
-        "forecast": [1,2],
+        "forecast": [1,2,3,4,5],
         "hidden": ["CloudCover", "DewPoint"],
         "interval": 5,
         "language": "en",
@@ -282,4 +282,3 @@ This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwo
 - [Powered by Dark Sky](https://darksky.net/poweredby/)
 - [Powered by Weather Underground](https://www.wunderground.com/)
 - [Powered by OpenWeatherMap](https://openweathermap.org/)
-- [Powered by Yahoo](https://yahoo.com/)
