@@ -24,7 +24,8 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Observations and Forecasts
 
-The following **19 observation and forecast values** can be displayed and used in HomeKit rules.
+The following **19 observation and forecast values** can be displayed and used in HomeKit rules.  
+If you don't want to use a 3rd party App like Eve, use the [compatibility mode](#compatibility) `home`.
 
 - Air Pressure
 - Cloud Cover
@@ -154,10 +155,12 @@ Your personal StationID.
 
 Below are explanations for a lot of advanced parameters to adjust the plugin to your needs. All parameters are *optional*.
 
-**compatibility**  
-Compatibility for the Apple Home app, the Eve app or a mix of both. This is required due to limitations in the Apple Home app recognized weather conditions.  
-`"mix"` Temperature and humidity are displayed in the Apple Home app. All conditions are displayed in the Eve app.  
-`"eve"` The device will be shown as unsupported in Apple Home app. All conditions are displayed in the Eve app while temperature, humidity and pressure are combined into a single row.
+<b name="compatibility">compatibility</b>  
+Compatibility for the Apple Home app, the Eve app or both. This is required due to limitations in the Apple Home app recognized weather conditions.  
+`"eve"` **(recommended)** Use this for the Eve app or another 3rd party HomeKit App. All conditions will be displayed. The Apple Home app will show only temperature and humidity.   
+`"eve2"` Same as above but the values for temperature, humidity and pressure will be grouped into a single row. The Apple Home app will show nothing.  
+`"home"` Use this if you don't want to use a 3rd party HomeKit App but want to see as much as possible in the Apple Home app. 3rd Party Apps will show some useless sensors with this setting. Ozone will be shown with the wrong unit (µg/m³ instead of DU)   
+`"both"` Combines eve and apple. You will need to hide some characteristics in the Eve app.
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
@@ -165,13 +168,13 @@ Detail level of the condition category. Not available for WeatherUnderground. De
 `"detailed"` [10 different categories](#a2)
 
 **extraHumidity**  
-Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Not available for compatibility mode `"eve"`.
+Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Only available for compatibility mode `"eve"`.
 
 **forecast**  
 List of forecast days with 1 for today, 2 for tomorrow etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
 
 **hidden**  
-List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainChance", "RainDay", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
+List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainBool", "RainChance", "RainDay", "SnowBool", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
 
 **interval**  
 Update interval in minutes. The default is `4` minutes because the rate for free API keys is limited.

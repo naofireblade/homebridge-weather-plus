@@ -156,3 +156,6 @@
 
 ## 3.0.0-beta.2
 * Fixed error on startup when using only one station
+
+## 3.0.0-beta.3
+* Added compatiblity mode for Apple Home app

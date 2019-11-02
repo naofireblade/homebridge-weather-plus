@@ -19,8 +19,10 @@ const inherits = require('util').inherits,
 		ObservationTime: '234fd9f1-1d33-4128-b622-d052f0c402af',
 		Ozone: 'bbeffddd-1bcd-4d75-b7cd-b57a90a04d13',
 		Rain1h: '10c88f40-7ec4-478c-8d5a-bd0c3cce14b7',
+		RainBool: 'f14eb1ad-e000-4ef4-a54f-0cf07b2e7be7',
 		RainDay: 'ccc04890-565b-4376-b39a-3113341d9e0f',
 		RainChance: 'fc01b24f-cf7e-4a74-90db-1b427af1ffa3',
+		SnowBool: 'f14eb1ad-e000-4ce6-bd0e-384f9ec4d5dd',
 		SolarRadiation: '1819a23e-ecab-4d39-b29a-7364d299310b',
 		TemperatureMin: '707b78ca-51ab-4dc9-8630-80a58f07e419',
 		UVIndex: '05ba0fe0-b848-4226-906d-5b64272e05ce',
@@ -175,7 +177,7 @@ module.exports = function (Characteristic, units)
 		Characteristic.call(this, 'Weather Condition Category', CustomUUID.ConditionCategory);
 		this.setProps({
 			format: Characteristic.Formats.UINT8,
-			maxValue: 3,
+			maxValue: 9,
 			minValue: 0,
 			minStep: 1,
 			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
@@ -250,6 +252,20 @@ module.exports = function (Characteristic, units)
 	inherits(CustomCharacteristic.Rain1h, Characteristic);
 	CustomCharacteristic.Rain1h._unitvalue = rainfallValue;
 
+	// Sensor if its raining
+	// True: It is raining at the moment (current conditions). It will rain on the day (forecast)
+	// False: It is not raining at the moment (current conditions). It will not rain on the day (forecast)
+	CustomCharacteristic.RainBool = function ()
+	{
+		Characteristic.call(this, 'Rain', CustomUUID.RainBool);
+		this.setProps({
+			format: Characteristic.Formats.BOOL,
+			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+		});
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.RainBool, Characteristic);
+
 	CustomCharacteristic.RainChance = function ()
 	{
 		Characteristic.call(this, 'Rain Chance', CustomUUID.RainChance);
@@ -273,6 +289,21 @@ module.exports = function (Characteristic, units)
 	};
 	inherits(CustomCharacteristic.RainDay, Characteristic);
 	CustomCharacteristic.RainDay._unitvalue = rainfallValue;
+
+
+	// Sensor if its snowing
+	// True: It is snowing at the moment (current conditions). It will snow on the day (forecast)
+	// False: It is not snowing at the moment (current conditions). It will not snow on the day (forecast)
+	CustomCharacteristic.SnowBool = function ()
+	{
+		Characteristic.call(this, 'Snow', CustomUUID.SnowBool);
+		this.setProps({
+			format: Characteristic.Formats.BOOL,
+			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+		});
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.SnowBool, Characteristic);
 
 	CustomCharacteristic.SolarRadiation = function ()
 	{

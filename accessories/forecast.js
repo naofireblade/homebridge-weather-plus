@@ -49,10 +49,15 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 	}
 
 	// Create temperature sensor service
-	this.forecastService = new Service.TemperatureSensor(this.name);
+	this.forecastService = new Service.TemperatureSensor(this.name, "Temperature");
 
 	// Fix for negative temperatures, because they are not supported by homekit
 	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
+
+	// TODO
+	this.UVIndexSensor = new Service.AirQualitySensor("UV Index", "UV Index");
+	this.DewPointSensor = new Service.TemperatureSensor("Dew Point", "Dew Point");
+	this.PrecipChanceService = new Service.HumiditySensor("Precip Chance");
 
 	// Get all forecast characteristics that are supported by the selected api
 	this.platform.stations[stationIndex].forecastCharacteristics.forEach((characteristicName) =>
@@ -102,6 +107,6 @@ ForecastWeatherAccessory.prototype = {
 
 	getServices: function ()
 	{
-		return [this.informationService, this.forecastService];
+		return [this.informationService, this.forecastService, this.PrecipChanceService, this.DewPointSensor, this.UVIndexSensor];
 	}
 };
