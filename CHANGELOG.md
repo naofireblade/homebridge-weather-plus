@@ -159,3 +159,5 @@
 
 ## 3.0.0-beta.3
 * Added compatiblity mode for Apple Home app
+* Added boolean sensors for currently raining / snowing
+* Added boolean sensors for rain / snow in the forecast

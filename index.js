@@ -3,7 +3,8 @@
 const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
-	debug = require("debug")("homebridge-weather-plus");
+	debug = require("debug")("homebridge-weather-plus"),
+	compatibility = require("./util/compatibility");
 
 let Service,
 	Characteristic,
@@ -87,7 +88,7 @@ function WeatherPlusPlatform(_log, _config)
 		config.forecast.forEach((day, i, array) =>
 		{
 			// Check if day is a number and within range of supported forecast days for the selected weather service
-			if (typeof day === "number" && (day % 1) === 0 && day >= 0 && day <= this.stations[index].forecastDays)
+			if (typeof day === "number" && (day % 1) === 0 && day >= 0 && day < this.stations[index].forecastDays)
 			{
 				this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day));
 			}
@@ -158,8 +159,6 @@ WeatherPlusPlatform.prototype = {
 		// 	hidden = hidden.toLowerCase();
 		// });
 		station.serial = station.service + " - " + (station.locationId || '') + (station.locationGeo || '') + (station.locationCity || '');
-
-		station.compatibilityTypes = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "Ozone", "RainBool", "SnowBool", "UVIndex", "Visibility", "WindDirection", "WindSpeed"];
 	},
 
 	// Update the weather for all accessories
@@ -204,7 +203,7 @@ WeatherPlusPlatform.prototype = {
 							}
 						}
 						// Add a weather forecast for the given day
-						else if (accessory.stationIndex === stationIndex && accessory.forecastService !== undefined && weather.forecasts[accessory.day] !== undefined)
+						else if (accessory.stationIndex === stationIndex && accessory.ForecastService !== undefined && weather.forecasts[accessory.day] !== undefined)
 						{
 							try
 							{
@@ -234,7 +233,7 @@ WeatherPlusPlatform.prototype = {
 	saveCharacteristic: function (accessory, name, value, type)
 	{
 		let config = accessory.config;
-		let temperatureService = type === "current" ? accessory.CurrentConditionsService : accessory.forecastService;
+		let temperatureService = type === "current" ? accessory.CurrentConditionsService : accessory.ForecastService;
 
 		value = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
 
@@ -247,7 +246,7 @@ WeatherPlusPlatform.prototype = {
 				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, value);
 			}
 			// Compatiblity characateristics have an separate service
-			else if (config.compatibility === "home" && config.compatibilityTypes.includes(name))
+			else if (config.compatibility === "home" && compatibility.types.includes(name))
 			{
 				if (name === "AirPressure")
 				{
@@ -274,6 +273,10 @@ WeatherPlusPlatform.prototype = {
 				else if (["RainBool", "SnowBool"].includes(name))
 				{
 					accessory[name + "Service"].setCharacteristic(Characteristic.OccupancyDetected, value ? 1 : 0);
+				}
+				else if (name === "TemperatureMin")
+				{
+					accessory.TemperatureMinService.setCharacteristic(Characteristic.CurrentTemperature, value);
 				}
 				else if (name === "UVIndex")
 				{

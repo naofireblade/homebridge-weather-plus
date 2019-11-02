@@ -1,5 +1,6 @@
 const debug = require('debug')('homebridge-weather-plus'),
-	version = require("../package.json").version;
+	version = require("../package.json").version,
+	compatibility = require("../util/compatibility");
 
 let Service,
 	Characteristic,
@@ -23,7 +24,6 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 	this.day = day;
 	this.serial = this.config.serial + " - Day " + day;
 
-	// TODO Multilang
 	// Get a nice name for the forecast day
 	switch (day)
 	{
@@ -48,44 +48,46 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 		this.name = this.name + (stationIndex > 0 ? (" - " + (stationIndex + 1)) : "");
 	}
 
-	// Create temperature sensor service
-	this.forecastService = new Service.TemperatureSensor(this.name, "Temperature");
-
-	// Fix for negative temperatures, because they are not supported by homekit
-	this.forecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
-
-	// TODO
-	this.UVIndexSensor = new Service.AirQualitySensor("UV Index", "UV Index");
-	this.DewPointSensor = new Service.TemperatureSensor("Dew Point", "Dew Point");
-	this.PrecipChanceService = new Service.HumiditySensor("Precip Chance");
+	// Use homekit temperature service or eve weather service depending on compatibility setting
+	if (this.config.compatibility === "eve2")
+	{
+		this.ForecastService = new CustomService.EveWeatherService(this.name);
+	}
+	else if (this.config.compatibility === "home")
+	{
+		this.ForecastService = new Service.TemperatureSensor(this.name + " Temperature", "Temperature");
+		compatibility.createServices(this, Service);
+	}
+	else
+	{
+		this.ForecastService = new Service.TemperatureSensor(this.name);
+	}
 
 	// Get all forecast characteristics that are supported by the selected api
-	this.platform.stations[stationIndex].forecastCharacteristics.forEach((characteristicName) =>
+	this.platform.stations[stationIndex].forecastCharacteristics.forEach((name) =>
 	{
-		if (this.config.hidden.indexOf(characteristicName) === -1)
+		if (this.config.hidden.indexOf(name) === -1)
 		{
 			// Temperature is an official homekit characteristic
-			if (characteristicName === "Temperature")
+			if (name === "Temperature")
 			{
-				// Do nothing, this characteristic is in the temperature service by default
+				// Fix for negative temperatures, because they are not supported by homekit
+				this.ForecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 			}
-			// Humidity is an official homekit characteristic
-			else if (characteristicName === "Humidity")
+			// Use separate services for these characteristics if compatiblity is "home"
+			else if (this.config.compatibility === "home" && compatibility.types.includes(name))
 			{
-				// Add humidity to the temperature service
-				this.forecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+				compatibility.customizeServices(this, CustomCharacteristic, name);
 			}
-			// Everything else is a custom characteristic
+			// Add humidity characteristic to temperature service
+			else if (name === "Humidity")
+			{
+				this.ForecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+			}
+			// Add everything else as a custom characteristic to the temperature service
 			else
 			{
-				// Add custom charactersitic to the temperature service
-				this.forecastService.addCharacteristic(CustomCharacteristic[characteristicName]);
-
-				// Increase upper limit if condition category is set to detailed
-				if (characteristicName === "ConditionCategory" && this.config.conditionDetail === "detailed")
-				{
-					this.forecastService.getCharacteristic(CustomCharacteristic[characteristicName]).props.maxValue = 9;
-				}
+				this.ForecastService.addCharacteristic(CustomCharacteristic[name]);
 			}
 		}
 	});
@@ -107,6 +109,6 @@ ForecastWeatherAccessory.prototype = {
 
 	getServices: function ()
 	{
-		return [this.informationService, this.forecastService, this.PrecipChanceService, this.DewPointSensor, this.UVIndexSensor];
+		return [this.informationService, this.ForecastService].concat(compatibility.getServices(this));
 	}
 };

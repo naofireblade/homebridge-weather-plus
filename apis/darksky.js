@@ -55,7 +55,7 @@ class DarkSkyAPI
 				'WindSpeed',
 				'WindSpeedMax'
 			];
-		this.forecastDays = 6;
+		this.forecastDays = 7;
 		this.cache = {
 			report: {},
 			forecast: {

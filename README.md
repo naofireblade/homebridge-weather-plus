@@ -24,7 +24,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Observations and Forecasts
 
-The following **19 observation and forecast values** can be displayed and used in HomeKit rules.  
+The following **18 observation and 18 forecast values** can be displayed and used in HomeKit rules.  
 If you don't want to use a 3rd party App like Eve, use the [compatibility mode](#compatibility) `home`.
 
 - Air Pressure
@@ -34,9 +34,11 @@ If you don't want to use a 3rd party App like Eve, use the [compatibility mode](
 - Dew Point
 - Humidity
 - Ozone
+- Rain Currently
 - Rain Last Hour
 - Rain All Day
 - Rain Chance
+- Snow Currently
 - Solar Radiation
 - Temperature
 - Temperature Min
@@ -48,7 +50,7 @@ If you don't want to use a 3rd party App like Eve, use the [compatibility mode](
 - Wind Speed Maximum
 - *Observation Time*
 - *Observation Station*
-- *Forecast day*
+- *Day of the forecast*
 
 > <b name="a1">1</b> Simple: clear(0), overcast(1), rain (2), snow (3)  
 > <b name="a2">2</b> Detailed: clear(0), few clouds(1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather(9)
@@ -59,8 +61,8 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 |                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |            Weather Underground <sup>[3](#a3)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      15                      |                                7                                 |                                12                                |
-| Forecast values            |                      16                      |                                9                                 |                                 0                                |
+| Current observation values |                      17                      |                                9                                 |                                12                                |
+| Forecast values            |                      18                      |                                11                                 |                                 0                                |
 | Forecast days              |                       7                      |                                 5                                |                                 0                                |
 | Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
@@ -171,7 +173,7 @@ Detail level of the condition category. Not available for WeatherUnderground. De
 Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Only available for compatibility mode `"eve"`.
 
 **forecast**  
-List of forecast days with 1 for today, 2 for tomorrow etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
+List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
 
 **hidden**  
 List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainBool", "RainChance", "RainDay", "SnowBool", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
@@ -210,7 +212,7 @@ Customization of the history storage system. By default the history is persisted
         "locationGeo": [52.5200066,13.404954],
         "compatibility": "mix",
         "conditionCategory": "detailed",
-        "forecast": [1,2,3,4,5],
+        "forecast": [0,1,2,3,4,5,6],
         "hidden": ["CloudCover", "DewPoint"],
         "interval": 5,
         "language": "en",
@@ -242,7 +244,7 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
                 "displayNameForecast": "Berlin forefacst",
                 "service": "darksky",
                 "key": "YOUR_API_KEY",
-                "forecast": [1,2,3,4,5],
+                "forecast": [0,1,2,3,4,5,6],
                 "locationGeo": [52.5200066,13.404954]
             },
             {
@@ -250,7 +252,7 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
                 "displayNameForecast": "Los Angeles forecast",
                 "service": "darksky",
                 "key": "YOUR_API_KEY",
-                "forecast": [1,2],
+                "forecast": [1],
                 "locationGeo": [34.0536909,-118.2427666]
             }
         ]

@@ -34,6 +34,8 @@ class OpenWeatherMapAPI
 			'ConditionCategory',
 			'Humidity',
 			'ObservationTime',
+			'RainBool',
+			'SnowBool',
 			'Temperature',
 			'WindDirection',
 			'WindSpeed'
@@ -45,6 +47,8 @@ class OpenWeatherMapAPI
 			'ConditionCategory',
 			'ForecastDay',
 			'Humidity',
+			'RainBool',
+			'SnowBool',
 			'Temperature',
 			'TemperatureMin',
 			'WindDirection',
