@@ -158,11 +158,11 @@ Your personal StationID.
 Below are explanations for a lot of advanced parameters to adjust the plugin to your needs. All parameters are *optional*.
 
 <b name="compatibility">compatibility</b>  
-Compatibility for the Apple Home app, the Eve app or both. This is required due to limitations in the Apple Home app recognized weather conditions.  
+Compatibility for the Apple Home app, the Eve app or both. This is required due to limitations in the Apple Home app recognized weather conditions. The default is `"eve"`.  
 `"eve"` **(recommended)** Use this for the Eve app or another 3rd party HomeKit App. All conditions will be displayed. The Apple Home app will show only temperature and humidity.   
 `"eve2"` Same as above but the values for temperature, humidity and pressure will be grouped into a single row. The Apple Home app will show nothing.  
-`"home"` Use this if you don't want to use a 3rd party HomeKit App but want to see as much as possible in the Apple Home app. 3rd Party Apps will show some useless sensors with this setting. Ozone will be shown with the wrong unit (µg/m³ instead of DU)   
-`"both"` Combines eve and apple. You will need to hide some characteristics in the Eve app.
+`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as much as possible in the Apple Home app. 3rd Party Apps will show some useless sensors with this setting. Ozone will be shown with the wrong unit (µg/m³ instead of DU)   
+`"both"` Combines eve and home. You will need to hide some useless sensors in the Eve app.
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  

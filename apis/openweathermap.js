@@ -99,6 +99,7 @@ class OpenWeatherMapAPI
 		let report = weather.report || {};
 		const timezone = geoTz(values.coord.lat, values.coord.lon);
 
+		// TODO implement rainbool and snowbool
 		report.AirPressure = parseInt(values.main.pressure);
 		report.CloudCover = parseInt(values.clouds.all);
 		report.Condition = values.weather[0].description;
@@ -139,6 +140,7 @@ class OpenWeatherMapAPI
 	{
 		let forecast = {};
 
+		// TODO implement rainbool and snowbool
 		forecast.AirPressure = parseInt(values.main.pressure);
 		forecast.CloudCover = parseInt(values.clouds.all);
 		forecast.Condition = values.weather[0].description;

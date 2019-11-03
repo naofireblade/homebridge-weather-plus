@@ -55,7 +55,7 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 	}
 	else if (this.config.compatibility === "home")
 	{
-		this.ForecastService = new Service.TemperatureSensor(this.name + " Temperature", "Temperature");
+		this.ForecastService = new Service.TemperatureSensor("Temperature Max", "Temperature Max");
 		compatibility.createServices(this, Service);
 	}
 	else

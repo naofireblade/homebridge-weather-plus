@@ -39,6 +39,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 		this.CurrentConditionsService = new Service.TemperatureSensor(this.name + " Temperature", "Temperature");
 		compatibility.createServices(this, Service);
 	}
+	// TODO Implement "both"
 	else
 	{
 		this.CurrentConditionsService = new Service.TemperatureSensor(this.name);
