@@ -239,7 +239,6 @@ WeatherPlusPlatform.prototype = {
 
 		if (config.hidden.indexOf(name) === -1 || name === "Temperature")
 		{
-			debug(name);
 			// Temperature is an official homekit characteristic
 			if (name === "Temperature")
 			{

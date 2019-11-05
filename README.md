@@ -15,22 +15,47 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 // TODO Neue Screenshots machen und hier direkt anzeigen
 
 ## Features
-- Get current observations and forecasts for up to 10 days
+- Get current [18 observation and forecast](#observations-and-forecasts) values for up to 7 days
 - Choose from 3 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
 - See translations and [icons](#screenshots) in the Eve App
 - Use all values in HomeKit rules with the Eve App
 
+## Choose your Weather Service
+
+This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
+
+|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |            Weather Underground <sup>[1](#a1)</sup>               |
+|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
+| Current observation values |                      17                      |                                9                                 |                                12                                |
+| Forecast values            |                      18                      |                                11                                 |                                 0                                |
+| Forecast days              |                       7                      |                                 5                                |                                 0                                |
+| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |
+| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
+| Free                       |               :heavy_check_mark:             |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
+| Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
+*You can add more services easily by forking the project and submitting a pull request for a new api file.*
+
+> <b name="a1">1</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
+
+
+## Installation
+
+1. Install homebridge using: `npm install -g homebridge`
+2. Install this plugin using: `npm install -g homebridge-weather-plus` *Note: The installation might take 5 minutes.*
+3. Gather an API key for a weather service from the register link in the table above
+4. Update your configuration file. See the samples below.
+
 ## Observations and Forecasts
 
-The following **18 observation and 18 forecast values** can be displayed and used in HomeKit rules.  
-If you don't want to use a 3rd party App like Eve, use the [compatibility mode](#compatibility) `home`.
+The following observation and forecast values can be displayed and used in HomeKit rules.  
+I recommend using the Eve app to see all the values. However, if you don't want to use a 3rd party app, use the [compatibility mode](#compatibility) `home` for displaying most values in the Apple home app.
 
 - Air Pressure
 - Cloud Cover
 - Condition
-- Condition Category <sup>[1](#a1), </sup><sup>[2](#a2)</sup>
+- Condition Category <sup>[2](#a2), </sup><sup>[3](#a3)</sup>
 - Dew Point
 - Humidity
 - Ozone
@@ -52,33 +77,8 @@ If you don't want to use a 3rd party App like Eve, use the [compatibility mode](
 - *Observation Station*
 - *Day of the forecast*
 
-> <b name="a1">1</b> Simple: clear(0), overcast(1), rain (2), snow (3)  
-> <b name="a2">2</b> Detailed: clear(0), few clouds(1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather(9)
-
-## Choose your Weather Service
-
-This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
-
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |            Weather Underground <sup>[3](#a3)</sup>               |
-|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      17                      |                                9                                 |                                12                                |
-| Forecast values            |                      18                      |                                11                                 |                                 0                                |
-| Forecast days              |                       7                      |                                 5                                |                                 0                                |
-| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |
-| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
-| Free                       |               :heavy_check_mark:             |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
-| Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
-
-> <b name="a3">3</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
-
-> *You can add more services easily by forking the project and submitting a pull request for a new api file.*
-
-## Installation
-
-1. Install homebridge using: `npm install -g homebridge`
-2. Install this plugin using: `npm install -g homebridge-weather-plus` *Note: The installation might take 5 minutes.*
-3. Gather an API key for a weather service from the register link in the table above
-4. Update your configuration file. See the samples below.
+> <b name="a2">2</b> Simple: clear (0), overcast (1), rain (2), snow (3)  
+> <b name="a3">3</b> Detailed: clear (0), few clouds (1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather (9)
 
 ## Configuration
 
@@ -166,8 +166,8 @@ Compatibility for the Apple Home app, the Eve app or both. This is required due 
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
-`"simple"` [4 different categories](#a1)  
-`"detailed"` [10 different categories](#a2)
+`"simple"` [4 different categories](#a2)  
+`"detailed"` [10 different categories](#a3)
 
 **extraHumidity**  
 Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Only available for compatibility mode `"eve"`.
