@@ -56,7 +56,6 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 	else if (this.config.compatibility === "home")
 	{
 		this.ForecastService = new Service.TemperatureSensor("Temperature Max", "Temperature Max");
-		compatibility.createServices(this, Service);
 	}
 	else
 	{
@@ -69,7 +68,7 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 		if (this.config.hidden.indexOf(name) === -1)
 		{
 			// Temperature is an official homekit characteristic
-			if (name === "Temperature")
+			if (name === "TemperatureMax")
 			{
 				// Fix for negative temperatures, because they are not supported by homekit
 				this.ForecastService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
@@ -77,7 +76,7 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 			// Use separate services for these characteristics if compatiblity is "home"
 			else if (this.config.compatibility === "home" && compatibility.types.includes(name))
 			{
-				compatibility.customizeServices(this, CustomCharacteristic, name);
+				compatibility.createService(this, name, Service, CustomCharacteristic);
 			}
 			// Add humidity characteristic to temperature service
 			else if (name === "Humidity")
@@ -104,6 +103,21 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 ForecastWeatherAccessory.prototype = {
 	identify: function (callback)
 	{
+		Object.keys(this).forEach((key) =>
+		{
+			if (key.includes("Service") && !key.includes("History") && !key.includes("information"))
+			{
+				debug("Service: %s", key);
+				this[key].characteristics.forEach((characteristic) =>
+				{
+					if (characteristic.displayName === "Name")
+					{
+						debug(" - UUID: %s", characteristic.UUID);
+						debug(" - Value: %s", characteristic.value);
+					}
+				});
+			}
+		});
 		callback();
 	},
 

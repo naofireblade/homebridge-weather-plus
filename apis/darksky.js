@@ -47,7 +47,7 @@ class DarkSkyAPI
 				'RainChance',
 				'RainDay',
 				'SnowBool',
-				'Temperature',
+				'TemperatureMax',
 				'TemperatureMin',
 				'UVIndex',
 				'Visibility',
@@ -167,7 +167,7 @@ class DarkSkyAPI
 		forecast.RainChance = parseInt(values.precipProbability * 100);
 		forecast.RainDay = values.rainDay;
 		forecast.SnowBool = (values.precipType === 'snow' || values.precipType === 'sleet') && values.rainDay > 0;
-		forecast.Temperature = values.temperatureHigh;
+		forecast.TemperatureMax = values.temperatureHigh;
 		forecast.TemperatureMin = values.temperatureLow;
 		forecast.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
 		forecast.Visibility = isNaN(parseInt(values.visibility)) ? 0 : parseInt(values.visibility);

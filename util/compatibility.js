@@ -3,37 +3,61 @@
 
 const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "Ozone", "RainBool", "SnowBool", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed"];
 
-const createServices = function (that, Service)
+const createService = function (that, name, Service, CustomCharacteristic)
 {
-	that.AirPressureService = new Service.OccupancySensor("Air Pressure", "Air Pressure");
-	that.CloudCoverService = new Service.OccupancySensor("Cloud Cover", "Cloud Cover");
-	that.DewPointService = new Service.TemperatureSensor("Dew Point", "Dew Point");
-	that.HumidityService = new Service.HumiditySensor("Humidity");
-	that.RainBoolService = new Service.OccupancySensor("Rain", "Rain");
-	that.SnowBoolService = new Service.OccupancySensor("Snow", "Snow");
-	that.TemperatureMinService = new Service.TemperatureSensor("Temperature Min", "TemperatureMin");
-	that.UVIndexService = new Service.AirQualitySensor("UV Index", "UV Index");
-	that.VisibilityService = new Service.OccupancySensor("Visibility", "Visibility");
-	that.WindDirectionService = new Service.OccupancySensor("Wind Direction", "Wind Dir");
-	that.WindSpeedService = new Service.OccupancySensor("Wind Speed", "Wind Speed");
-};
-
-const customizeServices = function (that, CustomCharacteristic, name)
-{
-	// Workaround to get configured units
+	if (name === "AirPressure")
+	{
+		that.AirPressureService = new Service.OccupancySensor("Air Pressure", "Air Pressure");
+	}
+	if (name === "CloudCover")
+	{
+		that.CloudCoverService = new Service.OccupancySensor("Cloud Cover", "Cloud Cover");
+	}
+	if (name === "DewPoint")
+	{
+		that.DewPointService = new Service.TemperatureSensor("Dew Point", "Dew Point");
+	}
+	if (name === "Humidity")
+	{
+		that.HumidityService = new Service.HumiditySensor("Humidity");
+	}
+	if (name === "RainBool")
+	{
+		that.RainBoolService = new Service.OccupancySensor("Rain", "Rain");
+	}
+	if (name === "SnowBool")
+	{
+		that.SnowBoolService = new Service.OccupancySensor("Snow", "Snow");
+	}
+	if (name === "TemperatureMin")
+	{
+		that.TemperatureMinService = new Service.TemperatureSensor("Temperature Min", "TemperatureMin");
+	}
+	if (name === "UVIndex")
+	{
+		that.UVIndexService = new Service.AirQualitySensor("UV Index", "UV Index");
+	}
 	if (name === "Visibility")
 	{
-		that.VisibilityService.addCharacteristic(CustomCharacteristic.Visibility);
-		let unit = that.VisibilityService.getCharacteristic(CustomCharacteristic.Visibility).props.unit;
-		that.VisibilityService.removeCharacteristic(CustomCharacteristic.Visibility);
-		that.VisibilityService.unit = unit;
+		// Get unit
+		let temporaryService = new Service.OccupancySensor("Temporary");
+		temporaryService.addCharacteristic(CustomCharacteristic.Visibility);
+
+		that.VisibilityService = new Service.OccupancySensor("Visibility", "Visibility");
+		that.VisibilityService.unit = temporaryService.getCharacteristic(CustomCharacteristic.Visibility).props.unit;
 	}
-	else if (name === "WindSpeed")
+	if (name === "WindDirection")
 	{
-		that.WindSpeedService.addCharacteristic(CustomCharacteristic.WindSpeed);
-		let unit = that.WindSpeedService.getCharacteristic(CustomCharacteristic.WindSpeed).props.unit;
-		that.WindSpeedService.removeCharacteristic(CustomCharacteristic.WindSpeed);
-		that.WindSpeedService.unit = unit;
+		that.WindDirectionService = new Service.OccupancySensor("Wind Direction", "Wind Dir");
+	}
+	if (name === "WindSpeed")
+	{
+		// Get unit
+		let temporaryService = new Service.OccupancySensor("Temporary");
+		temporaryService.addCharacteristic(CustomCharacteristic.WindSpeed);
+
+		that.WindSpeedService = new Service.OccupancySensor("Wind Speed", "Wind Speed");
+		that.WindSpeedService.unit = temporaryService.getCharacteristic(CustomCharacteristic.WindSpeed).props.unit;
 	}
 };
 
@@ -53,7 +77,6 @@ const getServices = function (that)
 
 module.exports = {
 	types,
-	createServices,
-	customizeServices,
+	createService,
 	getServices
 };

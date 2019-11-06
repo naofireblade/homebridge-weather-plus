@@ -82,7 +82,11 @@ function WeatherPlusPlatform(_log, _config)
 		}
 
 		// Create accessory for current weather conditions
-		this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this, index));
+		if (config.now)
+		{
+			debug("Added current conditions");
+			this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this, index));
+		}
 
 		// Create accessories for each weather forecast day
 		config.forecast.forEach((day, i, array) =>
@@ -90,6 +94,7 @@ function WeatherPlusPlatform(_log, _config)
 			// Check if day is a number and within range of supported forecast days for the selected weather service
 			if (typeof day === "number" && (day % 1) === 0 && day >= 0 && day < this.stations[index].forecastDays)
 			{
+				debug("Added forecast for day: %s", day);
 				this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day));
 			}
 			else
@@ -146,18 +151,23 @@ WeatherPlusPlatform.prototype = {
 		// Condition detail level
 		station.conditionDetail = stationConfig.conditionCategory || "simple";
 
-		// Separate
+		// Separate humidity accessory
 		station.extraHumidity = stationConfig.extraHumidity || false;
 		station.extraHumidity = station.compatibility === "eve" ? station.extraHumidity : false; // Only allow extraHumidity with eve mode
 
 		// Other options
+		station.now = "now" in stationConfig ? stationConfig.now : true;
 		station.forecast = stationConfig.forecast || [];
 		station.language = stationConfig.language || "en";
 		station.fakegatoParameters = stationConfig.fakegatoParameters || {storage: "fs"};
 		station.hidden = stationConfig.hidden || [];
-		// station.hidden.forEach((hidden) => {
-		// 	hidden = hidden.toLowerCase();
-		// });
+		station.hidden.forEach((hide, i, hidden) =>
+		{
+			if (["Temperature", "TemperatureMax"].includes(hide))
+			{
+				hidden.splice(i, 1);
+			}
+		});
 		station.serial = station.service + " - " + (station.locationId || '') + (station.locationGeo || '') + (station.locationCity || '');
 	},
 
@@ -237,10 +247,10 @@ WeatherPlusPlatform.prototype = {
 
 		value = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
 
-		if (config.hidden.indexOf(name) === -1 || name === "Temperature")
+		if (config.hidden.indexOf(name) === -1 || name === "Temperature" || name === "TemperatureMax")
 		{
 			// Temperature is an official homekit characteristic
-			if (name === "Temperature")
+			if (name === "Temperature" || name === "TemperatureMax")
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, value);
 			}

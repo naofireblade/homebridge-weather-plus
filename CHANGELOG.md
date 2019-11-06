@@ -161,3 +161,9 @@
 * Added compatiblity mode for Apple Home app
 * Added boolean sensors for currently raining / snowing
 * Added boolean sensors for rain / snow in the forecast
+
+## 3.0.0-beta.4
+* Added option to disable the Now accessory
+* Fixed TemperatureMin in Now
+* Fixed duplicate WindSpeed and Visiblity Characteristics
+* Fixed hidden not working with compatiblity mode "home"

@@ -190,6 +190,9 @@ Name for the current condition accessory. The default is `"Now"`. You could set 
 **nameForecast**  
 Name for the forecast accessories. Adds a prefix to the forecast days. You could set this to your city name or weather service type as well.
 
+**now**
+Option to hide the Now accessory if you only need forecasts. Default is `true` which shows the Now accessory. Set to `false` to hide it.
+
 **units**  
 Conversions used for reporting values. The default is `"metric"`. The options are:  
 `"si"` or `"metric"`  
@@ -218,6 +221,7 @@ Customization of the history storage system. By default the history is persisted
         "language": "en",
         "nameNow": "Berlin",
         "nameForecast": "Berlin Forecast",
+        "now": true,
         "units": "metric",
     }
 ]

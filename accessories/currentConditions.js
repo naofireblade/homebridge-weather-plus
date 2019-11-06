@@ -36,8 +36,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	}
 	else if (this.config.compatibility === "home")
 	{
-		this.CurrentConditionsService = new Service.TemperatureSensor(this.name + " Temperature", "Temperature");
-		compatibility.createServices(this, Service);
+		this.CurrentConditionsService = new Service.TemperatureSensor("Temperature", "Temperature");
 	}
 	// TODO Implement "both"
 	else
@@ -67,7 +66,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			// Use separate services for these characteristics if compatiblity is "home"
 			else if (this.config.compatibility === "home" && compatibility.types.includes(name))
 			{
-				compatibility.customizeServices(this, CustomCharacteristic, name);
+				compatibility.createService(this, name, Service, CustomCharacteristic);
 			}
 			// Use separate service for humidity if configured
 			else if (this.config.compatibility === "eve" && name === "Humidity" && this.config.extraHumidity)
@@ -102,6 +101,21 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 CurrentConditionsWeatherAccessory.prototype = {
 	identify: function (callback)
 	{
+		Object.keys(this).forEach((key) =>
+		{
+			if (key.includes("Service") && !key.includes("History") && !key.includes("information"))
+			{
+				debug("Service: %s", key);
+				this[key].characteristics.forEach((characteristic) =>
+				{
+					if (characteristic.displayName === "Name")
+					{
+						debug(" - UUID: %s", characteristic.UUID);
+						debug(" - Value: %s", characteristic.value);
+					}
+				});
+			}
+		});
 		callback();
 	},
 

@@ -98,28 +98,18 @@ class WundergroundAPI
 				values = observation.uk_hybrid;
 			}
 
-			debug("Station:" + observation.stationID + " : " + observation.neighborhood);
 			report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
 			report.ObservationTime = moment(Date.parse(observation.obsTimeUtc));
-
-			debug("WindDirection:" + observation.winddir);
-			debug("Humidity:" + observation.humidity);
 			report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.winddir)) ? 0 : parseInt(observation.winddir));
 			report.Humidity = isNaN(parseInt(observation.humidity)) ? 0 : parseInt(observation.humidity);
 			report.SolarRadiation = isNaN(parseInt(observation.solarRadiation)) ? 0 : parseInt(observation.solarRadiation);
 			report.UVIndex = isNaN(parseInt(observation.uv)) ? 0 : parseInt(observation.uv);
-
-			debug("Temperature:" + values.temp);
 			report.Temperature = isNaN(parseInt(values.temp)) ? 0 : parseInt(values.temp);
 			report.DewPoint = isNaN(parseInt(values.dewpt)) ? 0 : parseInt(values.dewpt);
 			report.AirPressure = isNaN(parseInt(values.pressure)) ? 0 : parseInt(values.pressure);
-			debug("AirPressure:" + report.AirPressure);
 			report.WindSpeed = isNaN(parseInt(values.windSpeed)) ? 0 : parseInt(values.windSpeed);
-			debug("WindSpeed:" + report.WindSpeed);
 			report.WindSpeedMax = isNaN(parseInt(values.windGust)) ? 0 : parseInt(values.windGust);
-			debug("WindSpeedMax:" + report.WindSpeedMax);
 			report.RainDay = isNaN(values.precipTotal) ? 0 : values.precipTotal;
-			debug("RainDay:" + report.RainDay);
 
 		} catch (error)
 		{

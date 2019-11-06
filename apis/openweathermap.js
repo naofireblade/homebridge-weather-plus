@@ -49,7 +49,7 @@ class OpenWeatherMapAPI
 			'Humidity',
 			'RainBool',
 			'SnowBool',
-			'Temperature',
+			'TemperatureMax',
 			'TemperatureMin',
 			'WindDirection',
 			'WindSpeed'
@@ -147,7 +147,7 @@ class OpenWeatherMapAPI
 		forecast.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id, this.conditionDetail);
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		forecast.Humidity = parseInt(values.main.humidity);
-		forecast.Temperature = values.main.temp_max;
+		forecast.TemperatureMax = values.main.temp_max;
 		forecast.TemperatureMin = values.main.temp_min;
 		forecast.WindDirection = converter.getWindDirection(values.wind.deg);
 		forecast.WindSpeed = values.wind.speed;
