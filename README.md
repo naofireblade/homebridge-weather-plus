@@ -6,18 +6,18 @@
 
 This is a weather plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations, daily forecasts and history graphs for multiple locations and services. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-plus).  
 
+![Screenshots](https://user-images.githubusercontent.com/12081369/69379083-feb05300-0caf-11ea-9a0d-cf8e1879d007.png)
+
+>screenshots 2 and 3 are taken from the Elgato Eve app.
+
 If you like this plugin and find it useful, I would be forever grateful for your support:
 
 <a href="https://www.buymeacoffee.com/2D1nUuK36" target="_blank"><img width="140" src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee"></a>
 
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-plus/issues).
 
-![Screenshots](https://user-images.githubusercontent.com/12081369/69379083-feb05300-0caf-11ea-9a0d-cf8e1879d007.png)
-
->screenshots 2 and 3 are taken from the Elgato Eve app.
-
 ## Features
-- Get current [18 observation and forecast](#observations-and-forecasts) values for up to 7 days
+- Get [18 observation and forecast](#observations-and-forecasts) values for up to 7 days
 - Choose from 3 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
