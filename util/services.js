@@ -1,20 +1,17 @@
 /* jshint asi: true, esversion: 6, laxbreak: true, laxcomma: true, node: true, undef: true, unused: true */
 
 const inherits = require('util').inherits;
-
 const CustomUUID = {
-	// Eve UUID        
+	// Eve UUID
 	EveWeather: 'E863F001-079E-48FF-8F27-9C2605A29F52'
 };
 
-var CustomService = {};
+let CustomService = {};
 
-module.exports = function (homebridge) {
-
-	var Service = homebridge.hap.Service;
-	var Characteristic = homebridge.hap.Characteristic;
-
-	CustomService.EveWeatherService = function (displayName, subtype) {
+module.exports = function (Service, Characteristic)
+{
+	CustomService.EveWeatherService = function (displayName, subtype)
+	{
 		Service.call(this, displayName, CustomUUID.EveWeather, subtype);
 		this.addCharacteristic(Characteristic.CurrentTemperature);
 	};

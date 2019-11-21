@@ -1,75 +1,130 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
-const debug = require('debug')('homebridge-weather-plus');
-
-var getConditionCategory = function (name) {
-	switch (name) {
-		case "snow":
-		case "sleet":
-		case "flurries":
-		case "chancesnow":
-		case "chancesleet":
-		case "chanceflurries":
-		case "hail":
-			return 3;
-		case "rain":
-		case "tstorms":
-		case "chancerain":
-		case "chancetstorms":
-		case "thunderstorm":
-		case "tornado":
-			return 2;
-		case "cloudy":
-		case "mostlycloudy":
-		case "partlysunny":
-		case "fog":
-		case "hazy":
-		case "wind":
-			return 1;
-		case "partlycloudy":
-		case "mostlysunny":
-		case "sunny":
-		case "clear":
-		case "clear-day":
-		case "clear-night":
-		case "partly-cloudy-day":
-		case "partly-cloudy-night":
-			return 0;
-		default:
-			return 0;
+const getConditionCategoryDarkSky = function (name, detail = false)
+{
+	if (["tornado", "wind"].includes(name))
+	{
+		// Severe weather
+		return detail ? 9 : 2;
 	}
-};
-
-var getConditionCategoryOwm = function (code) {
-	// See https://openweathermap.org/weather-conditions
-	if (code >= 200 && code < 300) {
-		// Thunderstorm
-		return 2;
-	} else if (code >= 300 && code < 400) {
-		// Drizzle
-		return 2;
-	} else if (code >= 500 && code < 600) {
-		// Rain
-		return 2;
-	} else if (code >= 600 && code < 700) {
+	else if (["snow", "sleet", "flurries", "chancesleet", "chancesnow", "chanceflurries"].includes(name))
+	{
 		// Snow
-		return 3;
-	} else if (code >= 700 && code < 800) {
-		// Atmosphere
-		return 1;
-	} else if (code >= 801 && code < 900) {
-		// Clouds
-		return 1;
-	} else {
-		// 800 = Clear
+		return detail ? 8 : 3;
+	}
+	else if (["hail"].includes(name))
+	{
+		// Hail
+		return detail ? 7 : 3;
+	}
+	else if (["tstorms", "thunderstorm", "rain"].includes(name))
+	{
+		// Rain
+		return detail ? 6 : 2;
+	}
+	else if (["chancerain", "chancetstorms"].includes(name))
+	{
+		// Drizzle
+		return detail ? 5 : 2;
+	}
+	else if (["fog", "hazy"].includes(name))
+	{
+		// Fog
+		return detail ? 4 : 1;
+	}
+	else if (["cloudy"].includes(name))
+	{
+		// Overcast
+		return detail ? 3 : 1;
+	}
+	else if (["mostlycloudy", "partlysunny", "partly-cloudy-day", "partly-cloudy-night", "partlycloudy"].includes(name))
+	{
+		// Broken Clouds
+		return detail ? 2 : 1;
+	}
+	else if (["mostlysunny"].includes(name))
+	{
+		// Few Clouds
+		return detail ? 1 : 0;
+	}
+	else if (["sunny", "clear", "clear-day", "clear-night"].includes(name))
+	{
+		// Clear
+		return 0;
+	}
+	else
+	{
+		this.log.warn("Unkown dark sky weatger category " + name);
 		return 0;
 	}
 };
 
-var getConditionCategoryYahoo = function (code) {
+const getConditionCategoryOwm = function (code, detail = false)
+{
+	// See https://openweathermap.org/weather-conditions
+	if ([212, 221, 232, 504, 531, 711, 762, 771, 781].includes(code))
+	{
+		// Severe weather
+		return detail ? 9 : 2;
+	}
+	else if (code >= 600 && code < 700)
+	{
+		// Snow
+		return detail ? 8 : 3;
+	}
+	else if (code === 511)
+	{
+		// Hail
+		return detail ? 7 : 3;
+	}
+	else if (code >= 500 && code < 600)
+	{
+		// Rain
+		return detail ? 6 : 2;
+	}
+	else if (code >= 300 && code < 400)
+	{
+		// Drizzle
+		return detail ? 5 : 2;
+	}
+	else if (code >= 700 && code < 800)
+	{
+		// Fog
+		return detail ? 4 : 1;
+	}
+	else if (code === 804)
+	{
+		// Overcast
+		return detail ? 3 : 1;
+	}
+	else if ([803, 802].includes(code))
+	{
+		// Broken Clouds
+		return detail ? 2 : 1;
+	}
+	else if (code === 801)
+	{
+		// Few Clouds
+		return detail ? 1 : 0;
+	}
+	else if (code === 800)
+	{
+		// Clear
+		return 0;
+	}
+	else
+	{
+		this.log.warn("Unkown openweathermap category " + code);
+		return 0;
+	}
+};
+
+const getConditionCategoryYahoo = function (code)
+{
 	// See https://developer.yahoo.com/weather/documentation.html#codes
-	switch (code) {
+	switch (code)
+	{
 		case 5:
 		case 6:
 		case 7:
@@ -127,15 +182,18 @@ var getConditionCategoryYahoo = function (code) {
 	}
 };
 
-var getWindDirection = function (degree) {
-	if (typeof degree !== 'number' || isNaN(degree)) {
+const getWindDirection = function (degree)
+{
+	if (typeof degree !== 'number' || isNaN(degree))
+	{
 		return 'Unkown';
 	}
 	let cat = Math.round(degree % 360 / 22.5);
 	let dir;
 
 	// TODO multilanguage
-	switch (cat) {
+	switch (cat)
+	{
 		case 0:
 			dir = 'N';
 			break;
@@ -190,20 +248,21 @@ var getWindDirection = function (degree) {
 		default:
 			dir = 'Variable';
 	}
-	debug("Converted wind direction from " + degree + " degress to direction " + dir);
 	return dir;
 };
 
-var getRainAccumulated = function (array, parameter) {
+const getRainAccumulated = function (array, parameter)
+{
 	let sum = 0;
-	for (let i = 0; i < array.length; i++) {
+	for (let i = 0; i < array.length; i++)
+	{
 		sum += array[i][parameter];
 	}
 	return sum;
 };
 
 module.exports = {
-	getConditionCategory,
+	getConditionCategoryDarkSky,
 	getConditionCategoryOwm,
 	getConditionCategoryYahoo,
 	getWindDirection,
