@@ -173,7 +173,7 @@ Detail level of the condition category. Not available for WeatherUnderground. De
 `"detailed"` [10 different categories](#a3)
 
 **extraHumidity**  
-Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Only available for compatibility mode `"eve"`.
+Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Only available for compatibility modes `"eve"` and `"both"`.
 
 **forecast**  
 List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
