@@ -99,13 +99,15 @@ class OpenWeatherMapAPI
 		let report = weather.report || {};
 		const timezone = geoTz(values.coord.lat, values.coord.lon);
 
-		// TODO implement rainbool and snowbool
 		report.AirPressure = parseInt(values.main.pressure);
 		report.CloudCover = parseInt(values.clouds.all);
 		report.Condition = values.weather[0].description;
 		report.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id, this.conditionDetail);
 		report.Humidity = parseInt(values.main.humidity);
 		report.ObservationTime = moment.unix(values.dt).tz(timezone).format('HH:mm:ss');
+		let detailedCondition = converter.getConditionCategoryOwm(values.weather[0].id, true);
+		report.RainBool = [5,6].includes(detailedCondition);
+		report.SnowBool = [7,8].includes(detailedCondition);
 		report.Temperature = values.main.temp;
 		report.WindDirection = converter.getWindDirection(values.wind.deg);
 		report.WindSpeed = values.wind.speed;
@@ -147,6 +149,9 @@ class OpenWeatherMapAPI
 		forecast.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id, this.conditionDetail);
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		forecast.Humidity = parseInt(values.main.humidity);
+		let detailedCondition = converter.getConditionCategoryOwm(values.weather[0].id, true);
+		forecast.RainBool = [5,6].includes(detailedCondition);
+		forecast.SnowBool = [7,8].includes(detailedCondition);
 		forecast.TemperatureMax = values.main.temp_max;
 		forecast.TemperatureMin = values.main.temp_min;
 		forecast.WindDirection = converter.getWindDirection(values.wind.deg);

@@ -38,10 +38,9 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	{
 		this.CurrentConditionsService = new Service.TemperatureSensor("Temperature", "Temperature");
 	}
-	// TODO Implement "both"
 	else
 	{
-		this.CurrentConditionsService = new Service.TemperatureSensor(this.name);
+		this.CurrentConditionsService = new Service.TemperatureSensor(this.name, "Temperature");
 
 		// Separate humidity into a single service if configurated
 		if (this.config.extraHumidity)
@@ -67,6 +66,19 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			else if (this.config.compatibility === "home" && compatibility.types.includes(name))
 			{
 				compatibility.createService(this, name, Service, CustomCharacteristic);
+			}
+			// Use separate services and the temperature service for these characteristics if compatiblity is "both"
+			else if (this.config.compatibility === "both" && compatibility.types.includes(name))
+			{
+				compatibility.createService(this, name, Service, CustomCharacteristic);
+				if (name === "Humidity")
+				{
+					this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+				}
+				else
+				{
+					this.CurrentConditionsService.addCharacteristic(CustomCharacteristic[name]);
+				}
 			}
 			// Use separate service for humidity if configured
 			else if (this.config.compatibility === "eve" && name === "Humidity" && this.config.extraHumidity)

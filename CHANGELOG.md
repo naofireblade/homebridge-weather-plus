@@ -143,27 +143,18 @@
 ## 2.8.2
 * Fixed crash in weatherunderground on malformed/missing server response
 
-## 3.0.0-beta.1
+## 3.0.0
+* Added compatiblity mode for Apple Home app
+* Added boolean sensors for currently raining / snowing
+* Added boolean sensors for rain / snow in the forecast
 * Added option to hide observation and forecast values 
 * Added option to have more detailed condition categories
 * Added option to show humidity as an extra accessory
+* Added option to disable the Now accessory
 * Changed readme to improve comprehensibility
 * Changed naming of some parameters (all backwards compatible, no need to update your config)
 * Fixed unsupported forecast day would throw an error in the darksky api
 * Fixed incorrect condition category for mostly cloudy days in the darksky api (was 0, is now 1)
-* Removed serial parameter (automatic assigned now)
-* Weather history graphs will be cleared and start from scratch with this update
+* Removed serial parameter (automatically assigned now)
 
-## 3.0.0-beta.2
-* Fixed error on startup when using only one station
-
-## 3.0.0-beta.3
-* Added compatiblity mode for Apple Home app
-* Added boolean sensors for currently raining / snowing
-* Added boolean sensors for rain / snow in the forecast
-
-## 3.0.0-beta.4
-* Added option to disable the Now accessory
-* Fixed TemperatureMin in Now
-* Fixed duplicate WindSpeed and Visiblity Characteristics
-* Fixed hidden not working with compatiblity mode "home"
+* Warning: Weather history graphs will be cleared and start from scratch with this update

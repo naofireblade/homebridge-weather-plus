@@ -27,7 +27,6 @@ module.exports = function (homebridge)
 	homebridge.registerPlatform("homebridge-weather-plus", "WeatherPlus", WeatherPlusPlatform);
 };
 
-// TODO v3.0.0 features
 function WeatherPlusPlatform(_log, _config)
 {
 	debug("Init WeatherPlus platform");
@@ -249,14 +248,27 @@ WeatherPlusPlatform.prototype = {
 
 		if (config.hidden.indexOf(name) === -1 || name === "Temperature" || name === "TemperatureMax")
 		{
+			debug("Setting %s to %s", name, value);
 			// Temperature is an official homekit characteristic
 			if (name === "Temperature" || name === "TemperatureMax")
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, value);
 			}
 			// Compatiblity characateristics have an separate service
-			else if (config.compatibility === "home" && compatibility.types.includes(name))
+			else if (["home", "both"].includes(config.compatibility) && compatibility.types.includes(name))
 			{
+				if (config.compatibility === "both")
+				{
+					if (name === "Humidity")
+					{
+						temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+					}
+					else
+					{
+						temperatureService.setCharacteristic(CustomCharacteristic[name], value);
+					}
+				}
+
 				if (name === "AirPressure")
 				{
 					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + value + "hPa");
@@ -264,7 +276,7 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "CloudCover")
 				{
-					accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, value > 10 ? 1 : 0);
+					accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, value > 20 ? 1 : 0);
 					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Cover: " + value);
 				}
 				else if (name === "DewPoint")
@@ -274,10 +286,6 @@ WeatherPlusPlatform.prototype = {
 				else if (name === "Humidity")
 				{
 					accessory.HumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
-				}
-				else if (name === "Ozone")
-				{
-					accessory.UVIndexService.setCharacteristic(Characteristic.OzoneDensity, value);
 				}
 				else if (["RainBool", "SnowBool"].includes(name))
 				{
@@ -289,29 +297,7 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "UVIndex")
 				{
-					let quality;
-					switch (value)
-					{
-						case 0:
-							quality = 1; // Excellent
-							break;
-						case 1:
-						case 2:
-							quality = 2; // Good
-							break;
-						case 3:
-						case 4:
-						case 5:
-							quality = 3; // Fair
-							break;
-						case 6:
-						case 7:
-							quality = 4; // Inferior
-							break;
-						default:
-							quality = 5; // Poor
-					}
-					accessory.UVIndexService.setCharacteristic(Characteristic.AirQuality, quality);
+					accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, value > 2 ? 1 : 0);
 					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + value);
 				}
 				else if (name === "Visibility")

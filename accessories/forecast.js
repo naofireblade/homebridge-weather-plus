@@ -59,7 +59,7 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 	}
 	else
 	{
-		this.ForecastService = new Service.TemperatureSensor(this.name);
+		this.ForecastService = new Service.TemperatureSensor(this.name, "Temperature Max");
 	}
 
 	// Get all forecast characteristics that are supported by the selected api
@@ -77,6 +77,19 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 			else if (this.config.compatibility === "home" && compatibility.types.includes(name))
 			{
 				compatibility.createService(this, name, Service, CustomCharacteristic);
+			}
+			// Use separate services and the temperature service for these characteristics if compatiblity is "both"
+			else if (this.config.compatibility === "both" && compatibility.types.includes(name))
+			{
+				compatibility.createService(this, name, Service, CustomCharacteristic);
+				if (name === "Humidity")
+				{
+					this.ForecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+				}
+				else
+				{
+					this.ForecastService.addCharacteristic(CustomCharacteristic[name]);
+				}
 			}
 			// Add humidity characteristic to temperature service
 			else if (name === "Humidity")

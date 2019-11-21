@@ -12,7 +12,11 @@ If you like this plugin and find it useful, I would be forever grateful for your
 
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-plus/issues).
 
-// TODO Neue Screenshots machen und hier direkt anzeigen
+<img alt="Current Conditions in Home app" src="https://user-images.githubusercontent.com/12081369/69377690-176b3980-0cad-11ea-9e70-81770b4c26e8.PNG" width=285>
+<img alt="Current Conditions in Eve app" src="https://user-images.githubusercontent.com/12081369/69377685-15a17600-0cad-11ea-9a13-119558667d8d.PNG" width=285>
+<img alt="History in Eve app" src="https://i.imgur.com/8opO7hel.png" width=285>
+
+>screenshots 2 and 3 are taken from the Elgato Eve app.
 
 ## Features
 - Get current [18 observation and forecast](#observations-and-forecasts) values for up to 7 days
@@ -161,8 +165,9 @@ Below are explanations for a lot of advanced parameters to adjust the plugin to 
 Compatibility for the Apple Home app, the Eve app or both. This is required due to limitations in the Apple Home app recognized weather conditions. The default is `"eve"`.  
 `"eve"` **(recommended)** Use this for the Eve app or another 3rd party HomeKit App. All conditions will be displayed. The Apple Home app will show only temperature and humidity.   
 `"eve2"` Same as above but the values for temperature, humidity and pressure will be grouped into a single row. The Apple Home app will show nothing.  
-`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as much as possible in the Apple Home app. 3rd Party Apps will show some useless sensors with this setting. Ozone will be shown with the wrong unit (µg/m³ instead of DU)   
-`"both"` Combines eve and home. You will need to hide some useless sensors in the Eve app.
+`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as many values as possible in the Apple Home app<sup>[5](#a4)</sup>. 3rd party apps will show some useless sensors that are required for Home app support.
+`"both"` Combines eve and home. You will need to hide some useless sensors in the Eve app that are required for Home app support. But after that you will get a solution that looks nice in home and 3rd party apps at the same time.
+> <b name="a5">5</b> The following values will be represented as occupancy sensors that trigger on specific limits: CloudCover > 20%, UVIndex > 2, WindSpeed > 4 m/s, Rain, Snow
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
@@ -270,11 +275,6 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
 - Start your automatic garden irrigation in the evening, depending on the amount of rain today and the forecast for tomorrow.
 
 **Hint:** To trigger rules based on time and weather condition you will need a plugin like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
-
-## Screenshots
-![Current Conditions in Elgato Eve app](https://i.imgur.com/ql9t8w0l.png)
-![History graph in Elgato Eve app](https://i.imgur.com/8opO7hel.png)
->(c) Screenshots are taken from the Elgato Eve app
 
 ## Contributors
 Many thanks go to

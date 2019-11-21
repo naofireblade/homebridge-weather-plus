@@ -138,9 +138,10 @@ class DarkSkyAPI
 		report.ObservationTime = moment.unix(values.time).tz(timezone).format('HH:mm:ss');
 		report.Ozone = parseInt(values.ozone);
 		report.Rain1h = isNaN(parseInt(values.precipIntensity)) ? 0 : parseInt(values.precipIntensity);
-		report.RainBool = values.precipType === 'rain' && parseInt(values.precipIntensity) > 0;
+		let detailedCondition = converter.getConditionCategoryDarkSky(values.icon, true);
+		report.RainBool = [5,6].includes(detailedCondition) || (values.precipType === 'rain' && parseInt(values.precipIntensity) > 0);
 		report.RainDay = values.rainDay;
-		report.SnowBool = (values.precipType === 'snow' || values.precipType === 'sleet') && parseInt(values.precipIntensity) > 0;
+		report.SnowBool = [7,8].includes(detailedCondition) || ((values.precipType === 'snow' || values.precipType === 'sleet') && parseInt(values.precipIntensity) > 0);
 		report.Temperature = values.temperature;
 		report.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
 		report.Visibility = isNaN(parseInt(values.visibility)) ? 0 : parseInt(values.visibility);
@@ -163,10 +164,11 @@ class DarkSkyAPI
 		forecast.ForecastDay = moment.unix(values.time).tz(timezone).format('dddd');
 		forecast.Humidity = parseInt(values.humidity * 100);
 		forecast.Ozone = parseInt(values.ozone);
-		forecast.RainBool = values.precipType === 'rain' && values.rainDay > 0;
+		let detailedCondition = converter.getConditionCategoryDarkSky(values.icon, true);
+		forecast.RainBool = [5,6].includes(detailedCondition) || (values.precipType === 'rain' && values.rainDay > 0);
 		forecast.RainChance = parseInt(values.precipProbability * 100);
 		forecast.RainDay = values.rainDay;
-		forecast.SnowBool = (values.precipType === 'snow' || values.precipType === 'sleet') && values.rainDay > 0;
+		forecast.SnowBool = [7,8].includes(detailedCondition) || ((values.precipType === 'snow' || values.precipType === 'sleet') && values.rainDay > 0);
 		forecast.TemperatureMax = values.temperatureHigh;
 		forecast.TemperatureMin = values.temperatureLow;
 		forecast.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
@@ -192,7 +194,7 @@ class DarkSkyAPI
 			{
 				this.cache.report.rainDay = result;
 				callbacks--;
-				if (callbacks == 0)
+				if (callbacks === 0)
 				{
 					callback();
 				}
