@@ -12,9 +12,9 @@ If you like this plugin and find it useful, I would be forever grateful for your
 
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-plus/issues).
 
-<img alt="Current Conditions in Home app" src="https://user-images.githubusercontent.com/12081369/69377690-176b3980-0cad-11ea-9e70-81770b4c26e8.PNG" width=285>
+<img alt="Current Conditions in Home app" align="left" src="https://user-images.githubusercontent.com/12081369/69377690-176b3980-0cad-11ea-9e70-81770b4c26e8.PNG" width=285>
 <img alt="Current Conditions in Eve app" src="https://user-images.githubusercontent.com/12081369/69377685-15a17600-0cad-11ea-9a13-119558667d8d.PNG" width=285>
-<img alt="History in Eve app" src="https://i.imgur.com/8opO7hel.png" width=285>
+<img alt="History in Eve app" align="right" src="https://i.imgur.com/8opO7hel.png" width=285>
 
 >screenshots 2 and 3 are taken from the Elgato Eve app.
 
