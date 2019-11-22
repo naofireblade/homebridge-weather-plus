@@ -216,7 +216,7 @@ Customization of the history storage system. By default the history is persisted
         "service": "darksky",
         "key": "XXXXXXXXXXXXXXX",
         "locationGeo": [52.5200066,13.404954],
-        "compatibility": "mix",
+        "compatibility": "both",
         "conditionCategory": "detailed",
         "forecast": [0,1,2,3,4,5,6],
         "hidden": ["CloudCover", "DewPoint"],
