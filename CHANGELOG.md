@@ -158,3 +158,6 @@
 * Removed serial parameter (automatically assigned now)
 
 * Warning: Weather history graphs will be cleared and start from scratch with this update
+
+## 3.0.1
+* Updated readme
