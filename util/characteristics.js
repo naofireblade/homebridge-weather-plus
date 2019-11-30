@@ -62,7 +62,7 @@ module.exports = function (Characteristic, units)
 	};
 	var rainfallValue = (val) =>
 	{
-		return (units !== 'imperial') ? val : (val / 25.4);
+		return (units !== 'imperial') ? val : Math.round(val / 25.4 * 100) / 100;
 	};
 
 	var c2f = (celsius) =>
@@ -88,7 +88,7 @@ module.exports = function (Characteristic, units)
 	};
 	var visibilityProps = (max) =>
 	{
-		var range = ((units === 'si') || (units == 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
+		var range = ((units === 'si') || (units === 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
 			: {unit: 'mi', maxValue: km2mi(max), minValue: 0};
 
 		return underscore.extend(
@@ -105,11 +105,11 @@ module.exports = function (Characteristic, units)
 
 	var mtos2kmh = (m) =>
 	{
-		return ((m * 3600) / 1000);
+		return (Math.round(m * 3.6 * 10) / 10);
 	};
 	var mtos2mih = (m) =>
 	{
-		return ((m * 3600) / 1609.34);
+		return (Math.round(((m * 3600) / 1609.34) * 10) / 10);
 	};
 	var windspeedProps = (max) =>
 	{

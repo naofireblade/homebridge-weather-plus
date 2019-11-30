@@ -7,8 +7,7 @@
 This is a weather plugin for [homebridge](https://github.com/nfarina/homebridge) that features current observations, daily forecasts and history graphs for multiple locations and services. You can download it via [npm](https://www.npmjs.com/package/homebridge-weather-plus).  
 
 ![Screenshots](https://user-images.githubusercontent.com/12081369/69379083-feb05300-0caf-11ea-9a0d-cf8e1879d007.png)
-
->Screenshots 2 and 3 are taken from the Elgato Eve app.
+*Screenshots 2 and 3 are taken from the Elgato Eve app.*
 
 If you like this plugin and find it useful, I would be forever grateful for your support:
 

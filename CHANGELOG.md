@@ -164,3 +164,6 @@
 
 ## 3.0.2
 * Updated readme
+
+## 3.0.3
+* Added rounding for non metric values in Apple Home app
