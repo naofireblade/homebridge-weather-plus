@@ -34,6 +34,12 @@ const inherits = require('util').inherits,
 
 let CustomCharacteristic = {};
 
+// A more accurate way of rounding decimals in Javascript compared to the usual multiply & divide
+// See https://www.jacklmoore.com/notes/rounding-in-javascript/ for explanation
+function round(value, decimals) {
+	return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  }  
+
 module.exports = function (Characteristic, units)
 {
 
@@ -62,7 +68,7 @@ module.exports = function (Characteristic, units)
 	};
 	var rainfallValue = (val) =>
 	{
-		return (units !== 'imperial') ? val : Math.round(val / 25.4 * 100) / 100;
+		return (units !== 'imperial') ? val : round(val / 25.4, 2);
 	};
 
 	var c2f = (celsius) =>
@@ -84,7 +90,7 @@ module.exports = function (Characteristic, units)
 
 	var km2mi = (km) =>
 	{
-		return Math.round(km / 1.60934);
+    return Math.round(km / 1.60934);
 	};
 	var visibilityProps = (max) =>
 	{
@@ -105,11 +111,11 @@ module.exports = function (Characteristic, units)
 
 	var mtos2kmh = (m) =>
 	{
-		return (Math.round(m * 3.6 * 10) / 10);
+		return (round((m * 3600) / 1000, 2));
 	};
 	var mtos2mih = (m) =>
 	{
-		return (Math.round(((m * 3600) / 1609.34) * 10) / 10);
+		return (round((m * 3600) / 1609.34, 2));
 	};
 	var windspeedProps = (max) =>
 	{
