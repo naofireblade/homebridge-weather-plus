@@ -247,7 +247,7 @@ WeatherPlusPlatform.prototype = {
 		// Depending on the Characteristic, it may be necessary to convert units.
 		// If a conversion is necessary, perform the conversion and save that here as 'convertedValue'
 		// The passed in 'value' may be used later for comparison to trigger value(s) in the unconverted units
-		convertedValue = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
+		const convertedValue = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
 
 		if (config.hidden.indexOf(name) === -1 || name === "Temperature" || name === "TemperatureMax")
 		{
