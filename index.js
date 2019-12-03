@@ -244,15 +244,18 @@ WeatherPlusPlatform.prototype = {
 		let config = accessory.config;
 		let temperatureService = type === "current" ? accessory.CurrentConditionsService : accessory.ForecastService;
 
-		value = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
+		// Depending on the Characteristic, it may be necessary to convert units.
+		// If a conversion is necessary, perform the conversion and save that here as 'convertedValue'
+		// The passed in 'value' may be used later for comparison to trigger value(s) in the unconverted units
+		const convertedValue = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
 
 		if (config.hidden.indexOf(name) === -1 || name === "Temperature" || name === "TemperatureMax")
 		{
-			debug("Setting %s to %s", name, value);
+			debug("Setting %s to %s", name, convertedValue);
 			// Temperature is an official homekit characteristic
 			if (name === "Temperature" || name === "TemperatureMax")
 			{
-				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, value);
+				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 			}
 			// Compatiblity characateristics have an separate service
 			else if (["home", "both"].includes(config.compatibility) && compatibility.types.includes(name))
@@ -261,57 +264,57 @@ WeatherPlusPlatform.prototype = {
 				{
 					if (name === "Humidity")
 					{
-						temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+						temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 					}
 					else
 					{
-						temperatureService.setCharacteristic(CustomCharacteristic[name], value);
+						temperatureService.setCharacteristic(CustomCharacteristic[name], convertedValue);
 					}
 				}
 
 				if (name === "AirPressure")
 				{
-					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + value + "hPa");
-					accessory.AirPressureService.value = value; // Save value to use in history
+					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + convertedValue + "hPa");
+					accessory.AirPressureService.value = convertedValue; // Save value to use in history
 				}
 				else if (name === "CloudCover")
 				{
-					accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, value > 20 ? 1 : 0);
-					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Cover: " + value);
+					accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue > 20 ? 1 : 0);
+					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Cover: " + convertedValue);
 				}
 				else if (name === "DewPoint")
 				{
-					accessory.DewPointService.setCharacteristic(Characteristic.CurrentTemperature, value);
+					accessory.DewPointService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 				}
 				else if (name === "Humidity")
 				{
-					accessory.HumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+					accessory.HumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 				}
 				else if (["RainBool", "SnowBool"].includes(name))
 				{
-					accessory[name + "Service"].setCharacteristic(Characteristic.OccupancyDetected, value ? 1 : 0);
+					accessory[name + "Service"].setCharacteristic(Characteristic.OccupancyDetected, convertedValue ? 1 : 0);
 				}
 				else if (name === "TemperatureMin")
 				{
-					accessory.TemperatureMinService.setCharacteristic(Characteristic.CurrentTemperature, value);
+					accessory.TemperatureMinService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 				}
 				else if (name === "UVIndex")
 				{
-					accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, value > 2 ? 1 : 0);
-					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + value);
+					accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue > 2 ? 1 : 0);
+					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + convertedValue);
 				}
 				else if (name === "Visibility")
 				{
-					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibility: " + value + accessory.VisibilityService.unit);
+					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibility: " + convertedValue + accessory.VisibilityService.unit);
 				}
 				else if (name === "WindDirection")
 				{
-					accessory.WindDirectionService.setCharacteristic(Characteristic.Name, "Wind Dir: " + value);
+					accessory.WindDirectionService.setCharacteristic(Characteristic.Name, "Wind Dir: " + convertedValue);
 				}
 				else if (name === "WindSpeed")
 				{
 					accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, value > 4 ? 1 : 0);
-					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + value + accessory.WindSpeedService.unit);
+					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + accessory.WindSpeedService.unit);
 				}
 				else
 				{
@@ -321,17 +324,17 @@ WeatherPlusPlatform.prototype = {
 			// Humidity might have an extra service if configured
 			else if (config.compatibility === "eve" && name === "Humidity" && config.extraHumidity)
 			{
-				accessory.HumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+				accessory.HumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 			}
 			// Otherwise humidity is a homekit characteristic
 			else if (name === "Humidity")
 			{
-				temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, value);
+				temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 			}
 			// Set everything else as a custom characteristic in the temperature service
 			else
 			{
-				temperatureService.setCharacteristic(CustomCharacteristic[name], value);
+				temperatureService.setCharacteristic(CustomCharacteristic[name], convertedValue);
 			}
 		}
 	}
