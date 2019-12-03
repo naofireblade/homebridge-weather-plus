@@ -300,7 +300,7 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "UVIndex")
 				{
-					accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue > 2 ? 1 : 0);
+					accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, value > 2 ? 1 : 0);
 					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + convertedValue);
 				}
 				else if (name === "Visibility")
