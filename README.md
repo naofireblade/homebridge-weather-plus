@@ -274,13 +274,14 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
 **Hint:** To trigger rules based on time and weather condition you will need a plugin like [homebridge-delay-switch](https://www.npmjs.com/package/homebridge-delay-switch). Create a dummy switch that resets after some seconds. Set this switch to on with a timed rule. Then create a condition rule that triggers when the switch goes on depending on weather conditions of your choice.
 
 ## Contributors
-Many thanks go to
+Many thanks to the awesome contributors who support the project with pull requests (chronological order):
 - [simont77](https://github.com/simont77) for his fakegato-history library, the eve weather emulation, the multiple stations feature and several other great improvements
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
 - [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
 - [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
 - [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
+- [Jay O'Conor](https://github.com/joconor) for improving the value rounding and fixing the wind sensor for non metric units
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one was a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 

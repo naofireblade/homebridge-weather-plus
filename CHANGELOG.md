@@ -167,3 +167,7 @@
 
 ## 3.0.3
 * Added rounding for non metric values in Apple Home app
+
+## 3.0.4
+* Improved rounding
+* Fixed wind sensor trigger for non metric units
