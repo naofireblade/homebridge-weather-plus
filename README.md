@@ -171,8 +171,8 @@ Detail level of the condition category. Not available for WeatherUnderground. De
 `"simple"` [4 different categories](#a2)  
 `"detailed"` [10 different categories](#a3)
 
-**extraHumidity**  
-Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`. Only available for compatibility modes `"eve"` and `"both"`.
+**extraHumidity**  (compatibility `"eve"` or `"both"`)  
+Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`.
 
 **forecast**  
 List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
@@ -201,6 +201,18 @@ Conversions used for reporting values. The default is `"metric"`. The options ar
 `"us"` or `"imperial"`  
 `"ca"` to report wind speeds in km/h instead of m/s  
 `"uk"` to report visibility in miles and wind speeds in km/h instead of m/s
+
+**tresholdAirPressure** (compatibility `"home"` or `"both"`)  
+At what treshold should the air pressure sensor trigger?
+
+**tresholdCloudCover** (compatibility `"home"` or `"both"`)  
+At what treshold should the cloud cover sensor trigger?
+
+**tresholdUvIndex** (compatibility `"home"` or `"both"`)  
+At what treshold should the UV-Index sensor trigger?
+
+**tresholdWindSpeed** (compatibility `"home"` or `"both"`)  
+At what treshold should the wind speed sensor trigger?
 
 **fakegatoParameters**  
 Customization of the history storage system. By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the [location of the persisted file](https://github.com/simont77/fakegato-history#file-system) or to use [GoogleDrive](https://github.com/simont77/fakegato-history#google-drive).

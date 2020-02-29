@@ -309,12 +309,27 @@ WeatherPlusPlatform.prototype = {
 
 				if (name === "AirPressure")
 				{
+					if (config.tresholdAirPressure === undefined)
+					{
+						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, value >= 1000);
+					}
+					else
+					{
+						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdAirPressure);
+					}
 					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + convertedValue + "hPa");
 					accessory.AirPressureService.value = convertedValue; // Save value to use in history
 				}
 				else if (name === "CloudCover")
 				{
-					accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue > 20 ? 1 : 0);
+					if (config.tresholdCloudCover === undefined)
+					{
+						accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, value >= 20);
+					}
+					else
+					{
+						accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdCloudCover);
+					}
 					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Cover: " + convertedValue);
 				}
 				else if (name === "DewPoint")
@@ -327,7 +342,7 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (["RainBool", "SnowBool"].includes(name))
 				{
-					accessory[name + "Service"].setCharacteristic(Characteristic.OccupancyDetected, convertedValue ? 1 : 0);
+					accessory[name + "Service"].setCharacteristic(Characteristic.OccupancyDetected, convertedValue);
 				}
 				else if (name === "TemperatureMin")
 				{
@@ -335,7 +350,14 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "UVIndex")
 				{
-					accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, value > 2 ? 1 : 0);
+					if (config.tresholdUvIndex === undefined)
+					{
+						accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, value >= 3);
+					}
+					else
+					{
+						accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdUvIndex);
+					}
 					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + convertedValue);
 				}
 				else if (name === "Visibility")
@@ -348,7 +370,14 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "WindSpeed")
 				{
-					accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, value > 4 ? 1 : 0);
+					if (config.tresholdWindSpeed === undefined)
+					{
+						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, value >= 5);
+					}
+					else
+					{
+						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdWindSpeed);
+					}
 					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + accessory.WindSpeedService.unit);
 				}
 				else

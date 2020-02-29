@@ -239,6 +239,18 @@
           },
           "fakegatoParameters": {
             "type": "string"
+          },
+          "tresholdAirPressure": {
+            "type": "integer"
+          },
+          "tresholdCloudCover": {
+            "type": "integer"
+          },
+          "tresholdUvIndex": {
+            "type": "integer"
+          },
+          "tresholdWindSpeed": {
+            "type": "integer"
           }
         }
       }
@@ -346,6 +358,38 @@
             },
             {
               "key": "stations[].compatibility"
+            },
+            {
+              "key": "stations[].tresholdAirPressure",
+              "title": "Threshold air pressure",
+              "description": "At what treshold should the air pressure sensor trigger?",
+              "condition": {
+                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+              }
+            },
+            {
+              "key": "stations[].tresholdCloudCover",
+              "title": "Threshold cloud cover",
+              "description": "At what treshold should the cloud cover sensor trigger?",
+              "condition": {
+                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+              }
+            },
+            {
+              "key": "stations[].tresholdUvIndex",
+              "title": "Threshold uv index",
+              "description": "At what treshold should the UV-Index sensor trigger?",
+              "condition": {
+                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+              }
+            },
+            {
+              "key": "stations[].tresholdWindSpeed",
+              "title": "Threshold wind speed",
+              "description": "At what treshold should the wind speed sensor trigger?",
+              "condition": {
+                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+              }
             },
             {
               "type": "fieldset",
