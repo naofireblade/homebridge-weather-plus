@@ -1,0 +1,410 @@
+{
+  "pluginAlias": "WeatherPlus",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Find the full documentation and report bugs [here](https://github.com/naofireblade/homebridge-weather-plus).",
+  "schema": {
+    "units": {
+      "type": "string",
+      "default": "si",
+      "required": true,
+      "oneOf": [
+        {
+          "title": "Imperial",
+          "const": "us"
+        },
+        {
+          "title": "Metric (m/s)",
+          "const": "si"
+        },
+        {
+          "title": "Metric (km/h)",
+          "const": "ca"
+        },
+        {
+          "title": "Metric (mph)",
+          "const": "uk"
+        }
+      ]
+    },
+    "interval": {
+      "type": "integer",
+      "default": 4,
+      "minimum": 1
+    },
+    "stations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nameNow": {
+            "type": "string",
+            "default": ""
+          },
+          "service": {
+            "type": "string",
+            "default": "darksky",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Dark Sky",
+                "const": "darksky"
+              },
+              {
+                "title": "OpenWeatherMap",
+                "const": "openweathermap"
+              },
+              {
+                "title": "Weather Underground",
+                "const": "weatherunderground"
+              }
+            ]
+          },
+          "key": {
+            "type": "string",
+            "required": true
+          },
+          "locationGeo": {
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "items": {
+              "type": "number"
+            }
+          },
+          "locationId": {
+            "type": "integer"
+          },
+          "locationCity": {
+            "type": "string"
+          },
+          "stationId": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string",
+            "default": "en",
+            "required": true,
+            "enum": [
+              "ar",
+              "az",
+              "be",
+              "bg",
+              "bn",
+              "bs",
+              "ca",
+              "cs",
+              "da",
+              "de",
+              "el",
+              "en",
+              "eo",
+              "es",
+              "et",
+              "fi",
+              "fr",
+              "he",
+              "hi",
+              "hr",
+              "hu",
+              "id",
+              "is",
+              "it",
+              "ja",
+              "ka",
+              "kn",
+              "ko",
+              "kw",
+              "lv",
+              "ml",
+              "mr",
+              "nb",
+              "nl",
+              "no",
+              "pa",
+              "pl",
+              "pt",
+              "ro",
+              "ru",
+              "sk",
+              "sl",
+              "sr",
+              "sv",
+              "ta",
+              "te",
+              "tet",
+              "tr",
+              "uk",
+              "ur",
+              "zh",
+              "zh-tw"
+            ]
+          },
+          "compatibility": {
+            "type": "string",
+            "default": "home",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Apple Home",
+                "const": "home"
+              },
+              {
+                "title": "Apple Home (plus Eve)",
+                "const": "both"
+              },
+              {
+                "title": "Eve and other 3rd party apps",
+                "const": "eve"
+              },
+              {
+                "title": "Eve (with grouping)",
+                "const": "eve2"
+              }
+            ]
+          },
+          "forecast": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Today",
+                "Tomorrow",
+                "In 2 days",
+                "In 3 days",
+                "In 4 days",
+                "In 5 days",
+                "In 6 days"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "nameForecast": {
+            "type": "string",
+            "default": ""
+          },
+          "conditionCategory": {
+            "type": "string",
+            "default": "simple",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "4",
+                "const": "simple"
+              },
+              {
+                "title": "10",
+                "const": "detailed"
+              }
+            ]
+          },
+          "now": {
+            "type": "boolean",
+            "default": true
+          },
+          "extraHumidity": {
+            "type": "boolean",
+            "default": false
+          },
+          "hidden": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "AirPressure",
+                "CloudCover",
+                "Condition",
+                "ConditionCategory",
+                "DewPoint",
+                "ForecastDay",
+                "Humidity",
+                "ObservationStation",
+                "ObservationTime",
+                "Ozone",
+                "Rain1h",
+                "RainBool",
+                "RainChance",
+                "RainDay",
+                "SnowBool",
+                "SolarRadiation",
+                "TemperatureMin",
+                "UVIndex",
+                "Visibility",
+                "WindDirection",
+                "WindSpeed",
+                "WindSpeedMax"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "fakegatoParameters": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "layout": [
+    {
+      "type": "help",
+      "helpvalue": "<h4>General options</h4>"
+    },
+    {
+      "key": "units",
+      "description": "Conversions used weather values."
+    },
+    {
+      "key": "interval",
+      "title": "Update interval (minutes)",
+      "description": "Free API keys do not allow lower than 4."
+    },
+    {
+      "type": "help",
+      "helpvalue": "<h4>Stations</h4><p class='help-block'>Add multiple stations for different cities or weather services with the ADD STATIONS button</p>"
+    },
+    {
+      "key": "stations",
+      "type": "array",
+      "notitle": true,
+      "listItems": 1,
+      "items": [
+        {
+          "type": "div",
+          "displayFlex": false,
+          "flex-direction": "row",
+          "items": [
+            {
+              "key": "stations[].nameNow",
+              "title": "Station Name",
+              "placeholder": "Custom name for your station"
+            },
+            {
+              "key": "stations[].service",
+              "description": "Compare available weather services and register for one <a href='https://github.com/naofireblade/homebridge-weather-plus#choose-your-weather-service' target='_blank'>here</a>."
+            },
+            {
+              "key": "stations[].key",
+              "title": "Api Key",
+              "description": "You get an API key after registering for a weather service."
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>Location coordinates</h6><p class='help-block'>Enter the latitude in the first box and the longitude in the second box.<br>You can get your coordinates <a target='_blank' rel='noopener noreferrer' href='http://www.mapcoordinates.net/en'>here</a>.</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+              }
+            },
+            {
+              "key": "stations[].locationGeo",
+              "notitle": true,
+              "type": "array",
+              "listItems": 2,
+              "items": [
+                {
+                  "key": "stations[].locationGeo[]",
+                  "placeholder": "Coordinate, e.g. 52.5200066"
+                }
+              ],
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+              }
+            },
+            {
+              "type": "help",
+              "helpvalue": "<br/>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+              }
+            },
+            {
+              "key": "stations[].locationId",
+              "title": "Location Id",
+              "description": "Numerical city id, can be found <a target='_blank' rel='noopener noreferrer' href='https://openweathermap.org/find'>here</a>.",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
+              }
+            },
+            {
+              "key": "stations[].locationCity",
+              "title": "City Name",
+              "description": "City name and optional country code, can be found <a target='_blank' rel='noopener noreferrer' href='https://openweathermap.org/find'>here</a>.",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
+              }
+            },
+            {
+              "key": "stations[].stationId",
+              "title": "Station Id",
+              "description": "Your personal StationID.",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'weatherunderground'"
+              }
+            },
+            {
+              "key": "stations[].language",
+              "description": "Translation for the current day and the weather report."
+            },
+            {
+              "key": "stations[].compatibility"
+            },
+            {
+              "type": "fieldset",
+              "title": "Forecast",
+              "description": "<i>Select which forecasts you are interested in.</i>",
+              "expandable": true,
+              "items": [
+                {
+                  "key": "stations[].nameForecast",
+                  "title": "Prefix",
+                  "description": "Adds a prefix to the forecast days. You could set this to your city name."
+                },
+                {
+                  "key": "stations[].forecast",
+                  "notitle": true
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "Advanced options",
+              "description": "<i>For some expert users.</i>",
+              "expandable": true,
+              "items": [
+                {
+                  "key": "stations[].conditionCategory",
+                  "title": "Number of condition categories",
+                  "description": "Select a higher number for more detailed <a href='https://github.com/naofireblade/homebridge-weather-plus#observations-and-forecasts' target='_blank'>condition categories.</a>"
+                },
+                {
+                  "key": "stations[].now",
+                  "title": "Show current conditions"
+                },
+                {
+                  "key": "stations[].extraHumidity",
+                  "title": "Separate humidity",
+                  "description": "Separate humidity from the weather accessory to an own accessory. Only available for compatibility modes \"eve\" and \"both\"."
+                },
+                {
+                  "key": "stations[].fakegatoParameters",
+                  "description": "Customization of the history storage system. By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the location of the <a href='https://github.com/simont77/fakegato-history#file-system' target='_blank'>persisted file</a> or to use <a href='https://github.com/simont77/fakegato-history#google-drive' target='_blank'>GoogleDrive</a>. Do not modify the parameter for the fakegato internal timer."
+                }
+              ]
+            },
+            {
+              "type": "fieldset",
+              "title": "Hide values",
+              "description": "<i>Hide weather data that you are not interested in.</i>",
+              "expandable": true,
+              "items": [
+                {
+                  "key": "stations[].hidden",
+                  "notitle": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
