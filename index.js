@@ -240,9 +240,9 @@ WeatherPlusPlatform.prototype = {
 									pressure: accessory.AirPressureService ? accessory.AirPressureService.value : accessory.CurrentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
 									humidity: accessory.HumidityService ? accessory.HumidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value
 								});
-							} catch (error)
+							} catch (error2)
 							{
-								this.log.error("Exception while parsing weather report: " + error);
+								this.log.error("Exception while parsing weather report: " + error2);
 								this.log.error("Report: " + weather.report);
 							}
 						}
@@ -259,9 +259,9 @@ WeatherPlusPlatform.prototype = {
 								{
 									this.saveCharacteristic(accessory, characteristicName, data[characteristicName], "forecast");
 								});
-							} catch (error)
+							} catch (error2)
 							{
-								this.log.error("Exception while parsing weather forecast: " + error);
+								this.log.error("Exception while parsing weather forecast: " + error2);
 								this.log.error("Forecast: " + weather.forecast);
 							}
 						}
