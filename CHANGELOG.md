@@ -175,3 +175,6 @@
 ## 3.1.0
 * Added support for config-ui-x
 * Added custom tresholds for apple home sensors
+
+## 3.1.1
+* Added unit sitorr for air pressure in mmhg

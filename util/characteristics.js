@@ -36,19 +36,21 @@ let CustomCharacteristic = {};
 
 // A more accurate way of rounding decimals in Javascript compared to the usual multiply & divide
 // See https://www.jacklmoore.com/notes/rounding-in-javascript/ for explanation
-function round(value, decimals) {
-	return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-  }  
+function round(value, decimals)
+{
+	return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
 
 module.exports = function (Characteristic, units)
 {
 
-	units =                    // rainfail    temperature    visibility    windspeed
+	units =                    		// rainfail    temperature    visibility    windspeed    airpressure
 		{
-			ca: 'ca'        //    mm       celsius        kilometers    km/hour
-			, imperial: 'imperial'  //  inches     fahrenheit       miles       miles/hour
-			, si: 'si'        //    mm       celsius        kilometers    m/second
-			, uk: 'uk'        //    mm       celsius          miles       miles/hour
+			ca: 'ca'        		//    mm       celsius        kilometers    km/hour		 hPa
+			, imperial: 'imperial'  //    inches   fahrenheit     miles       	miles/hour   hPa
+			, si: 'si'        		//    mm       celsius        kilometers    m/second     hPa
+			, sitorr: 'sitorr'    	//    mm       celsius        kilometers    m/second     mmhg
+			, uk: 'uk'        		//    mm       celsius        miles       	miles/hour   hPa
 
 			, metric: 'si'
 			, us: 'imperial'
@@ -90,11 +92,11 @@ module.exports = function (Characteristic, units)
 
 	var km2mi = (km) =>
 	{
-    return Math.round(km / 1.60934);
+		return Math.round(km / 1.60934);
 	};
 	var visibilityProps = (max) =>
 	{
-		var range = ((units === 'si') || (units === 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
+		var range = ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
 			: {unit: 'mi', maxValue: km2mi(max), minValue: 0};
 
 		return underscore.extend(
@@ -106,7 +108,7 @@ module.exports = function (Characteristic, units)
 	};
 	var visibilityValue = (val) =>
 	{
-		return ((units === 'si') || (units === 'ca')) ? val : km2mi(val);
+		return ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? val : km2mi(val);
 	};
 
 	var mtos2kmh = (m) =>
@@ -119,7 +121,7 @@ module.exports = function (Characteristic, units)
 	};
 	var windspeedProps = (max) =>
 	{
-		var range = (units === 'si') ? {unit: 'm/s', maxValue: max, minValue: 0}
+		var range = ((units === 'si') || (units === 'sitorr')) ? {unit: 'm/s', maxValue: max, minValue: 0}
 			: (units === 'ca') ? {unit: 'km/h', maxValue: mtos2kmh(max), minValue: 0}
 				: {unit: 'mph', maxValue: mtos2mih(max), minValue: 0};
 
@@ -132,25 +134,40 @@ module.exports = function (Characteristic, units)
 	};
 	var windspeedValue = (val) =>
 	{
-		return (units === 'si') ? val
+		return ((units === 'si') || (units === 'sitorr')) ? val
 			: (units === 'ca') ? mtos2kmh(val)
 				: mtos2mih(val);
+	};
+
+	let hpa2mmhg = (hpa) =>
+	{
+		return (round(hpa / 1.3332, 0));
+	};
+	let airpressureProps = (min, max) =>
+	{
+		let range = (units === 'sitorr') ? {unit: 'mmhg', maxValue: hpa2mmhg(max), minValue: hpa2mmhg(min)}
+			: {unit: 'hPa', maxValue: max, minValue: min};
+
+		return underscore.extend(
+			{
+				format: Characteristic.Formats.UINT8
+				, minStep: 1
+				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+			}, range);
+	};
+	let airpressureValue = (val) =>
+	{
+		return (units === 'sitorr') ? hpa2mmhg(val) : val;
 	};
 
 	CustomCharacteristic.AirPressure = function ()
 	{
 		Characteristic.call(this, 'Air Pressure', CustomUUID.AirPressure);
-		this.setProps({
-			format: Characteristic.Formats.UINT16,
-			unit: "hPa",
-			maxValue: 1100,
-			minValue: 700,
-			minStep: 1,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
+		this.setProps(airpressureProps(700, 1100));
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.AirPressure, Characteristic);
+	CustomCharacteristic.AirPressure._unitvalue = airpressureValue;
 
 	CustomCharacteristic.CloudCover = function ()
 	{

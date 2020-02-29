@@ -7,7 +7,12 @@ const createService = function (that, name, Service, CustomCharacteristic)
 {
 	if (name === "AirPressure")
 	{
+		// Get unit
+		let temporaryService = new Service.OccupancySensor("Temporary");
+		temporaryService.addCharacteristic(CustomCharacteristic.AirPressure);
+
 		that.AirPressureService = new Service.OccupancySensor("Air Pressure", "Air Pressure");
+		that.AirPressureService.unit = temporaryService.getCharacteristic(CustomCharacteristic.AirPressure).props.unit;
 	}
 	if (name === "CloudCover")
 	{

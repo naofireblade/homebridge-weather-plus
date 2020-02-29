@@ -317,7 +317,7 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdAirPressure);
 					}
-					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + convertedValue + "hPa");
+					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + convertedValue + " " + accessory.AirPressureService.unit);
 					accessory.AirPressureService.value = convertedValue; // Save value to use in history
 				}
 				else if (name === "CloudCover")
@@ -362,7 +362,7 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "Visibility")
 				{
-					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibility: " + convertedValue + accessory.VisibilityService.unit);
+					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibility: " + convertedValue + " " + accessory.VisibilityService.unit);
 				}
 				else if (name === "WindDirection")
 				{
@@ -378,7 +378,7 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdWindSpeed);
 					}
-					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + accessory.WindSpeedService.unit);
+					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + " " + accessory.WindSpeedService.unit);
 				}
 				else
 				{

@@ -198,6 +198,7 @@ Option to hide the Now accessory if you only need forecasts. Default is `true` w
 **units**  
 Conversions used for reporting values. The default is `"metric"`. The options are:  
 `"si"` or `"metric"`  
+`"sitorr"` to report air pressure in mmhg  
 `"us"` or `"imperial"`  
 `"ca"` to report wind speeds in km/h instead of m/s  
 `"uk"` to report visibility in miles and wind speeds in km/h instead of m/s

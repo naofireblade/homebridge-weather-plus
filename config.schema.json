@@ -18,6 +18,10 @@
           "const": "si"
         },
         {
+          "title": "Metric (m/s + mmhg)",
+          "const": "sitorr"
+        },
+        {
           "title": "Metric (km/h)",
           "const": "ca"
         },
