@@ -171,3 +171,7 @@
 ## 3.0.4
 * Improved rounding
 * Fixed wind sensor trigger for non metric units
+
+## 3.1.0
+* Added support for config-ui-x
+* Added custom tresholds for apple home sensors
