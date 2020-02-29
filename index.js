@@ -157,6 +157,41 @@ WeatherPlusPlatform.prototype = {
 		// Other options
 		station.now = "now" in stationConfig ? stationConfig.now : true;
 		station.forecast = stationConfig.forecast || [];
+		station.forecast.forEach(function (day, i, array)
+		{
+			if ("Today" === day)
+			{
+				array[i] = 0;
+			}
+			if ("Tomorrow" === day)
+			{
+				array[i] = 1;
+			}
+			if ("In 2 days" === day)
+			{
+				array[i] = 2;
+			}
+			if ("In 3 days" === day)
+			{
+				array[i] = 3;
+			}
+			if ("In 4 days" === day)
+			{
+				array[i] = 4;
+			}
+			if ("In 5 days" === day)
+			{
+				array[i] = 5;
+			}
+			if ("In 6 days" === day)
+			{
+				array[i] = 6;
+			}
+			if ("In 7 days" === day)
+			{
+				array[i] = 7;
+			}
+		});
 		station.language = stationConfig.language || "en";
 		station.fakegatoParameters = stationConfig.fakegatoParameters || {storage: "fs"};
 		station.hidden = stationConfig.hidden || [];
@@ -321,8 +356,8 @@ WeatherPlusPlatform.prototype = {
 					log.error("Unkown compatiblity type " + name);
 				}
 			}
-			// Humidity might have an extra service if configured
-			else if (config.compatibility === "eve" && name === "Humidity" && config.extraHumidity)
+			// Humidity might have an extra service if configured (only for current conditions)
+			else if (config.compatibility === "eve" && name === "Humidity" && config.extraHumidity && type === "current")
 			{
 				accessory.HumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 			}
