@@ -83,13 +83,13 @@
     "url": "https://github.com/naofireblade/homebridge-weather-plus.git"
   },
   "dependencies": {
-    "dark-sky": "^1.1.4",
+    "dark-sky": "^1.1.5",
     "debug": "^4.1.1",
-    "fakegato-history": "^0.5.2",
-    "geo-tz": "^4.0.1",
-    "moment-timezone": "^0.5.21",
-    "underscore": "1.8.3",
-    "openweather-apis": "^4.0.0",
-    "request": "^2.88.0"
+    "fakegato-history": "^0.5.6",
+    "geo-tz": "^6.0.0",
+    "moment-timezone": "^0.5.28",
+    "underscore": "^1.10.2",
+    "openweather-apis": "^4.2.0",
+    "request": "^2.88.2"
   }
 }
