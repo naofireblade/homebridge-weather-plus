@@ -65,15 +65,15 @@ function WeatherPlusPlatform(_log, _config)
 		switch (config.service)
 		{
 			case "darksky":
-				this.log("Adding station with weather service Dark Sky named '" + config.nameNow + "'");
+				this.log.info("Adding station with weather service Dark Sky named '" + config.nameNow + "'");
 				this.stations.push(new darksky(config.key, config.language, config.locationGeo || config.locationId, config.conditionDetail, this.log));
 				break;
 			case "weatherunderground":
-				this.log("Adding station with weather service Weather Underground named '" + config.nameNow + "'");
+				this.log.info("Adding station with weather service Weather Underground named '" + config.nameNow + "'");
 				this.stations.push(new weatherunderground(config.key, config.locationId, config.conditionDetail, this.log));
 				break;
 			case "openweathermap":
-				this.log("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
+				this.log.info("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
 				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, config.conditionDetail, this.log));
 				break;
 			default:
