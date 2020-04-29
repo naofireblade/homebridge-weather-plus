@@ -178,7 +178,8 @@
                 "In 3 days",
                 "In 4 days",
                 "In 5 days",
-                "In 6 days"
+                "In 6 days",
+                "In 7 days"
               ]
             },
             "uniqueItems": true
