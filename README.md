@@ -38,7 +38,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
-> <b name="a1">1</b> It is no longer possible to register as a new user for dark sky  
+> <b name="a1">1</b> [It is no longer possible](https://blog.darksky.net/dark-sky-has-a-new-home/) to register as a new user for Dark Sky. Existing users can use the service until 31.12.2021.  
 > <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
 
 
