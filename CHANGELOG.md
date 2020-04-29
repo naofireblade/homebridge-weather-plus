@@ -186,3 +186,6 @@
 * Updated dependencies
 * Fixed undefined this.log when converting unkown weather categories
 * Fixed RainBool threshold too strict in DarkSky service
+
+## 3.1.3
+* Changed minimum required node js version to v10
