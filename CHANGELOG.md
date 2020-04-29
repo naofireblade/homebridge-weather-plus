@@ -178,3 +178,8 @@
 
 ## 3.1.1
 * Added unit sitorr for air pressure in mmhg
+
+## 3.1.2
+* Added one more day to Dark Sky forecast
+* Fixed undefined this.log when converting unkown weather categories
+* Fixed RainBool threshold too strict in DarkSky service
