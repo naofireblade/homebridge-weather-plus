@@ -107,7 +107,7 @@ List with the latitude and longitude for your location (don't forget the square 
 ### OpenWeatherMap
 
 **key**  
-The API key that you get by [registering](https://openweathermap.org/appid) for the Dark Sky service.
+The API key that you get by [registering](https://openweathermap.org/appid) for the OpenWeather service.
 
 **locationId**<sup>[4](#a4)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
