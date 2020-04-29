@@ -54,7 +54,7 @@ class DarkSkyAPI
 				'WindSpeed',
 				'WindSpeedMax'
 			];
-		this.forecastDays = 7;
+		this.forecastDays = 8;
 		this.cache = {
 			report: {},
 			forecast: {
@@ -64,7 +64,8 @@ class DarkSkyAPI
 				day3: {},
 				day4: {},
 				day5: {},
-				day6: {}
+				day6: {},
+				day7: {}
 			}
 		};
 		this.darksky = new DarkSky(apiKey);
@@ -106,8 +107,8 @@ class DarkSkyAPI
 				response.currently.rainDay = that.cache.report.rainDay; // Load rainDay from cache
 				weather.report = that.parseReport(response.currently, response.timezone);
 
-				// Forecasts for today and next 6 days
-				for (let i = 0; i <= 6; i++)
+				// Forecasts for today and next 7 days
+				for (let i = 0; i <= 7; i++)
 				{
 					response.daily.data[i].rainDay = that.cache.forecast['day' + i].rainDay; // Load rainDay from cache
 					weather.forecasts.push(that.parseForecast(response.daily.data[i], response.timezone));
@@ -138,9 +139,9 @@ class DarkSkyAPI
 		report.Ozone = parseInt(values.ozone);
 		report.Rain1h = isNaN(parseInt(values.precipIntensity)) ? 0 : parseInt(values.precipIntensity);
 		let detailedCondition = this.getConditionCategory(values.icon, true);
-		report.RainBool = [5,6].includes(detailedCondition) || (values.precipType === 'rain' && parseInt(values.precipIntensity) > 0);
+		report.RainBool = [5,6].includes(detailedCondition);
 		report.RainDay = values.rainDay;
-		report.SnowBool = [7,8].includes(detailedCondition) || ((values.precipType === 'snow' || values.precipType === 'sleet') && parseInt(values.precipIntensity) > 0);
+		report.SnowBool = [7,8].includes(detailedCondition);
 		report.Temperature = values.temperature;
 		report.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
 		report.Visibility = isNaN(parseInt(values.visibility)) ? 0 : parseInt(values.visibility);
@@ -164,10 +165,10 @@ class DarkSkyAPI
 		forecast.Humidity = parseInt(values.humidity * 100);
 		forecast.Ozone = parseInt(values.ozone);
 		let detailedCondition = this.getConditionCategory(values.icon, true);
-		forecast.RainBool = [5,6].includes(detailedCondition) || (values.precipType === 'rain' && values.rainDay > 0);
+		forecast.RainBool = [5,6].includes(detailedCondition);
 		forecast.RainChance = parseInt(values.precipProbability * 100);
 		forecast.RainDay = values.rainDay;
-		forecast.SnowBool = [7,8].includes(detailedCondition) || ((values.precipType === 'snow' || values.precipType === 'sleet') && values.rainDay > 0);
+		forecast.SnowBool = [7,8].includes(detailedCondition);
 		forecast.TemperatureMax = values.temperatureHigh;
 		forecast.TemperatureMin = values.temperatureLow;
 		forecast.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
