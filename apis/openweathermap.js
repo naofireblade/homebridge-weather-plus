@@ -97,7 +97,7 @@ class OpenWeatherMapAPI
 	parseReport(weather, values, callback)
 	{
 		let report = weather.report || {};
-		const timezone = geoTz(values.coord.lat, values.coord.lon);
+		const timezone = String(geoTz(values.coord.lat, values.coord.lon));
 
 		report.AirPressure = parseInt(values.main.pressure);
 		report.CloudCover = parseInt(values.clouds.all);
@@ -121,7 +121,7 @@ class OpenWeatherMapAPI
 
 	parseForecasts(weather, values, callback)
 	{
-		const timezone = geoTz(values.city.coord.lat, values.city.coord.lon);
+		const timezone = String(geoTz(values.city.coord.lat, values.city.coord.lon));
 
 		let forecasts = [];
 		// We get a forecast for 5 days with values each 3 hours.

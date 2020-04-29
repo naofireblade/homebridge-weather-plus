@@ -63,7 +63,7 @@ class YahooAPI
 	parseReport(values, callback)
 	{
 		let report = {};
-		const timezone = geoTz(parseFloat(values.item.lat), parseFloat(values.item.long));
+		const timezone = String(geoTz(parseFloat(values.item.lat), parseFloat(values.item.long)));
 		debug("Using Timezone: " + timezone);
 
 		report.AirPressure = parseInt(values.atmosphere.pressure);

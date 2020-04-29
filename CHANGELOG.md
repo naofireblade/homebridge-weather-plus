@@ -189,3 +189,6 @@
 
 ## 3.1.3
 * Changed minimum required node js version to v10
+
+## 3.1.4
+* Fixed crash in OpenWeatherMap API
