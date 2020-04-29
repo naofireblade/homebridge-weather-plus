@@ -6,7 +6,6 @@ const DarkSky = require('dark-sky'),
 	moment = require('moment-timezone'),
 	debug = require('debug')('homebridge-weather-plus');
 
-
 class DarkSkyAPI
 {
 	constructor(apiKey, language, locationGeo, conditionDetail, log)
@@ -132,13 +131,13 @@ class DarkSkyAPI
 		report.AirPressure = parseInt(values.pressure);
 		report.CloudCover = parseInt(values.cloudCover * 100);
 		report.Condition = values.summary;
-		report.ConditionCategory = converter.getConditionCategoryDarkSky(values.icon, this.conditionDetail);
+		report.ConditionCategory = this.getConditionCategory(values.icon, this.conditionDetail);
 		report.DewPoint = parseInt(values.dewPoint);
 		report.Humidity = parseInt(values.humidity * 100);
 		report.ObservationTime = moment.unix(values.time).tz(timezone).format('HH:mm:ss');
 		report.Ozone = parseInt(values.ozone);
 		report.Rain1h = isNaN(parseInt(values.precipIntensity)) ? 0 : parseInt(values.precipIntensity);
-		let detailedCondition = converter.getConditionCategoryDarkSky(values.icon, true);
+		let detailedCondition = this.getConditionCategory(values.icon, true);
 		report.RainBool = [5,6].includes(detailedCondition) || (values.precipType === 'rain' && parseInt(values.precipIntensity) > 0);
 		report.RainDay = values.rainDay;
 		report.SnowBool = [7,8].includes(detailedCondition) || ((values.precipType === 'snow' || values.precipType === 'sleet') && parseInt(values.precipIntensity) > 0);
@@ -159,12 +158,12 @@ class DarkSkyAPI
 		forecast.AirPressure = parseInt(values.pressure);
 		forecast.CloudCover = parseInt(values.cloudCover * 100);
 		forecast.Condition = values.summary;
-		forecast.ConditionCategory = converter.getConditionCategoryDarkSky(values.icon, this.conditionDetail);
+		forecast.ConditionCategory = this.getConditionCategory(values.icon, this.conditionDetail);
 		forecast.DewPoint = parseInt(values.dewPoint);
 		forecast.ForecastDay = moment.unix(values.time).tz(timezone).format('dddd');
 		forecast.Humidity = parseInt(values.humidity * 100);
 		forecast.Ozone = parseInt(values.ozone);
-		let detailedCondition = converter.getConditionCategoryDarkSky(values.icon, true);
+		let detailedCondition = this.getConditionCategory(values.icon, true);
 		forecast.RainBool = [5,6].includes(detailedCondition) || (values.precipType === 'rain' && values.rainDay > 0);
 		forecast.RainChance = parseInt(values.precipProbability * 100);
 		forecast.RainDay = values.rainDay;
@@ -246,6 +245,64 @@ class DarkSkyAPI
 		}.bind(this));
 	}
 
+	getConditionCategory(name, detail = false)
+	{
+		if (["tornado", "wind"].includes(name))
+		{
+			// Severe weather
+			return detail ? 9 : 2;
+		}
+		else if (["snow", "sleet", "flurries", "chancesleet", "chancesnow", "chanceflurries"].includes(name))
+		{
+			// Snow
+			return detail ? 8 : 3;
+		}
+		else if (["hail"].includes(name))
+		{
+			// Hail
+			return detail ? 7 : 3;
+		}
+		else if (["tstorms", "thunderstorm", "rain"].includes(name))
+		{
+			// Rain
+			return detail ? 6 : 2;
+		}
+		else if (["chancerain", "chancetstorms"].includes(name))
+		{
+			// Drizzle
+			return detail ? 5 : 2;
+		}
+		else if (["fog", "hazy"].includes(name))
+		{
+			// Fog
+			return detail ? 4 : 1;
+		}
+		else if (["cloudy"].includes(name))
+		{
+			// Overcast
+			return detail ? 3 : 1;
+		}
+		else if (["mostlycloudy", "partlysunny", "partly-cloudy-day", "partly-cloudy-night", "partlycloudy"].includes(name))
+		{
+			// Broken Clouds
+			return detail ? 2 : 1;
+		}
+		else if (["mostlysunny"].includes(name))
+		{
+			// Few Clouds
+			return detail ? 1 : 0;
+		}
+		else if (["sunny", "clear", "clear-day", "clear-night"].includes(name))
+		{
+			// Clear
+			return 0;
+		}
+		else
+		{
+			this.log.warn("Unknown Dark Sky weather category " + name);
+			return 0;
+		}
+	};
 }
 
 module.exports = {

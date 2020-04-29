@@ -102,10 +102,10 @@ class OpenWeatherMapAPI
 		report.AirPressure = parseInt(values.main.pressure);
 		report.CloudCover = parseInt(values.clouds.all);
 		report.Condition = values.weather[0].description;
-		report.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id, this.conditionDetail);
+		report.ConditionCategory = this.getConditionCategory(values.weather[0].id, this.conditionDetail);
 		report.Humidity = parseInt(values.main.humidity);
 		report.ObservationTime = moment.unix(values.dt).tz(timezone).format('HH:mm:ss');
-		let detailedCondition = converter.getConditionCategoryOwm(values.weather[0].id, true);
+		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
 		report.RainBool = [5,6].includes(detailedCondition);
 		report.SnowBool = [7,8].includes(detailedCondition);
 		report.Temperature = values.main.temp;
@@ -146,10 +146,10 @@ class OpenWeatherMapAPI
 		forecast.AirPressure = parseInt(values.main.pressure);
 		forecast.CloudCover = parseInt(values.clouds.all);
 		forecast.Condition = values.weather[0].description;
-		forecast.ConditionCategory = converter.getConditionCategoryOwm(values.weather[0].id, this.conditionDetail);
+		forecast.ConditionCategory = this.getConditionCategory(values.weather[0].id, this.conditionDetail);
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		forecast.Humidity = parseInt(values.main.humidity);
-		let detailedCondition = converter.getConditionCategoryOwm(values.weather[0].id, true);
+		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
 		forecast.RainBool = [5,6].includes(detailedCondition);
 		forecast.SnowBool = [7,8].includes(detailedCondition);
 		forecast.TemperatureMax = values.main.temp_max;
@@ -209,6 +209,66 @@ class OpenWeatherMapAPI
 		}
 		return forecastsFiltered;
 	}
+
+	getConditionCategory(code, detail = false)
+	{
+		// See https://openweathermap.org/weather-conditions
+		if ([212, 221, 232, 504, 531, 711, 762, 771, 781].includes(code))
+		{
+			// Severe weather
+			return detail ? 9 : 2;
+		}
+		else if (code >= 600 && code < 700)
+		{
+			// Snow
+			return detail ? 8 : 3;
+		}
+		else if (code === 511)
+		{
+			// Hail
+			return detail ? 7 : 3;
+		}
+		else if (code >= 500 && code < 600)
+		{
+			// Rain
+			return detail ? 6 : 2;
+		}
+		else if (code >= 300 && code < 400)
+		{
+			// Drizzle
+			return detail ? 5 : 2;
+		}
+		else if (code >= 700 && code < 800)
+		{
+			// Fog
+			return detail ? 4 : 1;
+		}
+		else if (code === 804)
+		{
+			// Overcast
+			return detail ? 3 : 1;
+		}
+		else if ([803, 802].includes(code))
+		{
+			// Broken Clouds
+			return detail ? 2 : 1;
+		}
+		else if (code === 801)
+		{
+			// Few Clouds
+			return detail ? 1 : 0;
+		}
+		else if (code === 800)
+		{
+			// Clear
+			return 0;
+		}
+		else
+		{
+			this.log.warn("Unknown OpenWeatherMap category " + code);
+			return 0;
+		}
+	};
 }
 
 module.exports = {
