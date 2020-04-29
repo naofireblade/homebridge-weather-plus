@@ -55,15 +55,16 @@ class WundergroundAPI
 					callback(null, weather);
 				} catch (e)
 				{
-					debug("Error retrieving weather report and forecast");
-					debug("Error Message: " + e);
+					that.log.error("Error retrieving weather report and forecast");
+					that.log.error("Error Message: " + e);
+					that.log.error(body);
 					callback(e);
 				}
 			}
 			else
 			{
-				debug("Error retrieving weather report and forecast");
-				debug("Error Message: " + err);
+				that.log.error("Error retrieving weather report and forecast");
+				that.log.error("Error Message: " + err);
 				callback(err);
 			}
 		}.bind(this));
