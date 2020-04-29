@@ -27,7 +27,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky (recommended)            |                   OpenWeatherMap                                 |            Weather Underground <sup>[1](#a1)</sup>               |
+|                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | Current observation values |                      17                      |                                9                                 |                                12                                |
 | Forecast values            |                      18                      |                                11                                |                                 0                                |
@@ -38,7 +38,8 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
-> <b name="a1">1</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
+> <b name="a1">1</b> It is no longer possible to register as a new user for dark sky  
+> <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
 
 
 ## Installation
@@ -46,7 +47,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 1. Install homebridge using: `npm install -g homebridge`
 2. Install this plugin using: `npm install -g homebridge-weather-plus` *Note: The installation might take 5 minutes.*
 3. Gather an API key for a weather service from the register link in the table above
-4. Update your configuration file. See the samples below.
+4. Configure via the plugin `homebridge-config-ui-x` or update your configuration file manually. See the explanations and samples below.
 
 ## Observations and Forecasts
 
@@ -56,7 +57,7 @@ I recommend using the Eve app to see all the values. However, if you don't want 
 - Air Pressure
 - Cloud Cover
 - Condition
-- Condition Category <sup>[2](#a2), </sup><sup>[3](#a3)</sup>
+- Condition Category <sup>[3](#a3), </sup><sup>[4](#a4)</sup>
 - Dew Point
 - Humidity
 - Ozone
@@ -78,8 +79,8 @@ I recommend using the Eve app to see all the values. However, if you don't want 
 - *Observation Station*
 - *Day of the forecast*
 
-> <b name="a2">2</b> Simple: clear (0), overcast (1), rain (2), snow (3)  
-> <b name="a3">3</b> Detailed: clear (0), few clouds (1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather (9)
+> <b name="a3">3</b> Simple: clear (0), overcast (1), rain (2), snow (3)  
+> <b name="a4">4</b> Detailed: clear (0), few clouds (1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather (9)
 
 ## Configuration
 
@@ -109,16 +110,16 @@ List with the latitude and longitude for your location (don't forget the square 
 **key**  
 The API key that you get by [registering](https://openweathermap.org/appid) for the OpenWeather service.
 
-**locationId**<sup>[4](#a4)</sup>  
+**locationId**<sup>[5](#a4)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
 
-**locationCity**<sup>[4](#a4)</sup>  
+**locationCity**<sup>[5](#a4)</sup>  
 City name and optional country code, can be found [here](https://openweathermap.org/find).
 
-**locationGeo**<sup>[4](#a4)</sup>  
+**locationGeo**<sup>[5](#a4)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
-> <b name="a4">4</b> You need only **one** of these location options.
+> <b name="a5">5</b> You need only **one** of these location options.
 
 ```json
 "platforms": [
@@ -162,9 +163,9 @@ Below are explanations for a lot of advanced parameters to adjust the plugin to 
 Compatibility for the Apple Home app, the Eve app or both. This is required due to limitations in the Apple Home app recognized weather conditions. The default is `"eve"`.  
 `"eve"` **(recommended)** Use this for the Eve app or another 3rd party HomeKit App. All conditions will be displayed. The Apple Home app will show only temperature and humidity.   
 `"eve2"` Same as above but the values for temperature, humidity and pressure will be grouped into a single row. The Apple Home app will show nothing.  
-`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as many values as possible in the Apple Home app<sup>[5](#a4)</sup>. 3rd party apps will show some useless sensors that are required for Home app support.  
+`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as many values as possible in the Apple Home app<sup>[6](#a4)</sup>. 3rd party apps will show some useless sensors that are required for Home app support.  
 `"both"` Combines eve and home. You will need to hide some useless sensors in the Eve app that are required for Home app support. But after that you will get a solution that looks nice in the Home app and in 3rd party apps at the same time.
-> <b name="a5">5</b> The following values will be represented as occupancy sensors that trigger on specific limits: CloudCover > 20%, UVIndex > 2, WindSpeed > 4 m/s, Rain, Snow
+> <b name="a6">6</b> The following values will be represented as occupancy sensors that trigger on specific limits: CloudCover > 20%, UVIndex > 2, WindSpeed > 4 m/s, Rain, Snow
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
