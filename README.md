@@ -29,9 +29,9 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 |                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      17                      |                                9                                 |                                12                                |
-| Forecast values            |                      18                      |                                11                                |                                 0                                |
-| Forecast days              |                  today + 7                   |                             today + 4                            |                                 0                                |
+| Current observation values |                      17                      |                                15                                 |                                12                                |
+| Forecast values            |                      18                      |                                16                                |                                 0                                |
+| Forecast days              |                  today + 7                   |                             today + 7                            |                                 0                                |
 | Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
 | Free                       |               :heavy_check_mark:             |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
@@ -70,6 +70,7 @@ I recommend using the Eve app to see all the values. However, if you don't want 
 - Temperature
 - Temperature Min
 - Temperature Max
+- Temperature Wind Chill
 - UV-Index
 - Visibility
 - Wind Direction

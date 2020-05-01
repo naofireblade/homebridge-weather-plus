@@ -135,6 +135,7 @@ class OpenWeatherMapAPI
 		let forecast = {};
 		this.parseWeather(forecast, values);
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
+		// TODO values.snow
 		forecast.RainDay = isNaN(parseInt(values.rain)) ? 0 : parseInt(values.rain);
 		forecast.TemperatureMax = values.temp.max;
 		forecast.TemperatureMin = values.temp.min;

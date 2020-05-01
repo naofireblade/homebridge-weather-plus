@@ -200,4 +200,5 @@
 * Added rain all day to OpenWeatherMap
 * Added temperature wind chill to OpenWeatherMap
 * Added uv index to OpenWeatherMap
+* Added 3 more forecast days to OpenWeatherMap (today + 7)
 * Fixed city name with country code not found in OpenWeatherMap
