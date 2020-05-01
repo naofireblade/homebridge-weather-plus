@@ -192,3 +192,12 @@
 
 ## 3.1.4
 * Fixed crash in OpenWeatherMap API
+
+## 3.2.0
+* Added cloud cover to OpenWeatherMap
+* Added dew point to OpenWeatherMap
+* Added rain last hour to OpenWeatherMap
+* Added rain all day to OpenWeatherMap
+* Added temperature wind chill to OpenWeatherMap
+* Added uv index to OpenWeatherMap
+* Fixed city name with country code not found in OpenWeatherMap

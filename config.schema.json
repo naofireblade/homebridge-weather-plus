@@ -233,6 +233,7 @@
                 "SnowBool",
                 "SolarRadiation",
                 "TemperatureMin",
+                "TemperatureWindChill",
                 "UVIndex",
                 "Visibility",
                 "WindDirection",

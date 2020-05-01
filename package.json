@@ -1,6 +1,6 @@
 {
   "name": "homebridge-weather-plus",
-  "version": "3.1.4",
+  "version": "3.2.0-beta.1",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
@@ -26,6 +26,7 @@
     "Temperature",
     "Temperature Min",
     "Temperature Max",
+    "Temperature Wind Chill",
     "UV-Index",
     "Visibility",
     "Wind Direction",
@@ -89,7 +90,6 @@
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
     "underscore": "^1.10.2",
-    "openweather-apis": "^4.2.0",
     "request": "^2.88.2"
   }
 }

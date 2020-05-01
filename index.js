@@ -220,7 +220,7 @@ WeatherPlusPlatform.prototype = {
 					this.accessoriesList.forEach((accessory) =>
 					{
 						// Add current weather conditions
-						if (accessory.stationIndex === stationIndex && accessory.CurrentConditionsService !== undefined && weather.report !== undefined)
+						if (accessory.stationIndex === stationIndex && accessory.CurrentConditionsService !== undefined && weather !== undefined && weather.report !== undefined)
 						{
 							try
 							{
@@ -247,7 +247,7 @@ WeatherPlusPlatform.prototype = {
 							}
 						}
 						// Add a weather forecast for the given day
-						else if (accessory.stationIndex === stationIndex && accessory.ForecastService !== undefined && weather.forecasts[accessory.day] !== undefined)
+						else if (accessory.stationIndex === stationIndex && accessory.ForecastService !== undefined && weather!== undefined && weather.forecasts[accessory.day] !== undefined)
 						{
 							try
 							{
@@ -347,6 +347,10 @@ WeatherPlusPlatform.prototype = {
 				else if (name === "TemperatureMin")
 				{
 					accessory.TemperatureMinService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
+				}
+				else if (name === "TemperatureWindChill")
+				{
+					accessory.TemperatureWindChillService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 				}
 				else if (name === "UVIndex")
 				{
