@@ -49,9 +49,9 @@ class OpenWeatherMapAPI
 			'SnowBool',
 			'SunriseTime',
 			'SunsetTime',
+			'TemperatureApparent',
 			'TemperatureMax',
 			'TemperatureMin',
-			'TemperatureApparent',
 			'UVIndex',
 			'WindDirection',
 			'WindSpeed'
@@ -109,7 +109,9 @@ class OpenWeatherMapAPI
 		weather.report = {};
 		this.parseWeather(weather.report, values);
 		weather.report.ObservationTime = moment.unix(values.dt).tz(timezone).format('HH:mm:ss');
-		weather.report.Rain1h = values.rain === undefined || isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
+		let precip1h = values.rain === undefined || isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
+		precip1h += values.snow === undefined || isNaN(parseFloat(values.snow['1h'])) ? 0 : parseFloat(values.snow['1h']);
+		weather.report.Rain1h = precip1h;
 
 		if (weather.forecasts)
 		{
@@ -139,8 +141,9 @@ class OpenWeatherMapAPI
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		forecast.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
 		forecast.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
-		// TODO values.snow
-		forecast.RainDay = isNaN(parseFloat(values.rain)) ? 0 : parseFloat(values.rain);
+		let precipDay = isNaN(parseFloat(values.rain)) ? 0 : parseFloat(values.rain);
+		precipDay += isNaN(parseFloat(values.snow)) ? 0 : parseFloat(values.snow);
+		forecast.RainDay = precipDay;
 		forecast.TemperatureMax = parseInt(values.temp.max);
 		forecast.TemperatureMin = parseInt(values.temp.min);
 
