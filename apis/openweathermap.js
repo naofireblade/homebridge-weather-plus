@@ -107,7 +107,9 @@ class OpenWeatherMapAPI
 		weather.report = {};
 		this.parseWeather(weather.report, values);
 		weather.report.ObservationTime = moment.unix(values.dt).tz(timezone).format('HH:mm:ss');
-		weather.report.Rain1h = isNaN(parseInt(values.rain)) ? 0 : parseInt(values.rain);
+		// todo möglicherweise in values.rain.1h zu finden
+		debug(values.rain['1h']);
+		weather.report.Rain1h = isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
 
 		if (weather.forecasts)
 		{
@@ -136,7 +138,7 @@ class OpenWeatherMapAPI
 		this.parseWeather(forecast, values);
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		// TODO values.snow
-		forecast.RainDay = isNaN(parseInt(values.rain)) ? 0 : parseInt(values.rain);
+		forecast.RainDay = isNaN(parseFloat(values.rain)) ? 0 : parseFloat(values.rain);
 		forecast.TemperatureMax = values.temp.max;
 		forecast.TemperatureMin = values.temp.min;
 
@@ -152,21 +154,19 @@ class OpenWeatherMapAPI
 		report.DewPoint = parseInt(values.dew_point);
 		report.Humidity = parseInt(values.humidity);
 		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
-		report.RainBool = [5,6].includes(detailedCondition);
+		report.RainBool = [5,6,9].includes(detailedCondition);
 		report.SnowBool = [7,8].includes(detailedCondition);
-		debug(values.temp);
-		debug(typeof values.temp === 'object');
 		report.Temperature = typeof values.temp === 'object' ? parseInt(values.temp.day) : parseInt(values.temp);
 		report.TemperatureWindChill = typeof values.feels_like === 'object' ? parseInt(values.feels_like.day) : parseInt(values.feels_like);
 		report.UVIndex = parseInt(values.uvi);
 		report.WindDirection = converter.getWindDirection(values.wind_deg);
-		report.WindSpeed = values.wind_speed;
+		report.WindSpeed = parseFloat(values.wind_speed);
 	}
 
 	getConditionCategory(code, detail = false)
 	{
 		// See https://openweathermap.org/weather-conditions
-		if ([212, 221, 232, 504, 531, 711, 762, 771, 781].includes(code))
+		if ([202, 212, 221, 232, 504, 531, 711, 762, 771, 781].includes(code))
 		{
 			// Severe weather
 			return detail ? 9 : 2;
@@ -181,12 +181,12 @@ class OpenWeatherMapAPI
 			// Hail
 			return detail ? 7 : 3;
 		}
-		else if (code >= 500 && code < 600)
+		else if ([200, 201].includes(code) || code >= 311 && code < 600)
 		{
 			// Rain
 			return detail ? 6 : 2;
 		}
-		else if (code >= 300 && code < 400)
+		else if ([230, 231].includes(code) || code >= 300 && code < 311)
 		{
 			// Drizzle
 			return detail ? 5 : 2;
@@ -196,7 +196,7 @@ class OpenWeatherMapAPI
 			// Fog
 			return detail ? 4 : 1;
 		}
-		else if (code === 804)
+		else if ([210, 211].includes(code) || code === 804)
 		{
 			// Overcast
 			return detail ? 3 : 1;
@@ -227,6 +227,8 @@ class OpenWeatherMapAPI
 	{
 		debug("Getting weather data for location %s", this.locationGeo);
 
+		// todo units geht vlt schon?
+		// todo language
 		const queryUri = "https://api.openweathermap.org/data/2.5/onecall?units=metric&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
 		request(encodeURI(queryUri),  (requestError, response, body) =>
 		{
