@@ -85,8 +85,8 @@ module.exports = function (Characteristic, units)
 
 		return underscore.extend(
 			{
-				format: Characteristic.Formats.FLOAT
-				, minStep: 0.1
+				format: Characteristic.Formats.UINT8
+				, minStep: 1
 				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
 			}, range);
 	};

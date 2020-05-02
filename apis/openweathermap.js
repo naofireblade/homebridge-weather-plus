@@ -139,8 +139,8 @@ class OpenWeatherMapAPI
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		// TODO values.snow
 		forecast.RainDay = isNaN(parseFloat(values.rain)) ? 0 : parseFloat(values.rain);
-		forecast.TemperatureMax = values.temp.max;
-		forecast.TemperatureMin = values.temp.min;
+		forecast.TemperatureMax = parseInt(values.temp.max);
+		forecast.TemperatureMin = parseInt(values.temp.min);
 
 		return forecast;
 	}
@@ -156,7 +156,7 @@ class OpenWeatherMapAPI
 		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
 		report.RainBool = [5,6,9].includes(detailedCondition);
 		report.SnowBool = [7,8].includes(detailedCondition);
-		report.Temperature = typeof values.temp === 'object' ? parseInt(values.temp.day) : parseInt(values.temp);
+		report.Temperature = typeof values.temp === 'object' ? parseFloat(values.temp.day) : parseFloat(values.temp);
 		report.TemperatureWindChill = typeof values.feels_like === 'object' ? parseInt(values.feels_like.day) : parseInt(values.feels_like);
 		report.UVIndex = parseInt(values.uvi);
 		report.WindDirection = converter.getWindDirection(values.wind_deg);
