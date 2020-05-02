@@ -239,7 +239,7 @@ Customization of the history storage system. By default the history is persisted
         "nameNow": "Berlin",
         "nameForecast": "Berlin Forecast",
         "now": true,
-        "units": "metric",
+        "units": "metric"
     }
 ]
 ```
