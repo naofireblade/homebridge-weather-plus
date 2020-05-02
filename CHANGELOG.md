@@ -198,7 +198,9 @@
 * Added dew point to OpenWeatherMap
 * Added rain last hour to OpenWeatherMap
 * Added rain all day to OpenWeatherMap
-* Added temperature wind chill to OpenWeatherMap
+* Added apparent temperature to OpenWeatherMap
 * Added uv index to OpenWeatherMap
 * Added 3 more forecast days to OpenWeatherMap (today + 7)
-* Fixed city name with country code not found in OpenWeatherMap
+* Changed precision of dew point, min temperature and max temperature from 0.1 to 1
+* Fixed city name with optional country code will not be found in OpenWeatherMap
+* Fixed some missing weather categories for OpenWeatherMap

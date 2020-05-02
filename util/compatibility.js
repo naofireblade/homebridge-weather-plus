@@ -1,7 +1,7 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
-const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "TemperatureMin", "TemperatureWindChill", "UVIndex", "Visibility", "WindDirection", "WindSpeed"];
+const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed"];
 
 const createService = function (that, name, Service, CustomCharacteristic)
 {
@@ -38,9 +38,9 @@ const createService = function (that, name, Service, CustomCharacteristic)
 	{
 		that.TemperatureMinService = new Service.TemperatureSensor("Temperature Min", "TemperatureMin");
 	}
-	if (name === "TemperatureWindChill")
+	if (name === "TemperatureApparent")
 	{
-		that.TemperatureWindChillService = new Service.TemperatureSensor("Temperature WindChill", "TemperatureWindChill");
+		that.TemperatureApparentService = new Service.TemperatureSensor("Temperature Apparent", "TemperatureApparent");
 	}
 	if (name === "UVIndex")
 	{

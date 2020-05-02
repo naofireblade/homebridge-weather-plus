@@ -24,8 +24,10 @@ const inherits = require('util').inherits,
 		RainChance: 'fc01b24f-cf7e-4a74-90db-1b427af1ffa3',
 		SnowBool: 'f14eb1ad-e000-4ce6-bd0e-384f9ec4d5dd',
 		SolarRadiation: '1819a23e-ecab-4d39-b29a-7364d299310b',
+		SunriseTime: '0d96f60e-3688-487e-8cee-d75f05bb3008',
+		SunsetTime: '3de24ee0-a288-4e15-a5a8-ead2451b727c',
 		TemperatureMin: '707b78ca-51ab-4dc9-8630-80a58f07e419',
-		TemperatureWindChill: 'c1283352-3d12-4777-acd5-4734760f1ac8',
+		TemperatureApparent: 'c1283352-3d12-4777-acd5-4734760f1ac8',
 		UVIndex: '05ba0fe0-b848-4226-906d-5b64272e05ce',
 		Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
 		WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
@@ -344,6 +346,28 @@ module.exports = function (Characteristic, units)
 	};
 	inherits(CustomCharacteristic.SolarRadiation, Characteristic);
 
+	CustomCharacteristic.SunriseTime = function ()
+	{
+		Characteristic.call(this, 'Sunrise', CustomUUID.SunriseTime);
+		this.setProps({
+			format: Characteristic.Formats.STRING,
+			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+		});
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.SunriseTime, Characteristic);
+
+	CustomCharacteristic.SunsetTime = function ()
+	{
+		Characteristic.call(this, 'Sunset', CustomUUID.SunsetTime);
+		this.setProps({
+			format: Characteristic.Formats.STRING,
+			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+		});
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.SunsetTime, Characteristic);
+
 	CustomCharacteristic.TemperatureMin = function ()
 	{
 		Characteristic.call(this, 'Temperature Min', CustomUUID.TemperatureMin);
@@ -353,13 +377,13 @@ module.exports = function (Characteristic, units)
 	inherits(CustomCharacteristic.TemperatureMin, Characteristic);
 	// Homekit converts temperature by itself accoding to the user device settings
 
-	CustomCharacteristic.TemperatureWindChill = function ()
+	CustomCharacteristic.TemperatureApparent = function ()
 	{
-		Characteristic.call(this, 'Temperature Wind Chill', CustomUUID.TemperatureWindChill);
+		Characteristic.call(this, 'Apparent temperature', CustomUUID.TemperatureApparent);
 		this.setProps(temperatureProps(50, -50));
 		this.value = this.getDefaultValue();
 	};
-	inherits(CustomCharacteristic.TemperatureWindChill, Characteristic);
+	inherits(CustomCharacteristic.TemperatureApparent, Characteristic);
 
 	CustomCharacteristic.UVIndex = function ()
 	{

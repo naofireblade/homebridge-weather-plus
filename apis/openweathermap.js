@@ -31,7 +31,7 @@ class OpenWeatherMapAPI
 			'RainBool',
 			'SnowBool',
 			'Temperature',
-			'TemperatureWindChill',
+			'TemperatureApparent',
 			'UVIndex',
 			'WindDirection',
 			'WindSpeed'
@@ -47,9 +47,11 @@ class OpenWeatherMapAPI
 			'RainBool',
 			'RainDay',
 			'SnowBool',
+			'SunriseTime',
+			'SunsetTime',
 			'TemperatureMax',
 			'TemperatureMin',
-			'TemperatureWindChill',
+			'TemperatureApparent',
 			'UVIndex',
 			'WindDirection',
 			'WindSpeed'
@@ -107,9 +109,7 @@ class OpenWeatherMapAPI
 		weather.report = {};
 		this.parseWeather(weather.report, values);
 		weather.report.ObservationTime = moment.unix(values.dt).tz(timezone).format('HH:mm:ss');
-		// todo möglicherweise in values.rain.1h zu finden
-		debug(values.rain['1h']);
-		weather.report.Rain1h = isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
+		weather.report.Rain1h = values.rain === undefined || isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
 
 		if (weather.forecasts)
 		{
@@ -137,6 +137,8 @@ class OpenWeatherMapAPI
 		let forecast = {};
 		this.parseWeather(forecast, values);
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
+		forecast.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
+		forecast.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
 		// TODO values.snow
 		forecast.RainDay = isNaN(parseFloat(values.rain)) ? 0 : parseFloat(values.rain);
 		forecast.TemperatureMax = parseInt(values.temp.max);
@@ -157,7 +159,7 @@ class OpenWeatherMapAPI
 		report.RainBool = [5,6,9].includes(detailedCondition);
 		report.SnowBool = [7,8].includes(detailedCondition);
 		report.Temperature = typeof values.temp === 'object' ? parseFloat(values.temp.day) : parseFloat(values.temp);
-		report.TemperatureWindChill = typeof values.feels_like === 'object' ? parseInt(values.feels_like.day) : parseInt(values.feels_like);
+		report.TemperatureApparent = typeof values.feels_like === 'object' ? parseInt(values.feels_like.day) : parseInt(values.feels_like);
 		report.UVIndex = parseInt(values.uvi);
 		report.WindDirection = converter.getWindDirection(values.wind_deg);
 		report.WindSpeed = parseFloat(values.wind_speed);

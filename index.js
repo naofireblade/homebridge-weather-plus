@@ -348,9 +348,9 @@ WeatherPlusPlatform.prototype = {
 				{
 					accessory.TemperatureMinService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 				}
-				else if (name === "TemperatureWindChill")
+				else if (name === "TemperatureApparent")
 				{
-					accessory.TemperatureWindChillService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
+					accessory.TemperatureApparentService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 				}
 				else if (name === "UVIndex")
 				{
