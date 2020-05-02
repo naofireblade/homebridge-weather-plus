@@ -13,6 +13,7 @@ class OpenWeatherMapAPI
 	{
 		this.log = log;
 		this.apiKey = apiKey;
+		this.language = language;
 
 		this.locationId = locationId;
 		this.locationCity = locationCity;
@@ -234,7 +235,7 @@ class OpenWeatherMapAPI
 
 		// todo units geht vlt schon?
 		// todo language
-		const queryUri = "https://api.openweathermap.org/data/2.5/onecall?units=metric&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
+		const queryUri = "https://api.openweathermap.org/data/2.5/onecall?units=metric&lang=" + this.language + "&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
 		request(encodeURI(queryUri),  (requestError, response, body) =>
 		{
 			if (!requestError)
