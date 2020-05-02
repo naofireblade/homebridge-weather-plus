@@ -29,13 +29,13 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 
 |                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      17                      |                                15                                 |                                12                                |
-| Forecast values            |                      20                      |                                18                                |                                 0                                |
+| Current observation values |                      19                      |                                15                                 |                                12                               |
+| Forecast values            |                      22                      |                                18                                |                                 0                                |
 | Forecast days              |                  today + 7                   |                             today + 7                            |                                 0                                |
 | Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
-| Free                       |               :heavy_check_mark:             |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
-| Register                   | [here](https://darksky.net/dev/register)     | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
+| Free                       |   :heavy_check_mark: (only existing users)   |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
+| Register                   |                     closed                   | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 > <b name="a1">1</b> [It is no longer possible](https://blog.darksky.net/dark-sky-has-a-new-home/) to register as a new user for Dark Sky. Existing users can use the service until 31.12.2021.  
