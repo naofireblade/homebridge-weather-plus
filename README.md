@@ -36,6 +36,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 | Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
 | Free                       |   :heavy_check_mark: (only existing users)   |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
 | Register                   |                     closed                   | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
+
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 > <b name="a1">1</b> [It is no longer possible](https://blog.darksky.net/dark-sky-has-a-new-home/) to register as a new user for Dark Sky. Existing users can use the service until 31.12.2021.  
