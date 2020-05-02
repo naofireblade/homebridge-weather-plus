@@ -1,7 +1,5 @@
 /* jshint asi: true, esversion: 6, laxbreak: true, laxcomma: true, node: true, undef: true, unused: true */
 
-// TODO Refactoring
-
 const underscore = require('underscore');
 
 const inherits = require('util').inherits,

@@ -38,7 +38,6 @@ function WeatherPlusPlatform(_log, _config)
 
 	// Parse global config
 	this.units = _config.units || "si";
-	// TODO interval geht nicht < 4?
 	this.interval = "interval" in _config ? parseInt(_config.interval) : 4;
 	this.interval = (typeof this.interval !== "number" || (this.interval % 1) !== 0 || this.interval < 0) ? 4 : this.interval;
 
