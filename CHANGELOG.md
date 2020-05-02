@@ -200,7 +200,11 @@
 * Added rain all day to OpenWeatherMap
 * Added apparent temperature to OpenWeatherMap
 * Added uv index to OpenWeatherMap
+* Added sunrise and sunset to OpenWeatherMap
 * Added 3 more forecast days to OpenWeatherMap (today + 7)
-* Changed precision of dew point, min temperature and max temperature from 0.1 to 1
+* Added apparent temperature to DarkSky
+* Added sunrise and sunset to DarkSky
+* Changed precision of dew point, min temperature and max temperature from 0.1 degree to 1 degree
+* Changed precision of rain last hour from 1 mm to 0.1 mm
 * Fixed city name with optional country code will not be found in OpenWeatherMap
 * Fixed some missing weather categories for OpenWeatherMap

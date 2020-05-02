@@ -26,6 +26,7 @@ class DarkSkyAPI
 				'RainDay',
 				'SnowBool',
 				'Temperature',
+				'TemperatureApparent',
 				'UVIndex',
 				'Visibility',
 				'WindDirection',
@@ -46,6 +47,9 @@ class DarkSkyAPI
 				'RainChance',
 				'RainDay',
 				'SnowBool',
+				'SunriseTime',
+				'SunsetTime',
+				'TemperatureApparent',
 				'TemperatureMax',
 				'TemperatureMin',
 				'UVIndex',
@@ -137,12 +141,13 @@ class DarkSkyAPI
 		report.Humidity = parseInt(values.humidity * 100);
 		report.ObservationTime = moment.unix(values.time).tz(timezone).format('HH:mm:ss');
 		report.Ozone = parseInt(values.ozone);
-		report.Rain1h = isNaN(parseInt(values.precipIntensity)) ? 0 : parseInt(values.precipIntensity);
+		report.Rain1h = isNaN(parseFloat(values.precipIntensity)) ? 0 : parseFloat(values.precipIntensity);
 		let detailedCondition = this.getConditionCategory(values.icon, true);
 		report.RainBool = [5,6].includes(detailedCondition);
 		report.RainDay = values.rainDay;
 		report.SnowBool = [7,8].includes(detailedCondition);
 		report.Temperature = values.temperature;
+		report.TemperatureApparent = parseInt(values.apparentTemperature);
 		report.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
 		report.Visibility = isNaN(parseInt(values.visibility)) ? 0 : parseInt(values.visibility);
 		report.WindDirection = converter.getWindDirection(values.windBearing);
@@ -169,8 +174,11 @@ class DarkSkyAPI
 		forecast.RainChance = parseInt(values.precipProbability * 100);
 		forecast.RainDay = values.rainDay;
 		forecast.SnowBool = [7,8].includes(detailedCondition);
-		forecast.TemperatureMax = values.temperatureHigh;
-		forecast.TemperatureMin = values.temperatureLow;
+		forecast.SunriseTime = moment.unix(values.sunriseTime).tz(timezone).format('HH:mm:ss');
+		forecast.SunsetTime = moment.unix(values.sunsetTime).tz(timezone).format('HH:mm:ss');
+		forecast.TemperatureApparent = parseInt(values.apparentTemperatureHigh);
+		forecast.TemperatureMax = parseInt(values.temperatureHigh);
+		forecast.TemperatureMin = parseInt(values.temperatureLow);
 		forecast.UVIndex = isNaN(parseInt(values.uvIndex)) ? 0 : parseInt(values.uvIndex);
 		forecast.Visibility = isNaN(parseInt(values.visibility)) ? 0 : parseInt(values.visibility);
 		forecast.WindDirection = converter.getWindDirection(values.windBearing);
