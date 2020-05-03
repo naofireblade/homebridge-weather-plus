@@ -16,12 +16,14 @@ If you like this plugin and find it useful, I would be forever grateful for your
 Feel free to leave any feedback [here](https://github.com/naofireblade/homebridge-weather-plus/issues).
 
 ## Features
-- Get [18 observation and forecast](#observations-and-forecasts) values for up to 7 days
+- Get [27 observation and forecast](#observations-and-forecasts) values for up to 7 days
 - Choose from 3 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
-- See translations and [icons](#screenshots) in the Eve App
+- See all values, translations and [icons](#screenshots) in the Eve App
+- See all values in the Home app with compatiblity mode "Home"
 - Use all values in HomeKit rules with the Eve App
+- Configure everything easily with the homebridge config-ui-x
 
 ## Choose your Weather Service
 
