@@ -204,6 +204,7 @@
 * Added 3 more forecast days to OpenWeatherMap (today + 7)
 * Added apparent temperature to DarkSky
 * Added sunrise and sunset to DarkSky
+* Improved integration into config-ui-x
 * Changed precision of dew point, min temperature and max temperature from 0.1 degree to 1 degree
 * Changed precision of rain last hour from 1 mm to 0.1 mm
 * Fixed city name with optional country code will not be found in OpenWeatherMap
