@@ -194,13 +194,12 @@ WeatherPlusPlatform.prototype = {
 		station.language = stationConfig.language || "en";
 		station.fakegatoParameters = stationConfig.fakegatoParameters || {storage: "fs"};
 		station.hidden = stationConfig.hidden || [];
-		station.hidden.forEach((hide, i, hidden) =>
+		for (let i = 0; i < station.hidden.length; i++)
 		{
-			if (["Temperature", "TemperatureMax"].includes(hide))
-			{
-				hidden.splice(i, 1);
-			}
-		});
+			let hide = station.hidden[i];
+			station.hidden[i] = hide === "Rain" || hide === "Snow" ? hide + "Bool" : hide.replace(" ","");
+		}
+		debug(station.hidden);
 		station.serial = station.service + " - " + (station.locationId || '') + (station.locationGeo || '') + (station.locationCity || '');
 	},
 

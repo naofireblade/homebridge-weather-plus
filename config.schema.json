@@ -33,7 +33,7 @@
     },
     "interval": {
       "type": "integer",
-      "default": 4,
+      "default": 5,
       "minimum": 1
     },
     "stations": {
@@ -47,16 +47,16 @@
           },
           "service": {
             "type": "string",
-            "default": "darksky",
+            "default": "openweathermap",
             "required": true,
             "oneOf": [
               {
-                "title": "Dark Sky",
-                "const": "darksky"
-              },
-              {
                 "title": "OpenWeatherMap",
                 "const": "openweathermap"
+              },
+              {
+                "title": "Dark Sky",
+                "const": "darksky"
               },
               {
                 "title": "Weather Underground",
@@ -216,31 +216,31 @@
             "items": {
               "type": "string",
               "enum": [
-                "AirPressure",
-                "CloudCover",
+                "Air Pressure",
+                "Cloud Cover",
                 "Condition",
-                "ConditionCategory",
-                "DewPoint",
-                "ForecastDay",
+                "Condition Category",
+                "Dew Point",
+                "Forecast Day",
                 "Humidity",
-                "ObservationStation",
-                "ObservationTime",
+                "Observation Station",
+                "Observation Time",
                 "Ozone",
-                "Rain1h",
-                "RainBool",
-                "RainChance",
-                "RainDay",
-                "SnowBool",
-                "SolarRadiation",
-                "SunriseTime",
-                "SunsetTime",
-                "TemperatureMin",
-                "TemperatureApparent",
-                "UVIndex",
+                "Rain",
+                "Rain 1h",
+                "Rain Day",
+                "Rain Chance",
+                "Snow",
+                "Solar Radiation",
+                "Sunrise Time",
+                "Sunset Time",
+                "Temperature Min",
+                "Temperature Apparent",
+                "UV Index",
                 "Visibility",
-                "WindDirection",
-                "WindSpeed",
-                "WindSpeedMax"
+                "Wind Direction",
+                "Wind Speed",
+                "Wind Speed Max"
               ]
             },
             "uniqueItems": true
@@ -270,17 +270,19 @@
       "helpvalue": "<h4>General options</h4>"
     },
     {
-      "key": "units",
-      "description": "Conversions used weather values."
-    },
-    {
-      "key": "interval",
-      "title": "Update interval (minutes)",
-      "description": "Free API keys do not allow lower than 4."
+      "key": "units"
     },
     {
       "type": "help",
-      "helpvalue": "<h4>Stations</h4><p class='help-block'>Add multiple stations for different cities or weather services with the ADD STATIONS button</p>"
+      "helpvalue": "<h6>Update interval (minutes)</h6><p class='help-block'>Check your weather service provider to find out the allowed value for free api keys. Please don't update more often then you really need.</p>"
+    },
+    {
+      "key": "interval",
+      "notitle": true
+    },
+    {
+      "type": "help",
+      "helpvalue": "<h4>Stations</h4><p class='help-block'>Add multiple stations for different cities or services with the ADD STATIONS button below</p>"
     },
     {
       "key": "stations",
@@ -295,23 +297,64 @@
           "items": [
             {
               "key": "stations[].nameNow",
-              "title": "Station Name",
-              "placeholder": "Custom name for your station"
+              "title": "Name",
+              "placeholder": "A nice name for your station"
             },
             {
-              "key": "stations[].service",
-              "description": "Compare available weather services and register for one <a href='https://github.com/naofireblade/homebridge-weather-plus#choose-your-weather-service' target='_blank'>here</a>."
-            },
-            {
-              "key": "stations[].key",
-              "title": "Api Key",
-              "description": "You get an API key after registering for a weather service."
+              "key": "stations[].service"
             },
             {
               "type": "help",
-              "helpvalue": "<h6>Location coordinates</h6><p class='help-block'>Enter the latitude in the first box and the longitude in the second box.<br>You can get your coordinates <a target='_blank' rel='noopener noreferrer' href='http://www.mapcoordinates.net/en'>here</a>.</p>",
+              "helpvalue": "<h6>API Key</h6><p class='help-block'>Generate your free api key after registering <a target='_blank' href='https://home.openweathermap.org/users/sign_up'>here</a>.</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
+              }
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>API Key</h6><p class='help-block'>Registrations are closed. Existing users will find their api key <a target='_blank' href='https://darksky.net/dev/account'>here</a> and can use the service till 31.12.2021.</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'darksky'"
+              }
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>API Key</h6><p class='help-block'>Registration is available for users with a PWS. Get your free api key <a target='_blank' href='https://www.wunderground.com/member/api-keys'>here</a>.</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'weatherunderground'"
+              }
+            },
+            {
+              "key": "stations[].key",
+              "notitle": true
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>City</h6><p class='help-block'>Find your city <a target='_blank' href='https://openweathermap.org/find'>here</a>.</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
+              }
+            },
+            {
+              "key": "stations[].locationCity",
+              "notitle": true,
+              "placeholder": "Berlin, DE",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
+              }
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>Geo coordinates</h6><p class='help-block'>Optional: Enter geo coordinates (1. latitude, 2. longitude). Find your coordinates <a target='_blank' href='http://www.mapcoordinates.net/en'>here</a>.</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
+              }
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>Geo coordinates</h6><p class='help-block'>Enter the latitude in the first box and the longitude in the second box.<br>Get your coordinates <a target='_blank' href='http://www.mapcoordinates.net/en'>here</a>.</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'darksky'"
               }
             },
             {
@@ -322,7 +365,7 @@
               "items": [
                 {
                   "key": "stations[].locationGeo[]",
-                  "placeholder": "Coordinate, e.g. 52.5200066"
+                  "placeholder": "Coordinate, e.g. 10.0000"
                 }
               ],
               "condition": {
@@ -337,22 +380,6 @@
               }
             },
             {
-              "key": "stations[].locationId",
-              "title": "Location Id",
-              "description": "Numerical city id, can be found <a target='_blank' rel='noopener noreferrer' href='https://openweathermap.org/find'>here</a>.",
-              "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
-              }
-            },
-            {
-              "key": "stations[].locationCity",
-              "title": "City Name",
-              "description": "City name and optional country code, can be found <a target='_blank' rel='noopener noreferrer' href='https://openweathermap.org/find'>here</a>.",
-              "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
-              }
-            },
-            {
               "key": "stations[].stationId",
               "title": "Station Id",
               "description": "Your personal StationID.",
@@ -362,39 +389,35 @@
             },
             {
               "key": "stations[].language",
-              "description": "Translation for the current day and the weather report."
+              "title": "Daily weather report language"
             },
             {
               "key": "stations[].compatibility"
             },
             {
               "key": "stations[].tresholdAirPressure",
-              "title": "Threshold air pressure",
-              "description": "At what treshold should the air pressure sensor trigger?",
+              "title": "Threshold for air pressure sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
               }
             },
             {
               "key": "stations[].tresholdCloudCover",
-              "title": "Threshold cloud cover",
-              "description": "At what treshold should the cloud cover sensor trigger?",
+              "title": "Threshold for cloud cover sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
               }
             },
             {
               "key": "stations[].tresholdUvIndex",
-              "title": "Threshold uv index",
-              "description": "At what treshold should the UV-Index sensor trigger?",
+              "title": "Threshold for uv index sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
               }
             },
             {
               "key": "stations[].tresholdWindSpeed",
-              "title": "Threshold wind speed",
-              "description": "At what treshold should the wind speed sensor trigger?",
+              "title": "Threshold for wind speed sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
               }
@@ -402,50 +425,67 @@
             {
               "type": "fieldset",
               "title": "Forecast",
-              "description": "<i>Select which forecasts you are interested in.</i>",
+              "description": "<i>Choose which forecasts you are interested in.</i>",
               "expandable": true,
               "items": [
                 {
-                  "key": "stations[].nameForecast",
-                  "title": "Prefix",
-                  "description": "Adds a prefix to the forecast days. You could set this to your city name."
+                  "key": "stations[].forecast",
+                  "notitle": true
                 },
                 {
-                  "key": "stations[].forecast",
+                  "type": "help",
+                  "helpvalue": "<h6>Prefix</h6><p class='help-block'>Add a prefix to your forecast days. This is especially useful if you use multiple stations.</p>"
+                },
+                {
+                  "key": "stations[].nameForecast",
+                  "notitle": true
+                }
+              ],
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+              }
+            },
+            {
+              "type": "fieldset",
+              "title": "Advanced options",
+              "description": "<i>For expert users.</i>",
+              "expandable": true,
+              "items": [
+                {
+                  "type": "help",
+                  "helpvalue": "<h6>Number of condition categories</h6><p class='help-block'>These can be used for homekit rules in the Eve app.<br/><br/><b><u>Simple weather categories</u></b> (4)<br/>0: Clear<br/>1: Overcast<br/>2: Rain<br/>3: Snow<br/><br/><b><u>Detailed weather categories</u></b> (10)<br/>0: Clear<br/>1: Few clouds<br/>2: Broken clouds<br/>3: Overcast<br/>4: Fog<br/>5: Drizzle<br/>6: Rain<br/>7: Hail<br/>8: Snow<br/>9: Severe weather</p>"
+                },
+                {
+                  "key": "stations[].conditionCategory",
+                  "notitle": true
+                },
+                {
+                  "key": "stations[].now",
+                  "title": "Show current conditions",
+                  "description": "Deselect to hide the current conditions and only show forecasts."
+                },
+                {
+                  "key": "stations[].extraHumidity",
+                  "title": "Separate humidity",
+                  "description": "Separate humidity from the weather accessory to an own accessory.",
+                  "condition": {
+                    "functionBody": "return model.stations[0].compatibility === 'eve' ||  model.stations[0].compatibility === 'both'"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<h6>History Storage Configuration</h6><p class='help-block'>By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the location of the <a href='https://github.com/simont77/fakegato-history#file-system' target='_blank'>persisted file</a> or to use <a href='https://github.com/simont77/fakegato-history#google-drive' target='_blank'>GoogleDrive</a>. Do not modify the parameter for the fakegato internal timer.</p>"
+                },
+                {
+                  "key": "stations[].fakegatoParameters",
                   "notitle": true
                 }
               ]
             },
             {
               "type": "fieldset",
-              "title": "Advanced options",
-              "description": "<i>For some expert users.</i>",
-              "expandable": true,
-              "items": [
-                {
-                  "key": "stations[].conditionCategory",
-                  "title": "Number of condition categories",
-                  "description": "Select a higher number for more detailed <a href='https://github.com/naofireblade/homebridge-weather-plus#observations-and-forecasts' target='_blank'>condition categories.</a>"
-                },
-                {
-                  "key": "stations[].now",
-                  "title": "Show current conditions"
-                },
-                {
-                  "key": "stations[].extraHumidity",
-                  "title": "Separate humidity",
-                  "description": "Separate humidity from the weather accessory to an own accessory. Only available for compatibility modes \"eve\" and \"both\"."
-                },
-                {
-                  "key": "stations[].fakegatoParameters",
-                  "description": "Customization of the history storage system. By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the location of the <a href='https://github.com/simont77/fakegato-history#file-system' target='_blank'>persisted file</a> or to use <a href='https://github.com/simont77/fakegato-history#google-drive' target='_blank'>GoogleDrive</a>. Do not modify the parameter for the fakegato internal timer."
-                }
-              ]
-            },
-            {
-              "type": "fieldset",
               "title": "Hide values",
-              "description": "<i>Hide weather data that you are not interested in.</i>",
+              "description": "<i>Hide weather data you are not interested in.</i>",
               "expandable": true,
               "items": [
                 {
