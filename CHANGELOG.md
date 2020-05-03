@@ -182,7 +182,7 @@
 ## 3.1.2
 * Added one more day to Dark Sky forecast
 * Improved error logging for Weather Underground
-* Updated readme to point out Dark Sky discontinuation
+* Updated the readme to point out Dark Sky discontinuation
 * Updated dependencies
 * Fixed undefined this.log when converting unkown weather categories
 * Fixed RainBool threshold too strict in DarkSky service
