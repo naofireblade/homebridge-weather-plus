@@ -207,23 +207,23 @@ Conversions used for reporting values. The default is `"metric"`. The options ar
 `"si"` or `"metric"`  
 `"sitorr"` to report air pressure in mmhg  
 `"us"` or `"imperial"`  
-`"ca"` to report wind speeds in km/h instead of m/s  
-`"uk"` to report visibility in miles and wind speeds in km/h instead of m/s
+`"ca"` to report wind speeds in km/h
+`"uk"` to report visibility in miles and wind speeds in miles/h
 
 **tresholdAirPressure** (compatibility `"home"` or `"both"`)  
-At what treshold should the air pressure sensor trigger?
+At what treshold should the air pressure sensor trigger? Provide a number without unit. The range depends on your unit setting (sitorr -> mmhg, otherwise -> hPa).
 
 **tresholdCloudCover** (compatibility `"home"` or `"both"`)  
-At what treshold should the cloud cover sensor trigger?
+At what treshold should the cloud cover sensor trigger? Provide a number between 0 (clear) and 100 (overcast).
 
 **tresholdUvIndex** (compatibility `"home"` or `"both"`)  
-At what treshold should the UV-Index sensor trigger?
+At what treshold should the UV-Index sensor trigger? Provide a number >= 0. See https://en.wikipedia.org/wiki/Ultraviolet_index
 
 **tresholdWindSpeed** (compatibility `"home"` or `"both"`)  
-At what treshold should the wind speed sensor trigger?
+At what treshold should the wind speed sensor trigger? Provide a number without unit. The range depends on your unit setting (si/metric/sitorr -> m/s, ca -> km/h, uk/us/imperial -> miles/h).
 
 **fakegatoParameters**  
-Customization of the history storage system. By default the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the [location of the persisted file](https://github.com/simont77/fakegato-history#file-system) or to use [GoogleDrive](https://github.com/simont77/fakegato-history#google-drive).
+Customization of the history storage system. By default, the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the [location of the persisted file](https://github.com/simont77/fakegato-history#file-system) or to use [GoogleDrive](https://github.com/simont77/fakegato-history#google-drive).
  **Do not** modify the parameter for the fakegato internal timer.
 
 ### Example
