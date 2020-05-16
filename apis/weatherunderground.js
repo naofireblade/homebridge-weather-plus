@@ -49,15 +49,20 @@ class WundergroundAPI
 				try
 				{
 					const jsonObj = JSON.parse(body);
-					debug(JSON.stringify(jsonObj, null, 2));
-
-					weather.report = that.parseReport(jsonObj);
-					callback(null, weather);
+					if (jsonObj.errors === undefined || jsonObj.errors.length === 0)
+					{
+						debug(JSON.stringify(jsonObj, null, 2));
+						weather.report = that.parseReport(jsonObj);
+						callback(null, weather);
+					}
+					else
+					{
+						throw new Error(JSON.stringify(jsonObj.errors, null, 2));
+					}
 				} catch (e)
 				{
 					that.log.error("Error retrieving weather report and forecast");
 					that.log.error("Error Message: " + e);
-					that.log.error(body);
 					callback(e);
 				}
 			}
@@ -72,7 +77,7 @@ class WundergroundAPI
 
 	parseReport(json)
 	{
-
+		let that = this;
 		let report = {};
 
 		try
@@ -114,8 +119,8 @@ class WundergroundAPI
 
 		} catch (error)
 		{
-			debug("Error retrieving weather report for Weather Underground");
-			debug("Error Message: " + error);
+			that.log.error("Error parsing weather report for Weather Underground");
+			that.log.error("Error Message: " + error);
 		}
 		return report;
 	}

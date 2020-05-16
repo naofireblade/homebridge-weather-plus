@@ -210,17 +210,17 @@ Conversions used for reporting values. The default is `"metric"`. The options ar
 `"ca"` to report wind speeds in km/h
 `"uk"` to report visibility in miles and wind speeds in miles/h
 
-**tresholdAirPressure** (compatibility `"home"` or `"both"`)  
-At what treshold should the air pressure sensor trigger? Provide a number without unit. The range depends on your unit setting (sitorr -> mmhg, otherwise -> hPa).
+**thresholdAirPressure** (compatibility `"home"` or `"both"`)  
+At what threshold should the air pressure sensor trigger? Provide a number without unit. The range depends on your unit setting (sitorr -> mmhg, otherwise -> hPa).
 
-**tresholdCloudCover** (compatibility `"home"` or `"both"`)  
-At what treshold should the cloud cover sensor trigger? Provide a number between 0 (clear) and 100 (overcast).
+**thresholdCloudCover** (compatibility `"home"` or `"both"`)  
+At what threshold should the cloud cover sensor trigger? Provide a number between 0 (clear) and 100 (overcast).
 
-**tresholdUvIndex** (compatibility `"home"` or `"both"`)  
-At what treshold should the UV-Index sensor trigger? Provide a number >= 0. See https://en.wikipedia.org/wiki/Ultraviolet_index
+**thresholdUvIndex** (compatibility `"home"` or `"both"`)  
+At what threshold should the UV-Index sensor trigger? Provide a number >= 0. See https://en.wikipedia.org/wiki/Ultraviolet_index
 
-**tresholdWindSpeed** (compatibility `"home"` or `"both"`)  
-At what treshold should the wind speed sensor trigger? Provide a number without unit. The range depends on your unit setting (si/metric/sitorr -> m/s, ca -> km/h, uk/us/imperial -> miles/h).
+**thresholdWindSpeed** (compatibility `"home"` or `"both"`)  
+At what threshold should the wind speed sensor trigger? Provide a number without unit. The range depends on your unit setting (si/metric/sitorr -> m/s, ca -> km/h, uk/us/imperial -> miles/h).
 
 **fakegatoParameters**  
 Customization of the history storage system. By default, the history is persisted on the filesystem. You can set your own option using this parameter. In order to change the [location of the persisted file](https://github.com/simont77/fakegato-history#file-system) or to use [GoogleDrive](https://github.com/simont77/fakegato-history#google-drive).

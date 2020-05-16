@@ -51,10 +51,13 @@ function WeatherPlusPlatform(_log, _config)
 	this.stationConfigs = this.config.stations || [this.config];
 
 	// Parse config for each station
-	this.stationConfigs.forEach((station, index) =>
+	this.stationConfigs.forEach((station, index, array) =>
 	{
 		station.index = index;
-		this.parseStationConfig(station);
+		if (this.parseStationConfig(station) === false)
+		{
+			array.splice(index, 1);
+		}
 	});
 
 	// Create accessories
@@ -69,7 +72,7 @@ function WeatherPlusPlatform(_log, _config)
 				break;
 			case "weatherunderground":
 				this.log.info("Adding station with weather service Weather Underground named '" + config.nameNow + "'");
-				this.stations.push(new weatherunderground(config.key, config.locationId, config.conditionDetail, this.log));
+				this.stations.push(new weatherunderground(config.key, config.locationId, this.log));
 				break;
 			case "openweathermap":
 				this.log.info("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
@@ -120,6 +123,11 @@ WeatherPlusPlatform.prototype = {
 		let stationConfig = JSON.parse(JSON.stringify(station));
 
 		// Weather service
+		if (stationConfig.service === undefined)
+		{
+			this.log.error("No weather service configured. Please use config-ui-x or a configuration example from the readme to setup the plugin.")
+			return false;
+		}
 		station.service = stationConfig.service.toLowerCase().replace(/\s/g, "");
 
 		// Location id. Multiple parameter names are possible for backwards compatiblity
@@ -191,6 +199,13 @@ WeatherPlusPlatform.prototype = {
 				array[i] = 7;
 			}
 		});
+
+		// Compatibility for wrong spelling of threshold
+		station.thresholdAirPressure = stationConfig.tresholdAirPressure || station.thresholdAirPressure
+		station.thresholdCloudCover = stationConfig.tresholdCloudCover || station.thresholdCloudCover
+		station.thresholdUvIndex = stationConfig.tresholdUvIndex || station.thresholdUvIndex
+		station.thresholdWindSpeed = stationConfig.tresholdWindSpeed || station.thresholdWindSpeed
+
 		station.language = stationConfig.language || "en";
 		station.fakegatoParameters = stationConfig.fakegatoParameters || {storage: "fs"};
 		station.hidden = stationConfig.hidden || [];
@@ -201,6 +216,7 @@ WeatherPlusPlatform.prototype = {
 		}
 		debug(station.hidden);
 		station.serial = station.service + " - " + (station.locationId || '') + (station.locationGeo || '') + (station.locationCity || '');
+		return true;
 	},
 
 	// Update the weather for all accessories
@@ -307,26 +323,26 @@ WeatherPlusPlatform.prototype = {
 
 				if (name === "AirPressure")
 				{
-					if (config.tresholdAirPressure === undefined)
+					if (config.thresholdAirPressure === undefined)
 					{
 						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, value >= 1000);
 					}
 					else
 					{
-						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdAirPressure);
+						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdAirPressure);
 					}
 					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + convertedValue + " " + accessory.AirPressureService.unit);
 					accessory.AirPressureService.value = convertedValue; // Save value to use in history
 				}
 				else if (name === "CloudCover")
 				{
-					if (config.tresholdCloudCover === undefined)
+					if (config.thresholdCloudCover === undefined)
 					{
 						accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, value >= 20);
 					}
 					else
 					{
-						accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdCloudCover);
+						accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdCloudCover);
 					}
 					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Cover: " + convertedValue);
 				}
@@ -352,13 +368,13 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "UVIndex")
 				{
-					if (config.tresholdUvIndex === undefined)
+					if (config.thresholdUvIndex === undefined)
 					{
 						accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, value >= 3);
 					}
 					else
 					{
-						accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdUvIndex);
+						accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdUvIndex);
 					}
 					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + convertedValue);
 				}
@@ -372,13 +388,13 @@ WeatherPlusPlatform.prototype = {
 				}
 				else if (name === "WindSpeed")
 				{
-					if (config.tresholdWindSpeed === undefined)
+					if (config.thresholdWindSpeed === undefined)
 					{
 						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, value >= 5);
 					}
 					else
 					{
-						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.tresholdWindSpeed);
+						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdWindSpeed);
 					}
 					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + " " + accessory.WindSpeedService.unit);
 				}

@@ -174,7 +174,7 @@
 
 ## 3.1.0
 * Added support for config-ui-x
-* Added custom tresholds for apple home sensors
+* Added custom thresholds for apple home sensors
 
 ## 3.1.1
 * Added unit sitorr for air pressure in mmhg
@@ -209,3 +209,8 @@
 * Changed precision of rain last hour from 1 mm to 0.1 mm
 * Fixed city name with optional country code will not be found in OpenWeatherMap
 * Fixed some missing weather categories for OpenWeatherMap
+
+## 3.2.1
+* Improved error handling when the service parameter is missing in config
+* Fixed spelling of threshold parameter (old variant is still working)
+* Fixed crash in WeatherUnderground API when an error occurs
