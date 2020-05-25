@@ -400,7 +400,7 @@ WeatherPlusPlatform.prototype = {
 				}
 				else
 				{
-					log.error("Unkown compatiblity type " + name);
+					this.log.error("Unknown compatibility type " + name);
 				}
 			}
 			// Humidity might have an extra service if configured (only for current conditions)
