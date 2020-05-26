@@ -1,7 +1,7 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
-const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed"];
+const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
 
 const createService = function (that, name, Service, CustomCharacteristic)
 {
@@ -68,6 +68,16 @@ const createService = function (that, name, Service, CustomCharacteristic)
 		that.WindSpeedService = new Service.OccupancySensor("Wind Speed", "Wind Speed");
 		that.WindSpeedService.unit = temporaryService.getCharacteristic(CustomCharacteristic.WindSpeed).props.unit;
 	}
+	if (name === "RainDay")
+	{
+		// Get unit
+		let temporaryService = new Service.OccupancySensor("Temporary");
+		temporaryService.addCharacteristic(CustomCharacteristic.RainDay);
+
+		that.RainDayService = new Service.OccupancySensor("RainDay", "RainDay");
+		that.RainDayService.unit = temporaryService.getCharacteristic(CustomCharacteristic.RainDay).props.unit;
+	}
+
 };
 
 const getServices = function (that)

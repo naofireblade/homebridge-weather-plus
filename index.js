@@ -398,9 +398,13 @@ WeatherPlusPlatform.prototype = {
 					}
 					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + " " + accessory.WindSpeedService.unit);
 				}
+				else if(name === "RainDay") {
+					accessory.RainDayService.setCharacteristic(Characteristic.OccupancyDetected, value > 0);
+					accessory.RainDayService.setCharacteristic(Characteristic.Name, "Total precipitation: " + convertedValue + " " + accessory.RainDayService.unit);
+				}
 				else
 				{
-					log.error("Unkown compatiblity type " + name);
+					this.log.error("Unknown compatibility type " + name);
 				}
 			}
 			// Humidity might have an extra service if configured (only for current conditions)
