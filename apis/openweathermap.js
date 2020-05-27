@@ -90,7 +90,7 @@ class OpenWeatherMapAPI
 
 			this.getWeatherData((error, result) =>
 			{
-				if (!error)
+				if (!error && result["current"] !== undefined && result["daily"] !== undefined && result["timezone"] !== undefined)
 				{
 					this.parseReport(weather, result["current"], result["timezone"], callback);
 					this.parseForecasts(weather, result["daily"], result["timezone"], callback);
@@ -99,6 +99,7 @@ class OpenWeatherMapAPI
 				{
 					that.log.error("Error retrieving weather report");
 					that.log.error(error);
+					that.log.error(result);
 					callback();
 				}
 			});
