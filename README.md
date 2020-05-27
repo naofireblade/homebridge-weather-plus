@@ -302,6 +302,7 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
 - [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
 - [Jay O'Conor](https://github.com/joconor) for improving the value rounding and fixing the wind sensor for non metric units
+- [Angela Herring](https://github.com/angelaherring) for adding compatibilty mode for total precip and improving the WeatherUnderground integration
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one was a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
