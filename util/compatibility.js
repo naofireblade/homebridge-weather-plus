@@ -36,11 +36,11 @@ const createService = function (that, name, Service, CustomCharacteristic)
 	}
 	if (name === "TemperatureMin")
 	{
-		that.TemperatureMinService = new Service.TemperatureSensor("Temperature Min", "TemperatureMin");
+		that.TemperatureMinService = new Service.TemperatureSensor("Minimum Temperature", "TemperatureMin");
 	}
 	if (name === "TemperatureApparent")
 	{
-		that.TemperatureApparentService = new Service.TemperatureSensor("Temperature Apparent", "TemperatureApparent");
+		that.TemperatureApparentService = new Service.TemperatureSensor("Apparent Temperature", "TemperatureApparent");
 	}
 	if (name === "UVIndex")
 	{

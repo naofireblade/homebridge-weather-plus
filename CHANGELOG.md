@@ -214,3 +214,8 @@
 * Improved error handling when the service parameter is missing in config
 * Fixed spelling of threshold parameter (old variant is still working)
 * Fixed crash in WeatherUnderground API when an error occurs
+
+## 3.2.2
+* Added compatibility sensor for total precipitation
+* Changed precision of WeatherUnderground API to decimal
+* Fixed crash when OpenWeatherMap API returns no data
