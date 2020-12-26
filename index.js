@@ -349,6 +349,13 @@ WeatherPlusPlatform.prototype = {
 				else if (name === "DewPoint")
 				{
 					accessory.DewPointService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
+					
+					accessory.DewPointService
+					.getCharacteristic(Characteristic.CurrentTemperature)
+					.setProps({
+						minValue: -100,
+						maxValue: 100	
+					});
 				}
 				else if (name === "Humidity")
 				{
@@ -361,10 +368,24 @@ WeatherPlusPlatform.prototype = {
 				else if (name === "TemperatureMin")
 				{
 					accessory.TemperatureMinService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
+					
+					accessory.TemperatureMinService
+					.getCharacteristic(Characteristic.CurrentTemperature)
+					.setProps({
+						minValue: -100,
+						maxValue: 100
+					});
 				}
 				else if (name === "TemperatureApparent")
 				{
 					accessory.TemperatureApparentService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
+					
+					accessory.TemperatureApparentService
+					.getCharacteristic(Characteristic.CurrentTemperature)
+					.setProps({
+						minValue: -100,
+						maxValue: 100
+					});
 				}
 				else if (name === "UVIndex")
 				{
