@@ -45,16 +45,16 @@ function round(value, decimals)
 module.exports = function (Characteristic, units)
 {
 
-	units =                    		// rainfail    temperature    visibility    windspeed    airpressure
+	units =                    		//	rainfail    temperature    visibility	windspeed    airpressure
 		{
-			ca: 'ca'        		//    mm       celsius        kilometers    km/hour		 hPa
-			, imperial: 'imperial'  //    inches   fahrenheit     miles       	miles/hour   hPa
-			, si: 'si'        		//    mm       celsius        kilometers    m/second     hPa
-			, sitorr: 'sitorr'    	//    mm       celsius        kilometers    m/second     mmhg
-			, uk: 'uk'        		//    mm       celsius        miles       	miles/hour   hPa
+			ca: 'ca',        		//	mm       	celsius        kilometers   km/hour		 hPa
+			imperial: 'imperial',
+			us: 'imperial', 		//	inches   	fahrenheit     miles       	miles/hour   hPa
+			si: 'si',
+			metric: 'si',			//	mm       	celsius        kilometers   m/second     hPa
+			sitorr: 'sitorr',    	//	mm     	 	celsius        kilometers   m/second     mmhg
+			uk: 'uk'        		//	mm			celsius        miles       	miles/hour   hPa
 
-			, metric: 'si'
-			, us: 'imperial'
 		}[units.toLowerCase()];
 	if (!units) units = 'si';
 
@@ -78,15 +78,15 @@ module.exports = function (Characteristic, units)
 	{
 		return (celsius * 1.8) + 32;
 	};
-	var temperatureProps = (max, min) =>
+	var temperatureProps = (min, max) =>
 	{
 		var range = (units !== 'imperial') ? {unit: Characteristic.Units.CELSIUS, maxValue: max, minValue: min}
 			: {unit: 'fahrenheit', maxValue: c2f(max), minValue: c2f(min)};
 
 		return underscore.extend(
 			{
-				format: Characteristic.Formats.UINT8
-				, minStep: 1
+				format: Characteristic.Formats.FLOAT
+				, minStep: 0.1
 				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
 			}, range);
 	};
@@ -213,11 +213,11 @@ module.exports = function (Characteristic, units)
 	CustomCharacteristic.DewPoint = function ()
 	{
 		Characteristic.call(this, 'Dew Point', CustomUUID.DewPoint);
-		this.setProps(temperatureProps(50, -50));
+		this.setProps(temperatureProps(-50, 100));
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.DewPoint, Characteristic);
-	// Homekit converts temperature by itself accoding to the user device settings
+	// Homekit converts temperature by itself according to the user device settings
 
 	CustomCharacteristic.ForecastDay = function ()
 	{
@@ -369,7 +369,7 @@ module.exports = function (Characteristic, units)
 	CustomCharacteristic.TemperatureMin = function ()
 	{
 		Characteristic.call(this, 'Temperature Min', CustomUUID.TemperatureMin);
-		this.setProps(temperatureProps(50, -50));
+		this.setProps(temperatureProps(-50, 100));
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.TemperatureMin, Characteristic);
@@ -378,7 +378,7 @@ module.exports = function (Characteristic, units)
 	CustomCharacteristic.TemperatureApparent = function ()
 	{
 		Characteristic.call(this, 'Apparent temperature', CustomUUID.TemperatureApparent);
-		this.setProps(temperatureProps(50, -50));
+		this.setProps(temperatureProps(-50, 100));
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.TemperatureApparent, Characteristic);

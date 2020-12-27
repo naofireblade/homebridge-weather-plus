@@ -59,8 +59,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			// Temperature is an official homekit characteristic
 			if (name === "Temperature")
 			{
-				// Fix for negative temperatures, because they are not supported by homekit
-				this.CurrentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
+				// Nothing
 			}
 			// Use separate services for these characteristics if compatiblity is "home"
 			else if (this.config.compatibility === "home" && compatibility.types.includes(name))
@@ -120,11 +119,10 @@ CurrentConditionsWeatherAccessory.prototype = {
 				debug("Service: %s", key);
 				this[key].characteristics.forEach((characteristic) =>
 				{
-					if (characteristic.displayName === "Name")
-					{
-						debug(" - UUID: %s", characteristic.UUID);
-						debug(" - Value: %s", characteristic.value);
-					}
+					debug(" - Characteristic: %s", characteristic.displayName);
+					debug("   - UUID: %s", characteristic.UUID);
+					debug("   - Value: %s", characteristic.value);
+					debug("   - Props: %s", characteristic.props);
 				});
 			}
 		});

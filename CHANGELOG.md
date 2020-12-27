@@ -219,3 +219,6 @@
 * Added compatibility sensor for total precipitation
 * Changed precision of WeatherUnderground API to decimal
 * Fixed crash when OpenWeatherMap API returns no data
+
+## 3.2.3
+* Fixed apparent temperature and dew point not responding if lower than 0°C
