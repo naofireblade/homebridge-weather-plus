@@ -3,7 +3,7 @@
 
 const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
 
-const createService = function (that, name, Service, CustomCharacteristic)
+const createService = function (that, name, Service, Characteristic, CustomCharacteristic)
 {
 	if (name === "AirPressure")
 	{
@@ -21,6 +21,7 @@ const createService = function (that, name, Service, CustomCharacteristic)
 	if (name === "DewPoint")
 	{
 		that.DewPointService = new Service.TemperatureSensor("Dew Point", "Dew Point");
+		that.DewPointService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 	}
 	if (name === "Humidity")
 	{
@@ -37,10 +38,12 @@ const createService = function (that, name, Service, CustomCharacteristic)
 	if (name === "TemperatureMin")
 	{
 		that.TemperatureMinService = new Service.TemperatureSensor("Minimum Temperature", "TemperatureMin");
+		that.TemperatureMinService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 	}
 	if (name === "TemperatureApparent")
 	{
 		that.TemperatureApparentService = new Service.TemperatureSensor("Apparent Temperature", "TemperatureApparent");
+		that.TemperatureApparentService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 	}
 	if (name === "UVIndex")
 	{

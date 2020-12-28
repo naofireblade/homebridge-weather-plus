@@ -45,7 +45,7 @@ function WeatherPlusPlatform(_log, _config)
 	CustomService = require("./util/services")(Service, Characteristic);
 	CustomCharacteristic = require("./util/characteristics")(Characteristic, this.units);
 	CurrentConditionsWeatherAccessory = require("./accessories/currentConditions")(Service, Characteristic, CustomService, CustomCharacteristic, FakeGatoHistoryService);
-	ForecastWeatherAccessory = require("./accessories/forecast")(Service, Characteristic, CustomCharacteristic);
+	ForecastWeatherAccessory = require("./accessories/forecast")(Service, Characteristic, CustomService, CustomCharacteristic);
 
 	// Create weather stations, create default one if no stations array given
 	this.stationConfigs = this.config.stations || [this.config];

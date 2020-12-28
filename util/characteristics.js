@@ -58,7 +58,7 @@ module.exports = function (Characteristic, units)
 		}[units.toLowerCase()];
 	if (!units) units = 'si';
 
-	var rainfallProps = (max) =>
+	let rainfallProps = (max) =>
 	{
 		var range = (units !== 'imperial') ? {unit: 'mm', maxValue: max, minValue: 0, minStep: 0.1}
 			: {unit: 'in', maxValue: Math.round(max / 25.4), minValue: 0, minStep: 0.01};
@@ -69,19 +69,20 @@ module.exports = function (Characteristic, units)
 				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
 			}, range);
 	};
-	var rainfallValue = (val) =>
+	let rainfallValue = (val) =>
 	{
 		return (units !== 'imperial') ? val : round(val / 25.4, 2);
 	};
 
-	var c2f = (celsius) =>
+	let temperatureValue = (celsius) =>
 	{
-		return (celsius * 1.8) + 32;
+		return units === 'imperial' ? (round(celsius * 1.8, 1)) + 32 : celsius;
 	};
-	var temperatureProps = (min, max) =>
+	let temperatureProps = (min, max) =>
 	{
-		var range = (units !== 'imperial') ? {unit: Characteristic.Units.CELSIUS, maxValue: max, minValue: min}
-			: {unit: 'fahrenheit', maxValue: c2f(max), minValue: c2f(min)};
+		var range = {unit: units === 'imperial' ? 'fahrenheit' : Characteristic.Units.CELSIUS,
+						minValue: temperatureValue(min),
+						maxValue: temperatureValue(max)};
 
 		return underscore.extend(
 			{
@@ -91,11 +92,11 @@ module.exports = function (Characteristic, units)
 			}, range);
 	};
 
-	var km2mi = (km) =>
+	let km2mi = (km) =>
 	{
 		return Math.round(km / 1.60934);
 	};
-	var visibilityProps = (max) =>
+	let visibilityProps = (max) =>
 	{
 		var range = ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
 			: {unit: 'mi', maxValue: km2mi(max), minValue: 0};
@@ -107,20 +108,20 @@ module.exports = function (Characteristic, units)
 				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
 			}, range);
 	};
-	var visibilityValue = (val) =>
+	let visibilityValue = (val) =>
 	{
 		return ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? val : km2mi(val);
 	};
 
-	var mtos2kmh = (m) =>
+	let mtos2kmh = (m) =>
 	{
 		return (round((m * 3600) / 1000, 2));
 	};
-	var mtos2mih = (m) =>
+	let mtos2mih = (m) =>
 	{
 		return (round((m * 3600) / 1609.34, 2));
 	};
-	var windspeedProps = (max) =>
+	let windspeedProps = (max) =>
 	{
 		var range = ((units === 'si') || (units === 'sitorr')) ? {unit: 'm/s', maxValue: max, minValue: 0}
 			: (units === 'ca') ? {unit: 'km/h', maxValue: mtos2kmh(max), minValue: 0}
@@ -133,7 +134,7 @@ module.exports = function (Characteristic, units)
 				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
 			}, range);
 	};
-	var windspeedValue = (val) =>
+	let windspeedValue = (val) =>
 	{
 		return ((units === 'si') || (units === 'sitorr')) ? val
 			: (units === 'ca') ? mtos2kmh(val)
@@ -217,7 +218,8 @@ module.exports = function (Characteristic, units)
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.DewPoint, Characteristic);
-	// Homekit converts temperature by itself according to the user device settings
+	// Custom temperature characteristics must be converted manually
+	CustomCharacteristic.DewPoint._unitvalue = temperatureValue;
 
 	CustomCharacteristic.ForecastDay = function ()
 	{
@@ -373,7 +375,8 @@ module.exports = function (Characteristic, units)
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.TemperatureMin, Characteristic);
-	// Homekit converts temperature by itself accoding to the user device settings
+	// Custom temperature characteristics must be converted manually
+	CustomCharacteristic.TemperatureMin._unitvalue = temperatureValue;
 
 	CustomCharacteristic.TemperatureApparent = function ()
 	{
@@ -382,6 +385,8 @@ module.exports = function (Characteristic, units)
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.TemperatureApparent, Characteristic);
+	// Custom temperature characteristics must be converted manually
+	CustomCharacteristic.TemperatureApparent._unitvalue = temperatureValue;
 
 	CustomCharacteristic.UVIndex = function ()
 	{
