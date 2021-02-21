@@ -218,8 +218,6 @@ module.exports = function (Characteristic, units)
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.DewPoint, Characteristic);
-	// Custom temperature characteristics must be converted manually
-	CustomCharacteristic.DewPoint._unitvalue = temperatureValue;
 
 	CustomCharacteristic.ForecastDay = function ()
 	{
@@ -375,8 +373,6 @@ module.exports = function (Characteristic, units)
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.TemperatureMin, Characteristic);
-	// Custom temperature characteristics must be converted manually
-	CustomCharacteristic.TemperatureMin._unitvalue = temperatureValue;
 
 	CustomCharacteristic.TemperatureApparent = function ()
 	{
@@ -385,8 +381,6 @@ module.exports = function (Characteristic, units)
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.TemperatureApparent, Characteristic);
-	// Custom temperature characteristics must be converted manually
-	CustomCharacteristic.TemperatureApparent._unitvalue = temperatureValue;
 
 	CustomCharacteristic.UVIndex = function ()
 	{
