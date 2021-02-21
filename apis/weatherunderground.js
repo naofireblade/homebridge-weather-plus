@@ -105,7 +105,7 @@ class WundergroundAPI
 			}
 
 			report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
-			report.ObservationTime = moment(Date.parse(observation.obsTimeUtc));
+			report.ObservationTime = moment(Date.parse(observation.obsTimeUtc)).format('HH:mm:ss');
 			report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.winddir)) ? 0 : parseInt(observation.winddir));
 			report.Humidity = isNaN(observation.humidity) ? 0 : observation.humidity;
 			report.SolarRadiation = isNaN(observation.solarRadiation) ? 0 : observation.solarRadiation;

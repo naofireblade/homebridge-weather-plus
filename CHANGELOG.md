@@ -228,3 +228,7 @@
 * Fixed apparent temperature and dew point not responding in compatibility mode home if lower than 0°C
 * Fixed apparent temperature and dew point are not converted to F in compatibility mode eve
 * Fixed startup error when using compatibility mode eve2 (eve with grouping) and forecasts
+
+## 3.2.5
+* Fixed datatypes for homebridge 1.3.0
+* Added donation links for homebridge-ui-x
