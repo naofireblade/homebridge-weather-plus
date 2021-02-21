@@ -152,7 +152,7 @@ module.exports = function (Characteristic, units)
 
 		return underscore.extend(
 			{
-				format: Characteristic.Formats.UINT8
+				format: Characteristic.Formats.UINT16
 				, minStep: 1
 				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
 			}, range);
@@ -258,7 +258,7 @@ module.exports = function (Characteristic, units)
 	{
 		Characteristic.call(this, 'Ozone', CustomUUID.Ozone);
 		this.setProps({
-			format: Characteristic.Formats.UINT8,
+			format: Characteristic.Formats.UINT16,
 			unit: 'DU',
 			maxValue: 500,
 			minValue: 0,
@@ -335,7 +335,7 @@ module.exports = function (Characteristic, units)
 	{
 		Characteristic.call(this, 'Solar Radiation', CustomUUID.SolarRadiation);
 		this.setProps({
-			format: Characteristic.Formats.UINT8,
+			format: Characteristic.Formats.UINT16,
 			unit: "W/m²",
 			maxValue: 2000,
 			minValue: 0,
