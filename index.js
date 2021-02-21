@@ -137,6 +137,11 @@ WeatherPlusPlatform.prototype = {
 		station.locationId = stationConfig.locationId || station.locationId;
 		station.locationGeo = stationConfig.locationGeo;
 		station.locationCity = stationConfig.locationCity;
+		if (!station.locationId && !station.locationCity && !station.locationGeo)
+		{
+			this.log.error("No location configured for station: " + station.service + ". Please provide locationId, locationCity or locationGeo for each station.")
+			return false;
+		}
 
 		// Station name. Default is now, increment if multiple stations, use name from config if given
 		station.nameNow = "Now" + (stationConfig.index > 0 ? (" - " + (stationConfig.index + 1)) : "");

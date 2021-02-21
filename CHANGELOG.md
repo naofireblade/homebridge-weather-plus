@@ -235,3 +235,4 @@
 * Fixed error in history service since homebridge 1.3.0
 * Fixed wrong tempeature in Fahrenheit for dew point and apparent temperature
 * Added donation links for homebridge-ui-x
+* Added error log if no location is provided
