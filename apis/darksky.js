@@ -106,7 +106,6 @@ class DarkSkyAPI
 			that.darksky.get()
 			.then(function (response)
 			{
-
 				// Current weather report
 				response.currently.rainDay = that.cache.report.rainDay; // Load rainDay from cache
 				weather.report = that.parseReport(response.currently, response.timezone);
@@ -196,7 +195,7 @@ class DarkSkyAPI
 			this.cache.lastUpdate = new Date();
 
 			let now = moment();
-			let callbacks = forecastDays + 1;
+			let callbacks = forecastDays.length + 1;
 
 			this.doTimeMachineRequest(api, now, function (result)
 			{
@@ -208,11 +207,11 @@ class DarkSkyAPI
 				}
 			}.bind(this), true);
 
-			for (let i = 0; i < forecastDays; i++)
+			for (let i = 0; i < forecastDays.length; i++)
 			{
-				this.doTimeMachineRequest(api, now.clone().add(i, 'd'), function (result)
+				this.doTimeMachineRequest(api, now.clone().add(forecastDays[i], 'd'), function (result)
 				{
-					this.cache.forecast['day' + i].rainDay = result;
+					this.cache.forecast['day' + forecastDays[i]].rainDay = result;
 					callbacks--;
 					if (callbacks === 0)
 					{

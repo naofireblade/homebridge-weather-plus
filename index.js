@@ -231,7 +231,7 @@ WeatherPlusPlatform.prototype = {
 		this.stations.forEach((station, stationIndex) =>
 		{
 			// Update each stations
-			station.update(this.stationConfigs[stationIndex].forecast.length, (error, weather) =>
+			station.update(this.stationConfigs[stationIndex].forecast, (error, weather) =>
 			{
 				if (!error)
 				{

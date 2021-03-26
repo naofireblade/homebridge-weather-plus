@@ -236,3 +236,6 @@
 * Fixed wrong tempeature in Fahrenheit for dew point and apparent temperature
 * Added donation links for homebridge-ui-x
 * Added error log if no location is provided
+
+## 3.2.6
+* Fixed missing rain value in forecasts from dark sky API when a day is skipped in config
