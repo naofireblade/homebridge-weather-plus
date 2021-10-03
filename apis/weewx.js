@@ -60,7 +60,7 @@
                         precipRate: $current.rainRate.inch_per_hour.raw,
                         #end if
                         #if $day.rain.has_data
-                        24hrain: $day.rain.sum.inch.raw,
+                        rainday: $day.rain.sum.inch.raw,
                         #end if
         }
         metric: {
@@ -93,7 +93,7 @@
                         precipRate: $current.rainRate.mm_per_hour.raw,
                         #end if
                         #if $day.rain.has_data
-                        24hrain: $day.rain.sum.mm.raw,
+                        rainday: $day.rain.sum.mm.raw,
                         #end if
         }
         metric_si: {
@@ -126,7 +126,7 @@
                         precipRate: $current.rainRate.mm_per_hour.raw,
                         #end if
                         #if $day.rain.has_data
-                        24hrain: $day.rain.sum.mm.raw,
+                        rainday: $day.rain.sum.mm.raw,
                         #end if
         }
         uk_hybrid: {
@@ -159,7 +159,7 @@
                         precipRate: $current.rainRate.mm_per_hour.raw,
                         #end if
                         #if $day.rain.has_data
-                        24hrain: $day.rain.sum.mm.raw,
+                        rainday: $day.rain.sum.mm.raw,
                         #end if
         }
     }
@@ -284,15 +284,15 @@ class WundergroundAPI
 			report.Humidity = isNaN(observation.humidity) ? 0 : observation.humidity;
 			report.SolarRadiation = isNaN(observation.solarRadiation) ? 0 : observation.solarRadiation;
 			report.UVIndex = isNaN(observation.uv) ? 0 : observation.uv;
+			report.Ozone = isNaN(observation.ozone) ? 0 : observation.ozone;
 			report.Temperature = isNaN(values.temp) ? 0 : values.temp;
 			report.DewPoint = isNaN(values.dewpt) ? 0 : values.dewpt;
 			report.AirPressure = isNaN(values.pressure) ? 0 : values.pressure;
-      
-      
-      report.WindSpeed = isNaN(values.windSpeed) ? 0 : values.windSpeed;
+			report.TemperatureApparent = isNaN(values.apptemp) ? 0 : values.apptemp;
+      			report.WindSpeed = isNaN(values.windSpeed) ? 0 : values.windSpeed;
 			report.WindSpeedMax = isNaN(values.windGust) ? 0 : values.windGust;
-			report.RainDay = isNaN(values.24hrain) ? 0 : values.precipTotal;
-      report. 
+			report.Rain1h = isNaN(values.rain1h) ? 0 : values.rain1h;
+			report.RainDay = isNaN(values.rainday) ? 0 : values.rainday;
 
 		} catch (error)
 		{
