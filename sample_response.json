@@ -1,0 +1,68 @@
+{
+    observations:[
+    {
+        stationID: "Location Name",
+        softwareType: "weewx 4.5.1",
+        realtimeFrequency: "5.000000 minutes",
+        solarRadiation: 0.0,
+        rainbool: "No",
+        lon: -122.0128614,
+        epoch: 1633230900,
+        lat: 37.3336425,
+        uv: 0.0,
+        winddir: 359.77587189021733,
+        humidity: 79.96318997255405,
+        imperial: {
+                        temp: 31.777057776588883,
+                        maxtemp: 69.99999661536211,
+                        mintemp: 30.000003384637903,
+                        apptemp: 27.44737800965705,
+                        dewpt: 26.31379971544355,
+                        windSpeed: 0.006135004574322404,
+                        windGust: 0.00887461685199753,
+                        pressure: 31.09877299908514,
+                        precip1h: 0.0,
+                        precipRate: 0.0,
+                        rainday: 0.21000000000000005,
+        }
+        metric: {
+                        temp: -0.12385679078395384,
+                        maxtemp: 21.111109230756725,
+                        mintemp: -1.1111092307567203,
+                        apptemp: -2.529234439079416,
+                        dewpt: -3.1590001580869163,
+                        windSpeed: 0.009873332801658316,
+                        windGust: 0.014282311383061113,
+                        pressure: 1053.1251663782498,
+                        precip1h: 0.0,
+                        precipRate: 0.0,
+                        24hrain: 5.3340000000000005,
+        }
+        metric_si: {
+                        temp: -0.12385679078395384,
+                        maxtemp: 21.111109230756725,
+                        mintemp: -1.1111092307567203,
+                        apptemp: -2.529234439079416,
+                        dewpt: -3.1590001580869163,
+                        windSpeed: 0.0027425924449050875,
+                        windGust: 0.003967308717516976,
+                        pressure: 1053.1251663782498,
+                        precip1h: 0.0,
+                        precipRate: 0.0,
+                        24hrain: 5.3340000000000005,
+        }
+        uk_hybrid: {
+                        temp: -0.12385679078395384,
+                        maxtemp: 21.111109230756725,
+                        mintemp: -1.1111092307567203,
+                        apptemp: -2.529234439079416,
+                        dewpt: -3.1590001580869163,
+                        windSpeed: 0.006135004574322404,
+                        windGust: 0.00887461685199753,
+                        pressure: 1053.1251663782498,
+                        precip1h: 0.0,
+                        precipRate: 0.0,
+                        24hrain: 5.3340000000000005,
+        }
+    }
+}   
