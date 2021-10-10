@@ -7,7 +7,7 @@ const request = require('request'),
 	moment = require('moment-timezone'),
 	debug = require('debug')('homebridge-weather-plus');
 
-class WundergroundAPI
+class WeewxAPI
 {
 	constructor(apiKey, location, log)
 	{
@@ -22,7 +22,7 @@ class WundergroundAPI
       'Humidity',
       'Ozone',
       'Temperature',
-      'TemperatureApparent'
+      'TemperatureApparent',
       'DewPoint',
       'WindSpeed',
       'WindSpeedMax',
