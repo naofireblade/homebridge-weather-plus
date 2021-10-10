@@ -13,23 +13,22 @@ class WeewxAPI
 	{
 		this.attribution = 'Powered by Weewx';
 		this.reportCharacteristics = [
-      'ObservationStation',
-      'SolarRadiation',
-      'RainBool',
-      'ObservationTime',
-      'UVIndex',
-      'WindDirection',
-      'Humidity',
-      'Ozone',
-      'Temperature',
-      'TemperatureApparent',
-      'DewPoint',
-      'WindSpeed',
-      'WindSpeedMax',
-      'AirPressure',
-      'Rain1h',
-      'RainDay'
-      
+      			'ObservationStation',
+      			'SolarRadiation',
+      			'RainBool',
+      			'ObservationTime',
+      			'UVIndex',
+			'WindDirection',
+      			'Humidity',
+      			'Ozone',
+      			'Temperature',
+      			'TemperatureApparent',
+      			'DewPoint',
+      			'WindSpeed',
+      			'WindSpeedMax',
+      			'AirPressure',
+      			'Rain1h',
+      			'RainDay'
 		];
 
 		this.log = log;
