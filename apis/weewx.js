@@ -1,4 +1,5 @@
 /*jshint esversion: 6,node: true,-W041: false */
+
 "use strict";
 
 const request = require('request'),
@@ -10,7 +11,7 @@ const request = require('request'),
 
 class WeewxAPI
 {
-	constructor(apiKey, location, log)
+	constructor(apiKey, log)
 	{
 		this.attribution = 'Powered by Weewx';
 		this.reportCharacteristics = [
@@ -34,7 +35,7 @@ class WeewxAPI
 
 		this.log = log;
 
-		this.location = location;
+		//this.location = location;
 		this.apiKey = apiKey;
 
 		// Get observation values only in si 's' for now.
@@ -46,9 +47,8 @@ class WeewxAPI
 		debug("Updating weather with weewx");
 		let weather = {};
 		let that = this;
-//formatting url as http://site/file.json (using apikey for sitename) location for file name
-		//const queryUri = "http://" + this.apiKey + "/" + this.location + '.json';
-		const queryUri = "http://weewx/homekit.json";
+		//formatting url as http://site/file.json (using apikey for URL)
+		const queryUri = this.apiKey;
 		request(encodeURI(queryUri), function (err, response, body)
 		{
 			if (!err)
