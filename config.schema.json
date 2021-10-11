@@ -61,6 +61,10 @@
               {
                 "title": "Weather Underground",
                 "const": "weatherunderground"
+              },
+              {
+                "title": "Weewx",
+                "const": "weewx"
               }
             ]
           },
@@ -322,6 +326,13 @@
               "helpvalue": "<h6>API Key</h6><p class='help-block'>Registration is available for users with a PWS. Get your free api key <a target='_blank' href='https://www.wunderground.com/member/api-keys'>here</a>.</p>",
               "condition": {
                 "functionBody": "return model.stations[0].service === 'weatherunderground'"
+              }
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>JSON URL</h6><p class='help-block'>URL for JSON File (Include full URL).</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'weewx'"
               }
             },
             {
