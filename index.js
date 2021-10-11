@@ -3,6 +3,7 @@
 const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
+      	weewx = require("./apis/weewx").WeewxAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
 
@@ -77,6 +78,10 @@ function WeatherPlusPlatform(_log, _config)
 			case "openweathermap":
 				this.log.info("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
 				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, config.conditionDetail, this.log));
+				break;
+			case "weewx":
+				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
+				this.stations.push(new weewx(config.key, config.locationCity, this.log));
 				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
