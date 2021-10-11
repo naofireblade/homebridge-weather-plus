@@ -1,11 +1,12 @@
-//Edited Weather Underground API to use Weewx JSON output.  Format for Json Output is below.
-
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
+
 const request = require('request'),
 	converter = require('../util/converter'),
+	geoTz = require('geo-tz'),
 	moment = require('moment-timezone'),
 	debug = require('debug')('homebridge-weather-plus');
+
 
 class WeewxAPI
 {
@@ -13,22 +14,22 @@ class WeewxAPI
 	{
 		this.attribution = 'Powered by Weewx';
 		this.reportCharacteristics = [
-      			'ObservationStation',
-      			'SolarRadiation',
-      			'RainBool',
-      			'ObservationTime',
-      			'UVIndex',
-			'WindDirection',
-      			'Humidity',
-      			'Ozone',
-      			'Temperature',
-      			'TemperatureApparent',
-      			'DewPoint',
-      			'WindSpeed',
-      			'WindSpeedMax',
-      			'AirPressure',
-      			'Rain1h',
-      			'RainDay'
+			'ObservationStation',
+			'SolarRadiation',
+			'RainBool',
+			'ObservationTime',
+			'UVIndex',
+      		'WindDirection',
+			'Humidity',
+    		'Ozone',
+    		'Temperature',
+    		'TemperatureApparent',
+			'DewPoint',
+			'WindSpeed',
+			'WindSpeedMax',
+			'AirPressure',
+			'Rain1h',
+			'RainDay'
 		];
 
 		this.log = log;
@@ -46,7 +47,8 @@ class WeewxAPI
 		let weather = {};
 		let that = this;
 //formatting url as http://site/file.json (using apikey for sitename) location for file name
-		const queryUri = "http://" + this.apiKey + "/" + this.location + '.json';
+		//const queryUri = "http://" + this.apiKey + "/" + this.location + '.json';
+		const queryUri = "http://weewx/homekit.json";
 		request(encodeURI(queryUri), function (err, response, body)
 		{
 			if (!err)
@@ -109,8 +111,9 @@ class WeewxAPI
 			{ // 'h'
 				values = observation.uk_hybrid;
 			}
-
+			const timezone = String(geoTz(parseFloat(observation.lat), parseFloat(observation.lon)));
 			report.ObservationStation = observation.stationID;
+			report.RainBool = observation.rainbool;
 			report.ObservationTime = moment.unix(observation.epoch).tz(timezone).format('HH:mm:ss');      
 			report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.winddir)) ? 0 : parseInt(observation.winddir));
 			report.Humidity = isNaN(observation.humidity) ? 0 : observation.humidity;
@@ -121,14 +124,14 @@ class WeewxAPI
 			report.DewPoint = isNaN(values.dewpt) ? 0 : values.dewpt;
 			report.AirPressure = isNaN(values.pressure) ? 0 : values.pressure;
 			report.TemperatureApparent = isNaN(values.apptemp) ? 0 : values.apptemp;
-      			report.WindSpeed = isNaN(values.windSpeed) ? 0 : values.windSpeed;
+      		report.WindSpeed = isNaN(values.windSpeed) ? 0 : values.windSpeed;
 			report.WindSpeedMax = isNaN(values.windGust) ? 0 : values.windGust;
 			report.Rain1h = isNaN(values.rain1h) ? 0 : values.rain1h;
 			report.RainDay = isNaN(values.rainday) ? 0 : values.rainday;
 
 		} catch (error)
 		{
-			that.log.error("Error parsing weather report for Weather Underground");
+			that.log.error("Error parsing weather report for Weewx");
 			that.log.error("Error Message: " + error);
 		}
 		return report;
