@@ -161,6 +161,196 @@ Your personal StationID.
 ]
 ```
 
+### Weewx
+
+Weewx is an open source software for your weather station monitoring that can be found ([here](https://github.com/weewx/weewx)), to utilize this plugin you need to have the following extension that create a JSON input that can be found [here](https://github.com/teeks99/weewx-json).  Once that is installed a JSON response needs to be created using the following template that creates a JSON file on your server which can be created by adding a new file called YOUR_FILE_NAME_HERE.json.tmpl. and adding it to the skin.conf file.
+
+'''
+{
+    "observations":[
+    {
+        "stationID": "$station.location",
+        "softwareType": "weewx $station.version",
+        "realtimeFrequency": "$current.interval",
+        #if $current.radiation.has_data
+        "solarRadiation": $current.radiation.raw,
+        #end if
+        #if $current.rain.raw > 0
+        "rainbool": true,
+        #else
+        "rainbool": false,
+        #end if
+        "lon": $station.stn_info.longitude_f,
+        "epoch": $current.dateTime.raw,
+        "lat": $station.stn_info.latitude_f,
+        #if $current.UV.has_data
+        "uv": $current.UV,
+        #end if
+        #if $current.windDir.has_data
+        "winddir": $current.windDir.raw,
+        #end if
+        #if $current.outHumidity.has_data
+        "humidity": $current.outHumidity.raw,
+        #end if
+        #if $current.o3.has_data
+        "o3": $current.o3.raw
+        #end if
+        "imperial": {
+                        #if $current.outTemp.has_data
+                        "temp": $current.outTemp.degree_F.raw,
+                        #end if
+                        #if $day.outTemp.has_data
+                        "maxtemp": $day.outTemp.max.degree_F.raw,
+                        "mintemp": $day.outTemp.min.degree_F.raw,
+                        #end if
+                        #if $current.appTemp.has_data
+                        "apptemp": $current.appTemp.degree_F.raw,
+                        #end if
+                        #if $current.dewpoint.has_data
+                        "dewpt": $current.dewpoint.degree_F.raw,
+                        #end if
+                        #if $current.windSpeed.has_data
+                        "windSpeed": $current.windSpeed.mile_per_hour.raw,
+                        #end if
+                        #if $current.windGust.has_data
+                        "windGust": $current.windGust.mile_per_hour.raw,
+                        #end if
+                        #if $current.barometer.has_data
+                        "pressure": $current.barometer.inHg.raw,
+                        #end if
+                        #if $hour.rain.has_data
+                        "precip1h": $hour($hours_ago=1).rain.sum.inch.raw,
+                        #end if
+                        #if $current.rainRate.has_data
+                        "precipRate": $current.rainRate.inch_per_hour.raw,
+                        #end if
+                        #if $day.rain.has_data
+                        "rainday": $day.rain.sum.inch.raw
+                        #end if
+        },
+        "metric": {
+                        #if $current.outTemp.has_data
+                        "temp": $current.outTemp.degree_C.raw,
+                        #end if
+                        #if $day.outTemp.has_data
+                        "maxtemp": $day.outTemp.max.degree_C.raw,
+                        "mintemp": $day.outTemp.min.degree_C.raw,
+                        #end if
+                        #if $current.appTemp.has_data
+                        "apptemp": $current.appTemp.degree_C.raw,
+                        #end if
+                        #if $current.dewpoint.has_data
+                        "dewpt": $current.dewpoint.degree_C.raw,
+                        #end if
+                        #if $current.windSpeed.has_data
+                        "windSpeed": $current.windSpeed.km_per_hour.raw,
+                        #end if
+                        #if $current.windGust.has_data
+                        "windGust": $current.windGust.km_per_hour.raw,
+                        #end if
+                        #if $current.barometer.has_data
+                        "pressure": $current.barometer.mbar.raw,
+                        #end if
+                        #if $hour.rain.has_data
+                        "precip1h": $hour($hours_ago=1).rain.sum.mm.raw,
+                        #end if
+                        #if $current.rainRate.has_data
+                        "precipRate": $current.rainRate.mm_per_hour.raw,
+                        #end if
+                        #if $day.rain.has_data
+                        "rainday": $day.rain.sum.mm.raw
+                        #end if
+        },
+        "metric_si": {
+                        #if $current.outTemp.has_data
+                        "temp": $current.outTemp.degree_C.raw,
+                        #end if
+                        #if $day.outTemp.has_data
+                        "maxtemp": $day.outTemp.max.degree_C.raw,
+                        "mintemp": $day.outTemp.min.degree_C.raw,
+                        #end if
+                        #if $current.appTemp.has_data
+                        "apptemp": $current.appTemp.degree_C.raw,
+                        #end if
+                        #if $current.dewpoint.has_data
+                        "dewpt": $current.dewpoint.degree_C.raw,
+                        #end if
+                        #if $current.windSpeed.has_data
+                        "windSpeed": $current.windSpeed.meter_per_second.raw,
+                        #end if
+                        #if $current.windGust.has_data
+                        "windGust": $current.windGust.meter_per_second.raw,
+                        #end if
+                        #if $current.barometer.has_data
+                        "pressure": $current.barometer.mbar.raw,
+                        #end if
+                        #if $hour.rain.has_data
+                        "precip1h": $hour($hours_ago=1).rain.sum.mm.raw,
+                        #end if
+                        #if $current.rainRate.has_data
+                        "precipRate": $current.rainRate.mm_per_hour.raw,
+                        #end if
+                        #if $day.rain.has_data
+                        "rainday": $day.rain.sum.mm.raw
+                        #end if
+        },
+        "uk_hybrid": {
+                        #if $current.outTemp.has_data
+                        "temp": $current.outTemp.degree_C.raw,
+                        #end if
+                        #if $day.outTemp.has_data
+                        "maxtemp": $day.outTemp.max.degree_C.raw,
+                        "mintemp": $day.outTemp.min.degree_C.raw,
+                        #end if
+                        #if $current.appTemp.has_data
+                        "apptemp": $current.appTemp.degree_C.raw,
+                        #end if
+                        #if $current.dewpoint.has_data
+                        "dewpt": $current.dewpoint.degree_C.raw,
+                        #end if
+                        #if $current.windSpeed.has_data
+                        "windSpeed": $current.windSpeed.mile_per_hour.raw,
+                        #end if
+                        #if $current.windGust.has_data
+                        "windGust": $current.windGust.mile_per_hour.raw,
+                        #end if
+                        #if $current.barometer.has_data
+                        "pressure": $current.barometer.mbar.raw,
+                        #end if
+                        #if $hour.rain.has_data
+                        "precip1h": $hour($hours_ago=1).rain.sum.mm.raw,
+                        #end if
+                        #if $current.rainRate.has_data
+                        "precipRate": $current.rainRate.mm_per_hour.raw,
+                        #end if
+                        #if $day.rain.has_data
+                        "rainday": $day.rain.sum.mm.raw
+                        #end if
+        }
+    }
+    ]
+} 
+'''
+
+**key**  
+Weewx doesnt use a key but uses the key as the location for your JSON file. Just place the URL in the key and the app will use that to pull the json location.
+
+**locationCity**  
+Used to indicate Weewx version.  The homekit plugin requires an location field that is used to run.  It technically can be any text you want but I just have added the Current Weewx versin..
+
+```json
+"platforms": [
+    {
+        "platform": "WeatherPlus",
+        "service": "weatherunderground",
+        "key": "http://weewx.lan/homekit.json",
+        "locationCity": "V.4.3.1"
+    }
+]
+```
+
+
+
 ## Advanced Configuration
 
 Below are explanations for a lot of advanced parameters to adjust the plugin to your needs. All parameters are *optional*.
