@@ -165,8 +165,7 @@ Your personal StationID.
 
 Weewx is an open source software for your weather station monitoring that can be found ([here](https://github.com/weewx/weewx)), to utilize this plugin you need to have the following extension that create a JSON input that can be found [here](https://github.com/teeks99/weewx-json).  Once that is installed a JSON response needs to be created using the following template that creates a JSON file on your server which can be created by adding a new file called YOUR_FILE_NAME_HERE.json.tmpl. and adding it to the skin.conf file.
 
-'''
-{
+'''{
     "observations":[
     {
         "stationID": "$station.location",
