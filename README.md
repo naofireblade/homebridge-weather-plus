@@ -88,7 +88,7 @@ I recommend using the Eve app to see (almost) all the values. However, if you do
 - *Day of the forecast*
 
 > <b name="a3">3</b> Simple: clear (0), overcast (1), rain (2), snow (3)  
-> <b name="a4">4</b> Detailed: clear (0), few clouds (1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather (9)
+> <b name="a4">4</b> Detailed: clear (0), few clouds (1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather (9)  
 > <b name="a5">5</b> "Lightning Currently" and "Storm Distance" (from the MQTT weather service) are not supported by the Eve app.
 
 ## Configuration
@@ -169,8 +169,8 @@ MQTT is a OASIS standard messaging protocol for the Internet of Things (IoT), wh
 
 JSON structure: All values not having units are listed first.
 
-{
-    "observations" : [
+```json
+"observations" : [
     {
         "observationstation": "My MQTT Station",
         "condition": "Clear",
@@ -218,10 +218,8 @@ JSON structure: All values not having units are listed first.
                         "temperature": 22.2,
                         "windspeed": 0,
                         "windspeedmax": 0
-        }
-    }
-    ]
-}   
+     ]
+```
 
 **key**  
 The MQTT weather service doesn't use a key, but uses the value of "key" to store the location of your MQTT broker's URL.  Enter the MQTT broker's full URL, including the port number (usually 1883).
