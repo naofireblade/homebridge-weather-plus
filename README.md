@@ -218,7 +218,7 @@ JSON structure: All values not having units are listed first.
                         "temperature": 22.2,
                         "windspeed": 0,
                         "windspeedmax": 0
-     ]
+]
 ```
 
 **key**  
