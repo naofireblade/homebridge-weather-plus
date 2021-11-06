@@ -3,7 +3,7 @@
 const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
-    mqtt = require("./apis/mqtt").MQTTAPI,
+	mqtt = require("./apis/mqtt").MQTTAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
 
