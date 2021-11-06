@@ -219,6 +219,7 @@ JSON structure: All values not having units are listed first.
                         "windspeed": 0,
                         "windspeedmax": 0
         }
+     }
 ]
 ```
 
