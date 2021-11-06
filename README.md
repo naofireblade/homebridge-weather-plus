@@ -17,10 +17,10 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Features
 - Get [27 observation and forecast](#observations-and-forecasts) values for up to 7 days
-- Choose from 3 different weather [services](#choose-your-weather-service)
+- Choose from 4 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
-- See all values, translations and [icons](#screenshots) in the Eve App
+- See (almost) all values, translations and [icons](#screenshots) in the Eve App
 - See all values in the Home app with compatiblity mode "Home"
 - Use all values in HomeKit rules with the Eve App
 - Configure everything easily with the homebridge config-ui-x
@@ -29,15 +29,15 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
 
-|                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |
-|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      19                      |                                15                                 |                                12                               |
-| Forecast values            |                      22                      |                                18                                |                                 0                                |
-| Forecast days              |                  today + 7                   |                             today + 7                            |                                 0                                |
-| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |
-| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
-| Free                       |   :heavy_check_mark: (only existing users)   |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
-| Register                   |                     closed                   | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
+|                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |                MQTT               |
+|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|:---------------------------------:|
+| Current observation values |                      19                      |                                15                                |                                 12                               |                 14                |
+| Forecast values            |                      22                      |                                18                                |                                 0                                |                 0                 |
+| Forecast days              |                  today + 7                   |                             today + 7                            |                                 0                                |                 0                 |
+| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |          geo-coordinates          |
+| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |         :heavy_check_mark:        |
+| Free                       |   :heavy_check_mark: (only existing users)   |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |         :heavy_check_mark:        |
+| Register                   |                     closed                   | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             | public MQTT broker (or your own!) |
 
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
@@ -55,7 +55,7 @@ This plugin supports multiple weather services. Each has it's own advantages. Th
 ## Observations and Forecasts
 
 The following observation and forecast values can be displayed and used in HomeKit rules.  
-I recommend using the Eve app to see all the values. However, if you don't want to use a 3rd party app, use the [compatibility mode](#compatibility) `home` for displaying most values in the Apple home app.
+I recommend using the Eve app to see (almost) all the values. However, if you don't want to use a 3rd party app, use the [compatibility mode](#compatibility) `home` for displaying most values in the Apple home app.
 
 - Air Pressure
 - Cloud Cover
@@ -64,12 +64,14 @@ I recommend using the Eve app to see all the values. However, if you don't want 
 - Dew Point
 - Humidity
 - Ozone
+- Lightning Currently <sup>[5](#a5)</sup>
 - Rain Currently
 - Rain Last Hour
 - Rain All Day
 - Rain Chance
 - Snow Currently
 - Solar Radiation
+- Storm Distance <sup>[5](#a5)</sup>
 - Sunrise Time
 - Sunset Time
 - Temperature
@@ -87,6 +89,7 @@ I recommend using the Eve app to see all the values. However, if you don't want 
 
 > <b name="a3">3</b> Simple: clear (0), overcast (1), rain (2), snow (3)  
 > <b name="a4">4</b> Detailed: clear (0), few clouds (1), broken clouds (2), overcast (3), fog (4), drizzle (5), rain (6), hail (7), snow (8), severe weather (9)
+> <b name="a5">5</b> "Lightning Currently" and "Storm Distance" (from the MQTT weather service) are not supported by the Eve app.
 
 ## Configuration
 
@@ -116,16 +119,16 @@ List with the latitude and longitude for your location (don't forget the square 
 **key**  
 The API key that you get by [registering](https://openweathermap.org/appid) for the OpenWeather service.
 
-**locationId**<sup>[5](#a4)</sup>  
+**locationId**<sup>[6](#a6)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
 
-**locationCity**<sup>[5](#a4)</sup>  
+**locationCity**<sup>[6](#a6)</sup>  
 City name and optional country code, can be found [here](https://openweathermap.org/find).
 
-**locationGeo**<sup>[5](#a4)</sup>  
+**locationGeo**<sup>[6](#a6)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
-> <b name="a5">5</b> You need only **one** of these location options.
+> <b name="a6">6</b> You need only **one** of these location options.
 
 ```json
 "platforms": [
@@ -160,7 +163,82 @@ Your personal StationID.
     }
 ]
 ```
+### MQTT
 
+MQTT is a OASIS standard messaging protocol for the Internet of Things (IoT), which uses a publish-and-subscribe model for transporting data over networks. To use this weather service with homebridge-weather-plus, you will need to have a weather station that can publish its data to an MQTT server (called a "broker") in the payload of an MQTT packet as a JSON object formatted as in the example below.  This weather service adds two observation values which are not supported by Eve Weather, namely LightningBool and StormDist (in kms), in order to support the Austrian Microsystems (AMS) AS3935 Lighting Sensor, which can provide notification of lighting strikes up to 40km (~25 mi) away, and an estimate of the distance to the storm. These observations should display as accessories in "home" or "both" mode. The value for ObservationTime is derived from the values "epoch" (for the UNIX epoch, in seconds), and the decimal "lat"(itude) and "lon"(gitude) values for the geographical location of the weather station which published the data (thanks, CHAMLEX). 
+
+JSON structure: All values not having units are listed first.
+
+{
+    "observations" : [
+    {
+        "observationstation": "My MQTT Station",
+        "condition": "Clear",
+        "conditioncategory": 0,
+        "epoch": 1636155789,
+        "humidity": 0,
+        "lat": 38.889461,
+        "lightningbool": false,
+        "lon": 77.035272,
+        "rainbool": false,
+        "solarradiation": 0,
+        "winddirection": "N",
+        "imperial": {
+                        "airpressure": 933.254,
+                        "stormdist": 0,
+                        "rain1h": 0,
+                        "rainday": 0,
+                        "temperature": 72,
+                        "windspeed": 0,
+                        "windspeedmax": 0
+        },
+        "metric": {
+                        "airpressure": 933.254,
+                        "stormdist": 0,
+                        "rain1h": 0,
+                        "rainday": 0,
+                        "temperature": 22.2,
+                        "windspeed": 0,
+                        "windspeedmax": 0
+        },
+        "metric_si": {
+                        "airpressure": 700,
+                        "stormdist": 0,
+                        "rain1h": 0,
+                        "rainday": 0,
+                        "temperature": 22.2,
+                        "windspeed": 0,
+                        "windspeedmax": 0
+        },
+        "uk_hybrid": {
+                        "airpressure": 933.254,
+                        "stormdist": 0,
+                        "rain1h": 0,
+                        "rainday": 0,
+                        "temperature": 22.2,
+                        "windspeed": 0,
+                        "windspeedmax": 0
+        }
+    }
+    ]
+}   
+
+**key**  
+The MQTT weather service doesn't use a key, but uses the value of "key" to store the location of your MQTT broker's URL.  Enter the MQTT broker's full URL, including the port number (usually 1883).
+
+**locationCity**  
+Used to indicate your weather station's name.  homebridge-weather-plus requires a value for this field in order to run, but it can be any text you want.
+
+```json
+"platforms": [
+    {
+        "platform": "WeatherPlus",
+        "service": "mqtt",
+        "key": "http://mqtt.lan:1833/",
+        "locationCity": "My MQTT Station"
+    }
+]
+```
 ## Advanced Configuration
 
 Below are explanations for a lot of advanced parameters to adjust the plugin to your needs. All parameters are *optional*.
@@ -185,7 +263,7 @@ Separate humidity from the weather accessory to an own accessory if set to `true
 List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
 
 **hidden**  
-List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainBool", "RainChance", "RainDay", "SnowBool", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
+List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "LightingBool", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainBool", "RainChance", "RainDay", "SnowBool", "SolarRadiation", "StormDist", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
 
 **interval**  
 Update interval in minutes. The default is `4` minutes because the rate for free API keys is limited.
@@ -310,3 +388,4 @@ This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwo
 - [Powered by Dark Sky](https://darksky.net/poweredby/)
 - [Powered by Weather Underground](https://www.wunderground.com/)
 - [Powered by OpenWeatherMap](https://openweathermap.org/)
+- [Powered by MQTT](https://mqtt.org/)
