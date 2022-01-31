@@ -45,15 +45,15 @@ function round(value, decimals)
 module.exports = function (Characteristic, units)
 {
 
-	units =                    		//	rainfail    temperature    visibility	windspeed    airpressure
+	units =                    		//	rainfail    stormdist    temperature    visibility	  windspeed    airpressure
 		{
-			ca: 'ca',        		//	mm       	celsius        kilometers   km/hour		 hPa
+			ca: 'ca',        		//	mm       	kilometers		celsius       kilometers   km/hour		hPa
 			imperial: 'imperial',
-			us: 'imperial', 		//	inches   	fahrenheit     miles       	miles/hour   hPa
+			us: 'imperial', 		//	inches   	miles			fahrenheit    miles        miles/hour   hPa
 			si: 'si',
-			metric: 'si',			//	mm       	celsius        kilometers   m/second     hPa
-			sitorr: 'sitorr',    	//	mm     	 	celsius        kilometers   m/second     mmhg
-			uk: 'uk'        		//	mm			celsius        miles       	miles/hour   hPa
+			metric: 'si',			//	mm       	kilometers		celsius       kilometers   m/second     hPa
+			sitorr: 'sitorr',    	//	mm       	kilometers		celsius       kilometers   m/second     mmhg
+			uk: 'uk'        		//	mm       	miles			celsius       miles        miles/hour   hPa
 
 		}[units.toLowerCase()];
 	if (!units) units = 'si';
@@ -96,6 +96,24 @@ module.exports = function (Characteristic, units)
 	{
 		return Math.round(km / 1.60934);
 	};
+	
+	let stormdistProps = (max) =>
+	{
+		var range = ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
+			: {unit: 'mi', maxValue: km2mi(max), minValue: 0};
+
+		return underscore.extend(
+			{
+				format: Characteristic.Formats.UINT8
+				, minStep: 1
+				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+			}, range);
+	};
+	let stormdistValue = (val) =>
+	{
+		return ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? val : km2mi(val);
+	};
+	
 	let visibilityProps = (max) =>
 	{
 		var range = ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
@@ -230,6 +248,20 @@ module.exports = function (Characteristic, units)
 	};
 	inherits(CustomCharacteristic.ForecastDay, Characteristic);
 
+	// Sensor if lighting is detected
+	// True: Lightning is detected at the moment (current conditions).
+	// False: Lightning is not detected at the moment (current conditions).
+	CustomCharacteristic.LightningBool = function ()
+	{
+		Characteristic.call(this, 'Lightning', CustomUUID.LightningBool);
+		this.setProps({
+			format: Characteristic.Formats.BOOL,
+			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+		});
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.LightningBool, Characteristic);
+
 	CustomCharacteristic.ObservationStation = function ()
 	{
 		Characteristic.call(this, 'Station', CustomUUID.ObservationStation);
@@ -343,6 +375,15 @@ module.exports = function (Characteristic, units)
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.SolarRadiation, Characteristic);
+
+	CustomCharacteristic.StormDist = function ()
+	{
+		Characteristic.call(this, 'Storm Dist', CustomUUID.StormDist);
+		this.setProps(stormdistProps(40));
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.StormDist, Characteristic);
+	CustomCharacteristic.StormDist._unitvalue = stormdistValue;
 
 	CustomCharacteristic.SunriseTime = function ()
 	{

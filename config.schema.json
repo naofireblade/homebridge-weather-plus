@@ -62,6 +62,10 @@
                 "title": "Weather Underground",
                 "const": "weatherunderground"
               }
+              {
+                "title": "MQTT",
+                "const": "mqtt"
+              }
             ]
           },
           "key": {
@@ -223,6 +227,7 @@
                 "Dew Point",
                 "Forecast Day",
                 "Humidity",
+                "LightningBool",
                 "Observation Station",
                 "Observation Time",
                 "Ozone",
@@ -232,6 +237,7 @@
                 "Rain Chance",
                 "Snow",
                 "Solar Radiation",
+                "StormDist",
                 "Sunrise Time",
                 "Sunset Time",
                 "Temperature Min",
@@ -325,6 +331,13 @@
               }
             },
             {
+              "type": "help",
+              "helpvalue": "<h6>MQTT URL</h6><p class='help-block'>URL for MQTT broker (include full URL, plus port).</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'mqtt'"
+              }
+            },
+            {
               "key": "stations[].key",
               "notitle": true
             },
@@ -341,6 +354,21 @@
               "placeholder": "Berlin, DE",
               "condition": {
                 "functionBody": "return model.stations[0].service === 'openweathermap'"
+              }
+            },
+                        {
+              "type": "help",
+              "helpvalue": "<h6>MQTT Station Name</h6><p class='help-block'>Input name of your weather station (or any text, really).</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'mqtt'"
+              }
+            },
+            {
+              "key": "stations[].locationCity",
+              "notitle": true,
+              "placeholder": "My MQTT Station",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'mqtt"
               }
             },
             {
@@ -390,6 +418,9 @@
             {
               "key": "stations[].language",
               "title": "Daily weather report language"
+               "condition": {
+                "functionBody": "return model.stations[0].service != 'mqtt'"
+              }  
             },
             {
               "key": "stations[].compatibility"
