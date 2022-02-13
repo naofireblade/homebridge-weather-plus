@@ -299,7 +299,7 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
 - [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
-- [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
+- [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing weatherunderground api
 - [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
 - [Jay O'Conor](https://github.com/joconor) for improving the value rounding and fixing the wind sensor for non metric units
 - [Angela Herring](https://github.com/angelaherring) for adding compatibility mode for total precip and improving the WeatherUnderground integration
