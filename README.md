@@ -116,13 +116,13 @@ List with the latitude and longitude for your location (don't forget the square 
 **key**  
 The API key that you get by [registering](https://openweathermap.org/appid) for the OpenWeather service.
 
-**locationId**<sup>[5](#a4)</sup>  
+**locationId**<sup>[5](#a5)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
 
-**locationCity**<sup>[5](#a4)</sup>  
+**locationCity**<sup>[5](#a5)</sup>  
 City name and optional country code, can be found [here](https://openweathermap.org/find).
 
-**locationGeo**<sup>[5](#a4)</sup>  
+**locationGeo**<sup>[5](#a5)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
 > <b name="a5">5</b> You need only **one** of these location options.
@@ -169,14 +169,14 @@ Below are explanations for a lot of advanced parameters to adjust the plugin to 
 Compatibility for the Apple Home app, the Eve app or both. This is required due to limitations in the Apple Home app recognized weather conditions. The default is `"eve"`.  
 `"eve"` **(recommended)** Use this for the Eve app or another 3rd party HomeKit App. All conditions will be displayed. The Apple Home app will show only temperature and humidity.   
 `"eve2"` Same as above but the values for temperature, humidity and pressure will be grouped into a single row. The Apple Home app will show nothing.  
-`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as many values as possible in the Apple Home app<sup>[6](#a4)</sup>. 3rd party apps will show some useless sensors that are required for Home app support.  
+`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as many values as possible in the Apple Home app<sup>[6](#a6)</sup>. 3rd party apps will show some useless sensors that are required for Home app support.  
 `"both"` Combines eve and home. You will need to hide some useless sensors in the Eve app that are required for Home app support. But after that you will get a solution that looks nice in the Home app and in 3rd party apps at the same time.
 > <b name="a6">6</b> The following values will be represented as occupancy sensors that trigger on specific limits: CloudCover > 20%, UVIndex > 2, WindSpeed > 4 m/s, Rain, Snow
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
-`"simple"` [4 different categories](#a2)  
-`"detailed"` [10 different categories](#a3)
+`"simple"` [4 different categories](#a3)  
+`"detailed"` [10 different categories](#a4)
 
 **extraHumidity**  (compatibility `"eve"` or `"both"`)  
 Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`.
