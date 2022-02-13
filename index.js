@@ -130,7 +130,7 @@ WeatherPlusPlatform.prototype = {
 		}
 		station.service = stationConfig.service.toLowerCase().replace(/\s/g, "");
 
-		// Location id. Multiple parameter names are possible for backwards compatiblity
+		// Location id. Multiple parameter names are possible for backwards compatibility
 		station.locationId = "";
 		station.locationId = stationConfig.location || station.locationId;
 		station.locationId = stationConfig.stationId || station.locationId;
@@ -148,12 +148,12 @@ WeatherPlusPlatform.prototype = {
 		station.nameNow = stationConfig.displayName || station.nameNow;
 		station.nameNow = stationConfig.nameNow || station.nameNow;
 
-		// Station forecast name. Multiple parameter names are possible for backwards compatiblity
+		// Station forecast name. Multiple parameter names are possible for backwards compatibility
 		station.nameForecast = "";
 		station.nameForecast = stationConfig.displayNameForecast || station.nameForecast;
 		station.nameForecast = stationConfig.nameForecast || station.nameForecast;
 
-		// Compatibility with different homekit apps. Multiple parameter names are possible for backwards compatiblity
+		// Compatibility with different homekit apps. Multiple parameter names are possible for backwards compatibility
 		station.compatibility = "eve";
 		station.compatibility = stationConfig.compatibility || station.compatibility;
 		station.compatibility = "currentObservations" in stationConfig && stationConfig.currentObservations === "eve" ? "eve2" : station.compatibility; // old eve is now eve2
@@ -235,7 +235,7 @@ WeatherPlusPlatform.prototype = {
 			{
 				if (!error)
 				{
-					// Find the condtion and forecast accessory of the current station
+					// Find the condition and forecast accessory of the current station
 					this.accessoriesList.forEach((accessory) =>
 					{
 						// Add current weather conditions
@@ -311,7 +311,7 @@ WeatherPlusPlatform.prototype = {
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 			}
-			// Compatiblity characateristics have an separate service
+			// Compatibility characteristics have a separate service
 			else if (["home", "both"].includes(config.compatibility) && compatibility.types.includes(name))
 			{
 				if (config.compatibility === "both")
@@ -417,7 +417,7 @@ WeatherPlusPlatform.prototype = {
 			{
 				accessory.HumidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 			}
-			// Otherwise humidity is a homekit characteristic
+			// Otherwise, humidity is a homekit characteristic
 			else if (name === "Humidity")
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);

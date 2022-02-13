@@ -395,28 +395,28 @@
               "key": "stations[].compatibility"
             },
             {
-              "key": "stations[].tresholdAirPressure",
+              "key": "stations[].thresholdAirPressure",
               "title": "Threshold for air pressure sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
               }
             },
             {
-              "key": "stations[].tresholdCloudCover",
+              "key": "stations[].thresholdCloudCover",
               "title": "Threshold for cloud cover sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
               }
             },
             {
-              "key": "stations[].tresholdUvIndex",
+              "key": "stations[].thresholdUvIndex",
               "title": "Threshold for uv index sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
               }
             },
             {
-              "key": "stations[].tresholdWindSpeed",
+              "key": "stations[].thresholdWindSpeed",
               "title": "Threshold for wind speed sensor",
               "condition": {
                 "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"

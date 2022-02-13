@@ -21,13 +21,13 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
 - See all values, translations and [icons](#screenshots) in the Eve App
-- See all values in the Home app with compatiblity mode "Home"
+- See all values in the Home app with compatibility mode "Home"
 - Use all values in HomeKit rules with the Eve App
 - Configure everything easily with the homebridge config-ui-x
 
 ## Choose your Weather Service
 
-This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
+This plugin supports multiple weather services. Each has its own advantages. The following table shows a comparison to help you to choose one.
 
 |                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
@@ -182,7 +182,7 @@ Detail level of the condition category. Not available for WeatherUnderground. De
 Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`.
 
 **forecast**  
-List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
+List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the chosen [weather service](#choose-your-weather-service).
 
 **hidden**  
 List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainBool", "RainChance", "RainDay", "SnowBool", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
@@ -302,7 +302,7 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
 - [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
 - [Jay O'Conor](https://github.com/joconor) for improving the value rounding and fixing the wind sensor for non metric units
-- [Angela Herring](https://github.com/angelaherring) for adding compatibilty mode for total precip and improving the WeatherUnderground integration
+- [Angela Herring](https://github.com/angelaherring) for adding compatibility mode for total precip and improving the WeatherUnderground integration
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one was a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
