@@ -21,13 +21,13 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
 - See all values, translations and [icons](#screenshots) in the Eve App
-- See all values in the Home app with compatiblity mode "Home"
+- See all values in the Home app with compatibility mode "Home"
 - Use all values in HomeKit rules with the Eve App
 - Configure everything easily with the homebridge config-ui-x
 
 ## Choose your Weather Service
 
-This plugin supports multiple weather services. Each has it's own advantages. The following table shows a comparison to help you choosing one.
+This plugin supports multiple weather services. Each has its own advantages. The following table shows a comparison to help you to choose one.
 
 |                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |
 |----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
@@ -116,13 +116,13 @@ List with the latitude and longitude for your location (don't forget the square 
 **key**  
 The API key that you get by [registering](https://openweathermap.org/appid) for the OpenWeather service.
 
-**locationId**<sup>[5](#a4)</sup>  
+**locationId**<sup>[5](#a5)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
 
-**locationCity**<sup>[5](#a4)</sup>  
+**locationCity**<sup>[5](#a5)</sup>  
 City name and optional country code, can be found [here](https://openweathermap.org/find).
 
-**locationGeo**<sup>[5](#a4)</sup>  
+**locationGeo**<sup>[5](#a5)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
 > <b name="a5">5</b> You need only **one** of these location options.
@@ -359,20 +359,20 @@ Below are explanations for a lot of advanced parameters to adjust the plugin to 
 Compatibility for the Apple Home app, the Eve app or both. This is required due to limitations in the Apple Home app recognized weather conditions. The default is `"eve"`.  
 `"eve"` **(recommended)** Use this for the Eve app or another 3rd party HomeKit App. All conditions will be displayed. The Apple Home app will show only temperature and humidity.   
 `"eve2"` Same as above but the values for temperature, humidity and pressure will be grouped into a single row. The Apple Home app will show nothing.  
-`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as many values as possible in the Apple Home app<sup>[6](#a4)</sup>. 3rd party apps will show some useless sensors that are required for Home app support.  
+`"home"` Use this if you don't want to install a 3rd party HomeKit App but want to see as many values as possible in the Apple Home app<sup>[6](#a6)</sup>. 3rd party apps will show some useless sensors that are required for Home app support.  
 `"both"` Combines eve and home. You will need to hide some useless sensors in the Eve app that are required for Home app support. But after that you will get a solution that looks nice in the Home app and in 3rd party apps at the same time.
 > <b name="a6">6</b> The following values will be represented as occupancy sensors that trigger on specific limits: CloudCover > 20%, UVIndex > 2, WindSpeed > 4 m/s, Rain, Snow
 
 **conditionCategory**  
 Detail level of the condition category. Not available for WeatherUnderground. Default is `"simple"`.  
-`"simple"` [4 different categories](#a2)  
-`"detailed"` [10 different categories](#a3)
+`"simple"` [4 different categories](#a3)  
+`"detailed"` [10 different categories](#a4)
 
 **extraHumidity**  (compatibility `"eve"` or `"both"`)  
 Separate humidity from the weather accessory to an own accessory if set to `true`. Default is `false`.
 
 **forecast**  
-List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the choosen [weather service](#choose-your-weather-service).
+List of forecast days with 0 for today, 1 for tomorrow, 2 for in 2 days etc. Default are none `[]`. Maximum depends on the chosen [weather service](#choose-your-weather-service).
 
 **hidden**  
 List of observation and forecast values that should not be displayed. Possible options are `["AirPressure", "CloudCover", "Condition", "ConditionCategory", "DewPoint", "ForecastDay", "Humidity", "ObservationStation", "ObservationTime", "Ozone", "Rain1h", "RainBool", "RainChance", "RainDay", "SnowBool", "SolarRadiation", "TemperatureMin", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "WindSpeedMax"]`. Don't forget the square brackets.
@@ -489,10 +489,10 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [GatoPharaoh](https://github.com/GatoPharaoh) for his interval option pull request
 - [David Werth](https://github.com/werthdavid) for integrating the OpenWeatherMap and Yahoo apis
 - [Marshall T. Rose](https://github.com/mrose17) for adding support for imperial units and the displayName parameter
-- [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing wunderground api
+- [Bill Waggoner](https://github.com/ctgreybeard) for his fix for the crashing weatherunderground api
 - [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
 - [Jay O'Conor](https://github.com/joconor) for improving the value rounding and fixing the wind sensor for non metric units
-- [Angela Herring](https://github.com/angelaherring) for adding compatibilty mode for total precip and improving the WeatherUnderground integration
+- [Angela Herring](https://github.com/angelaherring) for adding compatibility mode for total precip and improving the WeatherUnderground integration
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one was a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
