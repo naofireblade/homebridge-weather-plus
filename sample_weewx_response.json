@@ -1,0 +1,69 @@
+{
+    "observations":[
+    {
+        "stationID": "Location Name",
+        "softwareType": "weewx 4.5.1",
+        "realtimeFrequency": "5.000000 minutes",
+        "solarRadiation": 0.0,
+        "rainbool": false,
+        "lon": -122.0128,
+        "epoch": 1633917000,
+        "lat": 37.333,
+        "uv": 0.0,
+        "winddir": 163.11106129869245,
+        "humidity": 47.18545292624831,
+        "imperial": {
+                        "temp": 68.88331418684668,
+                        "maxtemp": 69.41432963156382,
+                        "mintemp": 30.0000033846379,
+                        "apptemp": 65.34059244814766,
+                        "dewpt": 47.91921770429369,
+                        "windSpeed": 5.469091178958616,
+                        "windGust": 6.594181773680609,
+                        "pressure": 30.00618176420828,
+                        "precip1h": 0.0,
+                        "precipRate": 0.0,
+                        "rainday": 0.21000000000000005
+        },
+        "metric": {
+                        "temp": 20.49073010380371,
+                        "maxtemp": 20.78573868420212,
+                        "mintemp": -1.1111092307567223,
+                        "apptemp": 18.522551360082034,
+                        "dewpt": 8.844009835718717,
+                        "windSpeed": 8.801649074309974,
+                        "windGust": 10.612306872382247,
+                        "pressure": 1016.1257861761126,
+                        "precip1h": 0.0,
+                        "precipRate": 0.0,
+                        "rainday": 5.3340000000000005
+        },
+        "metric_si": {
+                        "temp": 20.49073010380371,
+                        "maxtemp": 20.78573868420212,
+                        "mintemp": -1.1111092307567223,
+                        "apptemp": 18.522551360082034,
+                        "dewpt": 8.844009835718717,
+                        "windSpeed": 2.4449025206416595,
+                        "windGust": 2.9478630201061793,
+                        "pressure": 1016.1257861761126,
+                        "precip1h": 0.0,
+                        "precipRate": 0.0,
+                        "rainday": 5.3340000000000005
+        },
+        "uk_hybrid": {
+                        "temp": 20.49073010380371,
+                        "maxtemp": 20.78573868420212,
+                        "mintemp": -1.1111092307567223,
+                        "apptemp": 18.522551360082034,
+                        "dewpt": 8.844009835718717,
+                        "windSpeed": 5.469091178958616,
+                        "windGust": 6.594181773680609,
+                        "pressure": 1016.1257861761126,
+                        "precip1h": 0.0,
+                        "precipRate": 0.0,
+                        "rainday": 5.3340000000000005
+        }
+    }
+    ]
+}   
