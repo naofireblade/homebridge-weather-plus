@@ -55,7 +55,8 @@ class OpenWeatherMapAPI
 			'TemperatureMin',
 			'UVIndex',
 			'WindDirection',
-			'WindSpeed'
+			'WindSpeed',
+			'RainChance'
 		];
 		this.forecastDays = 8;
 		this.conditionDetail = conditionDetail;
@@ -148,6 +149,7 @@ class OpenWeatherMapAPI
 		forecast.RainDay = precipDay;
 		forecast.TemperatureMax = parseInt(values.temp.max);
 		forecast.TemperatureMin = parseInt(values.temp.min);
+		forecast.RainChance = parseFloat(values.pop) * 100;
 
 		return forecast;
 	}
