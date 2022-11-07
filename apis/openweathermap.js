@@ -12,6 +12,7 @@ class OpenWeatherMapAPI
 	constructor(apiKey, language, locationId, locationGeo, locationCity, conditionDetail, log)
 	{
 		this.log = log;
+		this.apiBaseURL = "https://api.openweathermap.org/data/3.0";
 		this.apiKey = apiKey;
 		this.language = language;
 
@@ -236,7 +237,7 @@ class OpenWeatherMapAPI
 	{
 		debug("Getting weather data for location %s", this.locationGeo);
 
-		const queryUri = "https://api.openweathermap.org/data/3.0/onecall?units=metric&lang=" + this.language + "&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
+		const queryUri = this.apiBaseURL + "/onecall?units=metric&lang=" + this.language + "&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
 		request(encodeURI(queryUri),  (requestError, response, body) =>
 		{
 			if (!requestError)
@@ -267,7 +268,7 @@ class OpenWeatherMapAPI
 			? "id=" + this.locationId
 			: "q=" + this.locationCity.toLowerCase();
 
-		const queryUri = "https://api.openweathermap.org/data/2.5/weather?" + locationQuery + "&appid=" + this.apiKey;
+		const queryUri = this.apiBaseURL + "/weather?" + locationQuery + "&appid=" + this.apiKey;
 		request(encodeURI(queryUri),  (requestError, response, body) =>
 		{
 			if (!requestError)
