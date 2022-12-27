@@ -29,15 +29,15 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 This plugin supports multiple weather services. Each has its own advantages. The following table shows a comparison to help you to choose one.
 
-|                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |            Weather Underground <sup>[2](#a2)</sup>               |
-|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Current observation values |                      19                      |                                15                                 |                                12                               |
-| Forecast values            |                      22                      |                                18                                |                                 0                                |
-| Forecast days              |                  today + 7                   |                             today + 7                            |                                 0                                |
-| Location                   |                geo-coordinates               |                city name, city id, geo-coordinates               |                           station id                             |
-| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                        :heavy_check_mark:                        |
-| Free                       |   :heavy_check_mark: (only existing users)   |                        :heavy_check_mark:                        |           :heavy_check_mark: (only if you own a station)         |
-| Register                   |                     closed                   | [here](https://openweathermap.org/appid)                         | [here](https://www.wunderground.com/member/api-keys)             |
+|                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |       Weather Underground <sup>[2](#a2)</sup>        |
+|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------:|
+| Current observation values |                      19                      |                15                                                |           12                                         |
+| Forecast values            |                      22                      |                                18                                |                          0                           |
+| Forecast days              |                  today + 7                   |                            today + 7                             |                          0                           |
+| Location                   |                geo-coordinates               |               city name, city id, geo-coordinates                |                      station id                      |
+| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                  :heavy_check_mark:                  |
+| Free                       |   :heavy_check_mark: (only existing users)   |                        :heavy_check_mark:                        |    :heavy_check_mark: (only if you own a station)    |
+| Register                   |                     closed                   |      [here](https://home.openweathermap.org/users/sign_up)       | [here](https://www.wunderground.com/member/api-keys) |
 
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
@@ -114,7 +114,9 @@ List with the latitude and longitude for your location (don't forget the square 
 ### OpenWeatherMap
 
 **key**  
-The API key that you get by [registering](https://openweathermap.org/appid) for the OpenWeather service.
+The API key that you get by [registering](https://home.openweathermap.org/users/sign_up) for the OpenWeather service API 3.0.  
+The service requires a payment method despite being free for 1000 calls per day. The plugin should not exceed this limit in the default interval configuration, but I cannot guarantee that!  
+As a safeguard you can limit your api key 1000 calls on the owm website under "Billing plans". 
 
 **locationId**<sup>[5](#a5)</sup>  
 Numerical city id, can be found [here](https://openweathermap.org/find).
@@ -161,176 +163,9 @@ Your personal StationID.
 ]
 ```
 
-### Weewx
+### WeeWX
 
-Weewx is an open source software for your weather station monitoring that can be found ([here](https://github.com/weewx/weewx)), to utilize this plugin you need to have the following extension that create a JSON input that can be found [here](https://github.com/teeks99/weewx-json).  Once that is installed a JSON response needs to be created using the following template that creates a JSON file on your server which can be created by adding a new file called YOUR_FILE_NAME_HERE.json.tmpl. and adding it to the skin.conf file.
-
-```
-{
-    "observations":[
-    {
-        "stationID": "$station.location",
-        "softwareType": "weewx $station.version",
-        "realtimeFrequency": "$current.interval",
-        #if $current.radiation.has_data
-        "solarRadiation": $current.radiation.raw,
-        #end if
-        #if $current.rain.raw > 0
-        "rainbool": true,
-        #else
-        "rainbool": false,
-        #end if
-        "lon": $station.stn_info.longitude_f,
-        "epoch": $current.dateTime.raw,
-        "lat": $station.stn_info.latitude_f,
-        #if $current.UV.has_data
-        "uv": $current.UV,
-        #end if
-        #if $current.windDir.has_data
-        "winddir": $current.windDir.raw,
-        #end if
-        #if $current.outHumidity.has_data
-        "humidity": $current.outHumidity.raw,
-        #end if
-        #if $current.o3.has_data
-        "o3": $current.o3.raw
-        #end if
-        "imperial": {
-                        #if $current.outTemp.has_data
-                        "temp": $current.outTemp.degree_F.raw,
-                        #end if
-                        #if $day.outTemp.has_data
-                        "maxtemp": $day.outTemp.max.degree_F.raw,
-                        "mintemp": $day.outTemp.min.degree_F.raw,
-                        #end if
-                        #if $current.appTemp.has_data
-                        "apptemp": $current.appTemp.degree_F.raw,
-                        #end if
-                        #if $current.dewpoint.has_data
-                        "dewpt": $current.dewpoint.degree_F.raw,
-                        #end if
-                        #if $current.windSpeed.has_data
-                        "windSpeed": $current.windSpeed.mile_per_hour.raw,
-                        #end if
-                        #if $current.windGust.has_data
-                        "windGust": $current.windGust.mile_per_hour.raw,
-                        #end if
-                        #if $current.barometer.has_data
-                        "pressure": $current.barometer.inHg.raw,
-                        #end if
-                        #if $hour.rain.has_data
-                        "precip1h": $hour($hours_ago=1).rain.sum.inch.raw,
-                        #end if
-                        #if $current.rainRate.has_data
-                        "precipRate": $current.rainRate.inch_per_hour.raw,
-                        #end if
-                        #if $day.rain.has_data
-                        "rainday": $day.rain.sum.inch.raw
-                        #end if
-        },
-        "metric": {
-                        #if $current.outTemp.has_data
-                        "temp": $current.outTemp.degree_C.raw,
-                        #end if
-                        #if $day.outTemp.has_data
-                        "maxtemp": $day.outTemp.max.degree_C.raw,
-                        "mintemp": $day.outTemp.min.degree_C.raw,
-                        #end if
-                        #if $current.appTemp.has_data
-                        "apptemp": $current.appTemp.degree_C.raw,
-                        #end if
-                        #if $current.dewpoint.has_data
-                        "dewpt": $current.dewpoint.degree_C.raw,
-                        #end if
-                        #if $current.windSpeed.has_data
-                        "windSpeed": $current.windSpeed.km_per_hour.raw,
-                        #end if
-                        #if $current.windGust.has_data
-                        "windGust": $current.windGust.km_per_hour.raw,
-                        #end if
-                        #if $current.barometer.has_data
-                        "pressure": $current.barometer.mbar.raw,
-                        #end if
-                        #if $hour.rain.has_data
-                        "precip1h": $hour($hours_ago=1).rain.sum.mm.raw,
-                        #end if
-                        #if $current.rainRate.has_data
-                        "precipRate": $current.rainRate.mm_per_hour.raw,
-                        #end if
-                        #if $day.rain.has_data
-                        "rainday": $day.rain.sum.mm.raw
-                        #end if
-        },
-        "metric_si": {
-                        #if $current.outTemp.has_data
-                        "temp": $current.outTemp.degree_C.raw,
-                        #end if
-                        #if $day.outTemp.has_data
-                        "maxtemp": $day.outTemp.max.degree_C.raw,
-                        "mintemp": $day.outTemp.min.degree_C.raw,
-                        #end if
-                        #if $current.appTemp.has_data
-                        "apptemp": $current.appTemp.degree_C.raw,
-                        #end if
-                        #if $current.dewpoint.has_data
-                        "dewpt": $current.dewpoint.degree_C.raw,
-                        #end if
-                        #if $current.windSpeed.has_data
-                        "windSpeed": $current.windSpeed.meter_per_second.raw,
-                        #end if
-                        #if $current.windGust.has_data
-                        "windGust": $current.windGust.meter_per_second.raw,
-                        #end if
-                        #if $current.barometer.has_data
-                        "pressure": $current.barometer.mbar.raw,
-                        #end if
-                        #if $hour.rain.has_data
-                        "precip1h": $hour($hours_ago=1).rain.sum.mm.raw,
-                        #end if
-                        #if $current.rainRate.has_data
-                        "precipRate": $current.rainRate.mm_per_hour.raw,
-                        #end if
-                        #if $day.rain.has_data
-                        "rainday": $day.rain.sum.mm.raw
-                        #end if
-        },
-        "uk_hybrid": {
-                        #if $current.outTemp.has_data
-                        "temp": $current.outTemp.degree_C.raw,
-                        #end if
-                        #if $day.outTemp.has_data
-                        "maxtemp": $day.outTemp.max.degree_C.raw,
-                        "mintemp": $day.outTemp.min.degree_C.raw,
-                        #end if
-                        #if $current.appTemp.has_data
-                        "apptemp": $current.appTemp.degree_C.raw,
-                        #end if
-                        #if $current.dewpoint.has_data
-                        "dewpt": $current.dewpoint.degree_C.raw,
-                        #end if
-                        #if $current.windSpeed.has_data
-                        "windSpeed": $current.windSpeed.mile_per_hour.raw,
-                        #end if
-                        #if $current.windGust.has_data
-                        "windGust": $current.windGust.mile_per_hour.raw,
-                        #end if
-                        #if $current.barometer.has_data
-                        "pressure": $current.barometer.mbar.raw,
-                        #end if
-                        #if $hour.rain.has_data
-                        "precip1h": $hour($hours_ago=1).rain.sum.mm.raw,
-                        #end if
-                        #if $current.rainRate.has_data
-                        "precipRate": $current.rainRate.mm_per_hour.raw,
-                        #end if
-                        #if $day.rain.has_data
-                        "rainday": $day.rain.sum.mm.raw
-                        #end if
-        }
-    }
-    ]
-} 
-```
+WeeWX is an open source software for your weather station monitoring that can be found ([here](https://github.com/weewx/weewx)), to utilize this plugin you need to have the following extension that create a JSON input that can be found [here](https://github.com/teeks99/weewx-json).  Once that is installed a JSON response needs to be created using the following template that creates a JSON file on your server which can be created by adding a new file called [YOUR_FILE_NAME_HERE.json.tmpl](sample_weewx.json.tmpl) and adding it to the skin.conf file.
 
 **key**  
 Weewx doesnt use a key but uses the key as the location for your JSON file. Just place the URL in the key and the app will use that to pull the json location.
@@ -493,6 +328,14 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [Russell Sonnenschein](https://github.com/ctgreybeard) for adding the new 2019 weatherunderground api
 - [Jay O'Conor](https://github.com/joconor) for improving the value rounding and fixing the wind sensor for non metric units
 - [Angela Herring](https://github.com/angelaherring) for adding compatibility mode for total precip and improving the WeatherUnderground integration
+- [CHAMLEX](https://github.com/CHAMLEX) for integration the WeeWX api
+- [Zerosignal84](https://github.com/Zerosignal84) for fixing the uv index range
+- [Vincent Niehues](https://github.com/vniehues) for adding rain chance characteristic to the OpenWeatherMap api
+- [Hendrik-Cv](https://github.com/Hendrik-Cv) for updating the OpenWeatherMap api to v3.0 
+- [Colin](https://github.com/mcclurec) for updating the locationGeo call in OpenWeatherMap api to v3.0
+
+
+Also thanks to numerous people helping with the docs.
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one was a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 

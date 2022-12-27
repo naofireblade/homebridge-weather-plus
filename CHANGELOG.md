@@ -239,3 +239,9 @@
 
 ## 3.2.6
 * Fixed missing rain value in forecasts from dark sky API when a day is skipped in config
+
+## 3.2.7
+* Added WeeWX API
+* Added rain chance to OpenWeatherMap API
+* Updated OpenWeatherMap API to v3.0
+* Fixed uv index range

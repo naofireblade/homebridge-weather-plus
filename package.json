@@ -1,6 +1,6 @@
 {
   "name": "homebridge-weather-plus",
-  "version": "3.2.6",
+  "version": "3.2.7",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
@@ -83,6 +83,26 @@
     {
       "name": "Angela Herring",
       "url": "https://github.com/angelaherring"
+    },
+    {
+      "name": "CHAMLEX",
+      "url": "https://github.com/CHAMLEX"
+    },
+    {
+      "name": "Zerosignal84",
+      "url": "https://github.com/Zerosignal84"
+    },
+    {
+      "name": "Vincent Niehues",
+      "url": "https://github.com/vniehues"
+    },
+    {
+      "name": "Hendrik-Cv",
+      "url": "https://github.com/Hendrik-Cv"
+    },
+    {
+      "name": "Colin",
+      "url": "https://github.com/mcclurec"
     }
   ],
   "repository": {
@@ -91,15 +111,15 @@
   },
   "dependencies": {
     "dark-sky": "^1.1.5",
-    "debug": "^4.1.1",
+    "debug": "^4.3.4",
     "fakegato-history": "^0.6.1",
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
-    "underscore": "^1.10.2",
+    "underscore": "^1.13.6",
     "request": "^2.88.2"
   },
   "funding": {
-    "type" : "buymeacoffee",
-    "url" : "https://buymeacoffee.com/naofireblade"
+    "type": "buymeacoffee",
+    "url": "https://buymeacoffee.com/naofireblade"
   }
 }
