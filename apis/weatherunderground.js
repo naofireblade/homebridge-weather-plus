@@ -2,8 +2,7 @@
 "use strict";
 const request = require('request'),
 	converter = require('../util/converter'),
-	moment = require('moment-timezone'),
-	debug = require('debug')('homebridge-weather-plus');
+	moment = require('moment-timezone');
 
 class WundergroundAPI
 {
@@ -36,7 +35,7 @@ class WundergroundAPI
 
 	update(forecastDays, callback)
 	{
-		debug("Updating weather with weather underground");
+		this.log.debug("Updating weather with weather underground");
 		let weather = {};
 		let that = this;
 
@@ -51,7 +50,7 @@ class WundergroundAPI
 					const jsonObj = JSON.parse(body);
 					if (jsonObj.errors === undefined || jsonObj.errors.length === 0)
 					{
-						debug(JSON.stringify(jsonObj, null, 2));
+						this.log.debug(JSON.stringify(jsonObj, null, 2));
 						weather.report = that.parseReport(jsonObj);
 						callback(null, weather);
 					}
@@ -84,7 +83,7 @@ class WundergroundAPI
 		{
 			let observation = json.observations[0];
 			let values;
-			debug("Units: " + this.units);
+			this.log.debug("Units: " + this.units);
 
 			// Get values depending on chosen unit in request
 			if (this.units === 's')

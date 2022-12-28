@@ -174,8 +174,7 @@
 const request = require('request'),
 	converter = require('../util/converter'),
 	geoTz = require('geo-tz'),
-	moment = require('moment-timezone'),
-	debug = require('debug')('homebridge-weather-plus');
+	moment = require('moment-timezone');
 
 
 class WeewxAPI
@@ -213,7 +212,7 @@ class WeewxAPI
 
 	update(forecastDays, callback)
 	{
-		debug("Updating weather with weewx");
+		this.log.debug("Updating weather with weewx");
 		let weather = {};
 		let that = this;
 		//formatting url as http://site/file.json (using apikey for URL)
@@ -228,7 +227,7 @@ class WeewxAPI
 					const jsonObj = JSON.parse(body);
 					if (jsonObj.errors === undefined || jsonObj.errors.length === 0)
 					{
-						debug(JSON.stringify(jsonObj, null, 2));
+						this.log.debug(JSON.stringify(jsonObj, null, 2));
 						weather.report = that.parseReport(jsonObj);
 						callback(null, weather);
 					}
@@ -261,7 +260,7 @@ class WeewxAPI
 		{
 			let observation = json.observations[0];
 			let values;
-			debug("Units: " + this.units);
+			this.log.debug("Units: " + this.units);
 
 			// Get values depending on chosen unit in request
 			if (this.units === 's')

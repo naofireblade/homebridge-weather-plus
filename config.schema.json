@@ -80,9 +80,6 @@
               "type": "number"
             }
           },
-          "locationId": {
-            "type": "integer"
-          },
           "locationCity": {
             "type": "string"
           },
@@ -354,22 +351,6 @@
                 "functionBody": "return model.stations[0].service === 'openweathermap'"
               }
             },
-            {
-              "type": "help",
-              "helpvalue": "<h6>Weewx Version</h6><p class='help-block'>Place current Weewx Version.</p>",
-              "condition": {
-                "functionBody": "return model.stations[0].service === 'weewx'"
-              }
-            },
-            {
-              "key": "stations[].locationCity",
-              "notitle": true,
-              "placeholder": "v4.5.1",
-              "condition": {
-                "functionBody": "return model.stations[0].service === 'weewx"
-              }
-            },
-            
             {
               "type": "help",
               "helpvalue": "<h6>Geo coordinates</h6><p class='help-block'>Optional: Enter geo coordinates (1. latitude, 2. longitude). Find your coordinates <a target='_blank' href='http://www.mapcoordinates.net/en'>here</a>.</p>",

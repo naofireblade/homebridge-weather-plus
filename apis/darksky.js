@@ -3,8 +3,7 @@
 
 const DarkSky = require('dark-sky'),
 	converter = require('../util/converter'),
-	moment = require('moment-timezone'),
-	debug = require('debug')('homebridge-weather-plus');
+	moment = require('moment-timezone');
 
 class DarkSkyAPI
 {
@@ -102,7 +101,7 @@ class DarkSkyAPI
 
 		this.updateCache(this.darkskyTimeMachine, forecastDays, function ()
 		{
-			debug("Updating weather with dark sky");
+			that.log.debug("Updating weather with dark sky");
 			that.darksky.get()
 			.then(function (response)
 			{
@@ -191,7 +190,7 @@ class DarkSkyAPI
 	{
 		if (typeof this.cache.lastUpdate === 'undefined' || new Date() - this.cache.lastUpdate > 3600000)
 		{
-			debug("Called hourly update of rain data");
+			this.log.debug("Called hourly update of rain data");
 			this.cache.lastUpdate = new Date();
 
 			let now = moment();
@@ -242,7 +241,7 @@ class DarkSkyAPI
 
 			// Sum all values for the requested day
 			let result = converter.getRainAccumulated(response.hourly.data.slice(0, hour), 'precipIntensity');
-			debug("Accumulated rain for " + now.tz(response.timezone).format('dddd') + (limit ? (' until ' + hour + ':00') : '') + ": " + Math.round(result * 100) / 100);
+			this.log.debug("Accumulated rain for " + now.tz(response.timezone).format('dddd') + (limit ? (' until ' + hour + ':00') : '') + ": " + Math.round(result * 100) / 100);
 			callback(result);
 		}.bind(this))
 		.catch(function (error)

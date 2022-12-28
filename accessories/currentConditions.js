@@ -1,5 +1,4 @@
-const debug = require('debug')('homebridge-weather-plus'),
-	version = require("../package.json").version,
+const version = require("../package.json").version,
 	compatibility = require("../util/compatibility");
 
 let Service,
@@ -29,7 +28,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	this.stationIndex = stationIndex;
 
 	// Use homekit temperature service or eve weather service depending on compatibility setting
-	debug("Using compatibility mode '%s'", this.config.compatibility);
+	this.log.debug("Using compatibility mode '%s'", this.config.compatibility);
 	if (this.config.compatibility === "eve2")
 	{
 		this.CurrentConditionsService = new CustomService.EveWeatherService(this.name);
@@ -45,7 +44,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 		// Separate humidity into a single service if configurated
 		if (this.config.extraHumidity)
 		{
-			debug("Separating humidity into an extra service");
+			this.log.debug("Separating humidity into an extra service");
 			this.HumidityService = new Service.HumiditySensor("Humidity")
 		}
 	}
@@ -117,13 +116,13 @@ CurrentConditionsWeatherAccessory.prototype = {
 		{
 			if (key.includes("Service") && !key.includes("History") && !key.includes("information"))
 			{
-				debug("Service: %s", key);
+				this.log.debug("Service: %s", key);
 				this[key].characteristics.forEach((characteristic) =>
 				{
-					debug(" - Characteristic: %s", characteristic.displayName);
-					debug("   - UUID: %s", characteristic.UUID);
-					debug("   - Value: %s", characteristic.value);
-					debug("   - Props: %s", characteristic.props);
+					this.log.debug(" - Characteristic: %s", characteristic.displayName);
+					this.log.debug("   - UUID: %s", characteristic.UUID);
+					this.log.debug("   - Value: %s", characteristic.value);
+					this.log.debug("   - Props: %s", characteristic.props);
 				});
 			}
 		});

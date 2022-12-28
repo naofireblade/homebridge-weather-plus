@@ -29,20 +29,21 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 This plugin supports multiple weather services. Each has its own advantages. The following table shows a comparison to help you to choose one.
 
-|                            |            Dark Sky <sup>[1](#a1)</sup>      |                   OpenWeatherMap (recommended)                   |       Weather Underground <sup>[2](#a2)</sup>        |
-|----------------------------|:--------------------------------------------:|:----------------------------------------------------------------:|:----------------------------------------------------:|
-| Current observation values |                      19                      |                15                                                |           12                                         |
-| Forecast values            |                      22                      |                                18                                |                          0                           |
-| Forecast days              |                  today + 7                   |                            today + 7                             |                          0                           |
-| Location                   |                geo-coordinates               |               city name, city id, geo-coordinates                |                      station id                      |
-| Personal weather stations  |                      :x:                     |                        :heavy_check_mark:                        |                  :heavy_check_mark:                  |
-| Free                       |   :heavy_check_mark: (only existing users)   |                        :heavy_check_mark:                        |    :heavy_check_mark: (only if you own a station)    |
-| Register                   |                     closed                   |      [here](https://home.openweathermap.org/users/sign_up)       | [here](https://www.wunderground.com/member/api-keys) |
+|                            |       Dark Sky <sup>[1](#a1)</sup>       |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |
+|----------------------------|:----------------------------------------:|:-----------------------------------------------------:|:----------------------------------------------------:|
+| Current observation values |                    19                    |                          15                           |                          12                          |
+| Forecast values            |                    22                    |                 18<sup>[6](#a6)</sup>                 |                          0                           |
+| Forecast days              |                today + 7                 |             today + 7<sup>[6](#a6)</sup>              |                          0                           |
+| Location                   |             geo-coordinates              |              city name, geo-coordinates               |                      station id                      |
+| Personal weather stations  |                   :x:                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |
+| Free                       | :heavy_check_mark: (only existing users) |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |
+| Register                   |                  closed                  | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |
 
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 > <b name="a1">1</b> [It is no longer possible](https://blog.darksky.net/dark-sky-has-a-new-home/) to register as a new user for Dark Sky. Existing users can use the service [until 31 Dec 2022](https://blog.darksky.net).  
 > <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.
+> <b name="a6">6</b> uv-index, dew point, sunrise, sunset are only available after registering for the new OpenWeatherMap One Call API 3.0, which is free as well. The old API also has 4 instead of 7 forecast days.
 
 
 ## Installation
@@ -115,11 +116,9 @@ List with the latitude and longitude for your location (don't forget the square 
 
 **key**  
 The API key that you get by [registering](https://home.openweathermap.org/users/sign_up) for the OpenWeather service API 3.0.  
-The service requires a payment method despite being free for 1000 calls per day. The plugin should not exceed this limit in the default interval configuration, but I cannot guarantee that!  
-As a safeguard you can limit your api key 1000 calls on the owm website under "Billing plans". 
-
-**locationId**<sup>[5](#a5)</sup>  
-Numerical city id, can be found [here](https://openweathermap.org/find).
+* The service requires a payment method despite being free for 1000 calls per day. The plugin should not exceed this limit in the default interval configuration, but I cannot guarantee that!  
+* To be on the safe side you can limit your api key to 1000 calls on the OpenWeather website under "Billing plans".  
+* It can take up to 30 minutes until a newly generated ApiKey is accepted.
 
 **locationCity**<sup>[5](#a5)</sup>  
 City name and optional country code, can be found [here](https://openweathermap.org/find).
@@ -135,7 +134,6 @@ List with the latitude and longitude for your location (don't forget the square 
 		"platform": "WeatherPlus",
 		"service": "openweathermap",
 		"key": "YOUR_API_KEY",
-		"locationId": 2950159,
 		"locationCity": "Berlin, DE",
 		"locationGeo": [52.5200066, 13.404954]
 	}
@@ -331,9 +329,7 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [CHAMLEX](https://github.com/CHAMLEX) for integration the WeeWX api
 - [Zerosignal84](https://github.com/Zerosignal84) for fixing the uv index range
 - [Vincent Niehues](https://github.com/vniehues) for adding rain chance characteristic to the OpenWeatherMap api
-- [Hendrik-Cv](https://github.com/Hendrik-Cv) for updating the OpenWeatherMap api to v3.0 
-- [Colin](https://github.com/mcclurec) for updating the locationGeo call in OpenWeatherMap api to v3.0
-
+- [Hendrik-Cv](https://github.com/Hendrik-Cv) for updating the OpenWeatherMap api to v3.0
 
 Also thanks to numerous people helping with the docs.
 

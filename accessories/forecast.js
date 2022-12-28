@@ -1,5 +1,4 @@
-const debug = require('debug')('homebridge-weather-plus'),
-	version = require("../package.json").version,
+const version = require("../package.json").version,
 	compatibility = require("../util/compatibility");
 
 let Service,
@@ -122,13 +121,13 @@ ForecastWeatherAccessory.prototype = {
 		{
 			if (key.includes("Service") && !key.includes("History") && !key.includes("information"))
 			{
-				debug("Service: %s", key);
+				this.log.debug("Service: %s", key);
 				this[key].characteristics.forEach((characteristic) =>
 				{
-					debug(" - Characteristic: %s", characteristic.displayName);
-					debug("   - UUID: %s", characteristic.UUID);
-					debug("   - Value: %s", characteristic.value);
-					debug("   - Props: %s", characteristic.props);
+					this.log.debug(" - Characteristic: %s", characteristic.displayName);
+					this.log.debug("   - UUID: %s", characteristic.UUID);
+					this.log.debug("   - Value: %s", characteristic.value);
+					this.log.debug("   - Props: %s", characteristic.props);
 				});
 			}
 		});

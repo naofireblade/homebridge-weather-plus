@@ -3,20 +3,24 @@
 
 const converter = require('../util/converter'),
 	moment = require('moment-timezone'),
-	geoTz = require('geo-tz'),
-	request = require('request'),
-	debug = require('debug')('homebridge-weather-plus');
+	request = require('request');
 
 class OpenWeatherMapAPI
 {
 	constructor(apiKey, language, locationId, locationGeo, locationCity, conditionDetail, log)
 	{
 		this.log = log;
-		this.apiBaseURL = "https://api.openweathermap.org/data/3.0";
+		this.api = "3.0";
+		this.apiBaseURL = "https://api.openweathermap.org";
+
 		this.apiKey = apiKey;
 		this.language = language;
 
-		this.locationId = locationId;
+		if (locationId)
+		{
+			this.log.error("Using a locationId is no longer supported by OpenWeatherMap. Please provide city name e.g. 'Berlin, DE' (locationCity) or geo cooridnates (locationGeo)");
+		}
+
 		this.locationCity = locationCity;
 		this.locationGeo = locationGeo;
 
@@ -65,7 +69,7 @@ class OpenWeatherMapAPI
 
 	update(forecastDays, callback)
 	{
-		debug("Updating weather with OpenWeatherMap");
+		this.log.debug("Updating weather with OpenWeatherMap");
 		let that = this;
 
 		if (!this.locationGeo)
@@ -75,7 +79,6 @@ class OpenWeatherMapAPI
 				if (!error)
 				{
 					that.locationGeo = [coordinates.lat, coordinates.lon];
-					debug("Found locationGeo: %s", that.locationGeo);
 					that.update(forecastDays, callback);
 				}
 				else
@@ -87,35 +90,77 @@ class OpenWeatherMapAPI
 		}
 		else
 		{
-			debug("Update weather");
+			this.log.debug("Update weather");
 			let weather = {};
 
-			this.getWeatherData((error, result) =>
+			this.getWeatherData(this.getWeatherUrl(), (error, result) =>
 			{
-				if (!error && result["current"] !== undefined && result["daily"] !== undefined && result["timezone"] !== undefined)
+				this.log.debug(result);
+				if (!error && result["timezone"] !== undefined)
 				{
-					this.parseReport(weather, result["current"], result["timezone"], callback);
-					this.parseForecasts(weather, result["daily"], result["timezone"], callback);
+					this.generateReport(weather, result, result["timezone"], callback);
+
+					// Old api requires an extra call to get the forecast
+					if (this.api === "2.5")
+					{
+						this.getWeatherData(this.apiBaseURL + "/data/2.5/forecast", (error, result) =>
+						{
+							this.generateForecasts(weather, result["list"], result["city"]["timezone"], callback);
+						});
+					}
+					else
+					{
+						this.generateForecasts(weather, result, result["timezone"], callback);
+					}
 				}
 				else
 				{
-					that.log.error("Error retrieving weather report");
-					that.log.error(error);
-					that.log.error(result);
-					callback();
+					if (JSON.stringify(result).includes("401"))
+					{
+						if (this.api === "3.0")
+						{
+							that.log.info("Could not retreive weather report with API 3.0, trying API 2.5 now ...")
+							this.api = "2.5";
+							this.removeCharacteristic(this.reportCharacteristics, "UVIndex");
+							this.removeCharacteristic(this.reportCharacteristics, "DewPoint");
+							this.removeCharacteristic(this.forecastCharacteristics, "UVIndex");
+							this.removeCharacteristic(this.forecastCharacteristics, "DewPoint");
+							this.removeCharacteristic(this.forecastCharacteristics, "SunriseTime");
+							this.removeCharacteristic(this.forecastCharacteristics, "SunsetTime");
+							this.forecastDays = 5;
+							this.update(forecastDays, callback);
+						}
+						else
+						{
+							that.log.error("Could not retreive weather report with neither API 3.0 or API 2.5. You may need to wait up to 30 minutes after creating your api key. If the error persist, check if you copied the api key correctly.");
+							that.log.error(result);
+							callback();
+						}
+					}
+					else
+					{
+						that.log.error("Error retrieving weather report");
+						that.log.error(result);
+						callback();
+					}
 				}
 			});
 		}
 	}
 
-	parseReport(weather, values, timezone, callback)
+	generateReport(weather, values, timezone, callback)
 	{
 		weather.report = {};
-		this.parseWeather(weather.report, values);
-		weather.report.ObservationTime = moment.unix(values.dt).tz(timezone).format('HH:mm:ss');
-		let precip1h = values.rain === undefined || isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
-		precip1h += values.snow === undefined || isNaN(parseFloat(values.snow['1h'])) ? 0 : parseFloat(values.snow['1h']);
-		weather.report.Rain1h = precip1h;
+		if (this.api === "2.5")
+		{
+			this.parseReportLegacy(weather.report, values);
+		}
+		else
+		{
+			this.parseReportOneCall(weather.report, values["current"]);
+		}
+		let timezoneShift = timezone / 60
+		weather.report.ObservationTime = moment.unix(values.dt).utcOffset(timezoneShift).format('HH:mm:ss');
 
 		if (weather.forecasts)
 		{
@@ -123,12 +168,36 @@ class OpenWeatherMapAPI
 		}
 	}
 
-	parseForecasts(weather, values, timezone, callback)
+	generateForecasts(weather, values, timezone, callback)
 	{
 		let forecasts = [];
+
+		// API 2.5 does not send a summary for the forecast day, instead it sends a report for every 3 hours.
+		// We need to combine 8 x 3hrs reports to get the forecast for 1 day.
+		let legacyDays = [];
+		if (this.api === "2.5")
+		{
+			for (let i = 0; i < values.length; i++)
+			{
+				if (i % 8 === 0)
+				{
+					legacyDays.push([]);
+				}
+				legacyDays[legacyDays.length - 1].push(values[i]);
+			}
+			values = legacyDays;
+		}
+
 		for (let i = 0; i < values.length; i++)
 		{
-			forecasts[forecasts.length] = this.parseForecast(values[i], timezone);
+			if (this.api === "2.5")
+			{
+				forecasts[forecasts.length] = this.parseForecastLegacy(values[i], timezone / 60);
+			}
+			else
+			{
+				forecasts[forecasts.length] = this.parseForecastOneCall(values[i], timezone);
+			}
 		}
 
 		weather.forecasts = forecasts;
@@ -138,24 +207,75 @@ class OpenWeatherMapAPI
 		}
 	}
 
-	parseForecast(values, timezone)
+	parseReportLegacy(report, values, isForecast = false)
+	{
+		report.AirPressure = parseInt(values.main.pressure);
+		report.CloudCover = parseInt(values.clouds.all);
+		report.Condition = values.weather[0].description;
+		report.ConditionCategory = this.getConditionCategory(values.weather[0].id, this.conditionDetail);
+		report.Humidity = parseInt(values.main.humidity);
+		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
+		report.RainBool = [5, 6, 9].includes(detailedCondition);
+		report.SnowBool = [7, 8].includes(detailedCondition);
+		report.TemperatureApparent = typeof values.main.feels_like === 'object' ? parseInt(values.main.feels_like.day) : parseInt(values.main.feels_like);
+		report.TemperatureMax = parseInt(values.main.temp_max);
+		report.TemperatureMin = parseInt(values.main.temp_min);
+		report.WindDirection = converter.getWindDirection(values.wind.deg);
+		report.WindSpeed = parseFloat(values.wind.speed);
+		if (isForecast)
+		{
+			report.RainDay = values.rain["24h"];
+			report.RainChance = parseFloat(values.pop) * 100;
+		}
+		else
+		{
+			report.Temperature = typeof values.main.temp === 'object' ? parseFloat(values.main.temp.day) : parseFloat(values.main.temp);
+			let precip1h = values.rain === undefined || isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
+			precip1h += values.snow === undefined || isNaN(parseFloat(values.snow['1h'])) ? 0 : parseFloat(values.snow['1h']);
+			report.Rain1h = precip1h;
+		}
+	}
+
+	/**
+	 * Combine the 8 reports for a forecast day into a meaningful summary for the day.
+	 * @param values 8 reports, each for 3 hours
+	 * @param timezoneShift shift in seconds from utc of location timezone
+	 * @returns {{}} forecast day
+	 */
+	parseForecastLegacy(values, timezoneShift)
 	{
 		let forecast = {};
-		this.parseWeather(forecast, values);
-		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
-		forecast.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
-		forecast.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
-		let precipDay = isNaN(parseFloat(values.rain)) ? 0 : parseFloat(values.rain);
-		precipDay += isNaN(parseFloat(values.snow)) ? 0 : parseFloat(values.snow);
-		forecast.RainDay = precipDay;
-		forecast.TemperatureMax = parseInt(values.temp.max);
-		forecast.TemperatureMin = parseInt(values.temp.min);
-		forecast.RainChance = parseFloat(values.pop) * 100;
+		let combinedHourlyValues = {
+			"dt": values[0].dt,
+			"main": {
+				"temp_max": Math.max(...values.map(v => v.main.temp_max)),
+				"temp_min": Math.min(...values.map(v => v.main.temp_min)),
+				"feels_like": Math.max(...values.map(v => v.main.feels_like)),
+				"pressure": Math.max(...values.map(v => v.main.pressure)),
+				"humidity": Math.max(...values.map(v => v.main.humidity))
+			},
+			"clouds": {
+				"all": values.map(v => v.clouds.all).reduce((acc, v, i, a) => (acc + v / a.length), 0)
+			},
+			"weather": values[4].weather,
+			"wind": {
+				"speed": Math.max(...values.map(v => v.wind.speed)),
+				"deg": values[4].wind.deg,
+				"gust": Math.max(...values.map(v => v.wind.gust))
+			},
+			"rain": {
+				"24h": values.map(v => v.rain === undefined || isNaN(parseFloat(v.rain['3h'])) ? 0 : parseFloat(v.rain['3h'])).reduce((a, b) => a + b)
+			},
+			"pop": Math.max(...values.map(v => v.pop))
+		}
+		this.parseReportLegacy(forecast, combinedHourlyValues, true);
+		
+		forecast.ForecastDay = moment.unix(combinedHourlyValues.dt).utcOffset(timezoneShift).format('dddd');
 
 		return forecast;
 	}
 
-	parseWeather(report, values)
+	parseReportOneCall(report, values, isForecast = false)
 	{
 		report.AirPressure = parseInt(values.pressure);
 		report.CloudCover = parseInt(values.clouds);
@@ -164,13 +284,37 @@ class OpenWeatherMapAPI
 		report.DewPoint = parseInt(values.dew_point);
 		report.Humidity = parseInt(values.humidity);
 		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
-		report.RainBool = [5,6,9].includes(detailedCondition);
-		report.SnowBool = [7,8].includes(detailedCondition);
-		report.Temperature = typeof values.temp === 'object' ? parseFloat(values.temp.day) : parseFloat(values.temp);
+		report.RainBool = [5, 6, 9].includes(detailedCondition);
+		report.SnowBool = [7, 8].includes(detailedCondition);
 		report.TemperatureApparent = typeof values.feels_like === 'object' ? parseInt(values.feels_like.day) : parseInt(values.feels_like);
 		report.UVIndex = parseInt(values.uvi);
 		report.WindDirection = converter.getWindDirection(values.wind_deg);
 		report.WindSpeed = parseFloat(values.wind_speed);
+		if (isForecast)
+		{
+			let precipDay = isNaN(parseFloat(values.rain)) ? 0 : parseFloat(values.rain);
+			precipDay += isNaN(parseFloat(values.snow)) ? 0 : parseFloat(values.snow);
+			report.RainDay = precipDay;
+			report.TemperatureMax = parseInt(values.temp.max);
+			report.TemperatureMin = parseInt(values.temp.min);
+			report.RainChance = parseFloat(values.pop) * 100;
+		}
+		else
+		{
+			report.Temperature = typeof values.temp === 'object' ? parseFloat(values.temp.day) : parseFloat(values.temp);
+		}
+	}
+
+	parseForecastOneCall(values, timezone)
+	{
+		let forecast = {};
+		this.parseReportOneCall(forecast, values);
+		
+		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
+		forecast.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
+		forecast.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
+
+		return forecast;
 	}
 
 	getConditionCategory(code, detail = false)
@@ -233,12 +377,12 @@ class OpenWeatherMapAPI
 		}
 	};
 
-	getWeatherData(callback)
+	getWeatherData(url, callback)
 	{
-		debug("Getting weather data for location %s", this.locationGeo);
+		this.log.debug("Getting weather data for location %s", this.locationGeo);
 
-		const queryUri = this.apiBaseURL + "/onecall?units=metric&lang=" + this.language + "&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
-		request(encodeURI(queryUri),  (requestError, response, body) =>
+		const queryUri = url + "?units=metric&lang=" + this.language + "&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
+		request(encodeURI(queryUri), (requestError, response, body) =>
 		{
 			if (!requestError)
 			{
@@ -262,14 +406,9 @@ class OpenWeatherMapAPI
 
 	getLocationGeo(callback)
 	{
-		debug("Getting locationGeo from %s", this.locationId ? this.locationId : this.locationCity);
-
-		let locationQuery = this.locationId
-			? "id=" + this.locationId
-			: "q=" + this.locationCity.toLowerCase();
-
-		const queryUri = this.apiBaseURL + "/weather?" + locationQuery + "&appid=" + this.apiKey;
-		request(encodeURI(queryUri),  (requestError, response, body) =>
+		this.log.debug("Getting coordinates for %s", this.locationCity);
+		const queryUri = this.apiBaseURL + "/geo/1.0/direct?q=" + this.locationCity.toLowerCase() + "&limit=1&appid=" + this.apiKey;
+		request(encodeURI(queryUri), (requestError, response, body) =>
 		{
 			if (!requestError)
 			{
@@ -278,8 +417,13 @@ class OpenWeatherMapAPI
 				let parseError;
 				try
 				{
-					coordinates = JSON.parse(body)["coord"];
-					if (coordinates === undefined)
+					let json = JSON.parse(body);
+					if (json.length >= 1)
+					{
+						coordinates = {"lat": json[0].lat, "lon": json[0].lon};
+						this.log.info("Found coordinates for %s: %s", this.locationCity, coordinates);
+					}
+					else
 					{
 						parseError = body;
 					}
@@ -295,6 +439,28 @@ class OpenWeatherMapAPI
 			}
 		});
 	};
+
+	getWeatherUrl()
+	{
+		this.log.debug("Using API %s", this.api);
+		if (this.api === "2.5")
+		{
+			return this.apiBaseURL + "/data/2.5/weather";
+		}
+		else
+		{
+			return this.apiBaseURL + "/data/3.0/onecall"
+		}
+	}
+
+	removeCharacteristic(characteristics, item)
+	{
+		let index = characteristics.indexOf(item);
+		if (index !== -1)
+		{
+			characteristics.splice(index, 1);
+		}
+	}
 }
 
 module.exports = {

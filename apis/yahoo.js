@@ -4,8 +4,7 @@
 const request = require('request'),
 	converter = require('../util/converter'),
 	moment = require('moment-timezone'),
-	geoTz = require('geo-tz'),
-	debug = require('debug')('homebridge-weather-plus');
+	geoTz = require('geo-tz');
 
 
 class YahooAPI
@@ -40,7 +39,7 @@ class YahooAPI
 
 	update(forecastDays, callback)
 	{
-		debug("Updating weather with Yahoo");
+		this.log.debug("Updating weather with Yahoo");
 
 		const queryUri = `https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where u='c' AND woeid in (select woeid from geo.places(1) where text="${this.location}")&format=json`;
 		request(encodeURI(queryUri), function (err, response, body)
@@ -64,7 +63,7 @@ class YahooAPI
 	{
 		let report = {};
 		const timezone = String(geoTz(parseFloat(values.item.lat), parseFloat(values.item.long)));
-		debug("Using Timezone: " + timezone);
+		this.log.debug("Using Timezone: " + timezone);
 
 		report.AirPressure = parseInt(values.atmosphere.pressure);
 		report.Condition = values.item.condition.text;

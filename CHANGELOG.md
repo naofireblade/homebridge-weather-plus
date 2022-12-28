@@ -245,3 +245,8 @@
 * Added rain chance to OpenWeatherMap API
 * Updated OpenWeatherMap API to v3.0
 * Fixed uv index range
+
+## 3.2.8
+* Added backwards compatibility for old OpenWeatherMap API 2.5
+* Fixed getting geo coordinates with API 3.0
+* Removed possibility to get location from id. Please use city name or geo coordinates!

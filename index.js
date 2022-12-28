@@ -30,8 +30,6 @@ module.exports = function (homebridge)
 
 function WeatherPlusPlatform(_log, _config)
 {
-	debug("Init WeatherPlus platform");
-
 	this.log = _log;
 	this.config = _config;
 	this.stations = [];
@@ -81,7 +79,7 @@ function WeatherPlusPlatform(_log, _config)
 				break;
 			case "weewx":
 				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
-				this.stations.push(new weewx(config.key, config.locationCity, this.log));
+				this.stations.push(new weewx(config.key, this.log));
 				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
@@ -90,7 +88,6 @@ function WeatherPlusPlatform(_log, _config)
 		// Create accessory for current weather conditions
 		if (config.now)
 		{
-			debug("Added current conditions");
 			this.accessoriesList.push(new CurrentConditionsWeatherAccessory(this, index));
 		}
 
@@ -100,12 +97,12 @@ function WeatherPlusPlatform(_log, _config)
 			// Check if day is a number and within range of supported forecast days for the selected weather service
 			if (typeof day === "number" && (day % 1) === 0 && day >= 0 && day < this.stations[index].forecastDays)
 			{
-				debug("Added forecast for day: %s", day);
+				this.log.debug("Added forecast for day: %s", day);
 				this.accessoriesList.push(new ForecastWeatherAccessory(this, index, day));
 			}
 			else
 			{
-				debug("Ignoring forecast day: %s", day);
+				this.log.debug("Ignoring forecast day: %s", day);
 				array.splice(i, 1);
 			}
 		});
@@ -224,7 +221,7 @@ WeatherPlusPlatform.prototype = {
 			let hide = station.hidden[i];
 			station.hidden[i] = hide === "Rain" || hide === "Snow" ? hide + "Bool" : hide.replace(" ","");
 		}
-		debug(station.hidden);
+		this.log.debug(station.hidden);
 		station.serial = station.service + " - " + (station.locationId || '') + (station.locationGeo || '') + (station.locationCity || '');
 		return true;
 	},
@@ -243,13 +240,15 @@ WeatherPlusPlatform.prototype = {
 					// Find the condition and forecast accessory of the current station
 					this.accessoriesList.forEach((accessory) =>
 					{
+						// this.log.debug(accessory);
+						// this.log.debug(weather);
 						// Add current weather conditions
 						if (accessory.stationIndex === stationIndex && accessory.CurrentConditionsService !== undefined && weather !== undefined && weather.report !== undefined)
 						{
 							try
 							{
 								let data = weather.report;
-								debug("Current Conditions for station '%s': %O", accessory.name, data);
+								this.log.debug("Current Conditions for station '%s': %O", accessory.name, data);
 
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.reportCharacteristics.forEach((characteristicName) =>
@@ -257,7 +256,7 @@ WeatherPlusPlatform.prototype = {
 									this.saveCharacteristic(accessory, characteristicName, data[characteristicName], "current");
 								});
 
-								debug("Saving history entry");
+								this.log.debug("Saving history entry");
 								accessory.historyService.addEntry({
 									time: new Date().getTime() / 1000,
 									temp: accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
@@ -276,7 +275,7 @@ WeatherPlusPlatform.prototype = {
 							try
 							{
 								let data = weather.forecasts[accessory.day];
-								debug("Forecast for station '%s': %O", accessory.name, data);
+								this.log.debug("Forecast for station '%s': %O", accessory.name, data);
 
 								// Set homekit characteristic value for each reported characteristic of the api
 								station.forecastCharacteristics.forEach((characteristicName) =>
@@ -310,7 +309,7 @@ WeatherPlusPlatform.prototype = {
 
 		if (config.hidden.indexOf(name) === -1 || name === "Temperature" || name === "TemperatureMax")
 		{
-			debug("Setting %s to %s", name, convertedValue);
+			this.log.debug("Setting %s to %s", name, convertedValue);
 			// Temperature is an official homekit characteristic
 			if (name === "Temperature" || name === "TemperatureMax")
 			{
