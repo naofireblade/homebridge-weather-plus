@@ -154,13 +154,14 @@ class OpenWeatherMapAPI
 		if (this.api === "2.5")
 		{
 			this.parseReportLegacy(weather.report, values);
+			let timezoneShift = timezone / 60
+			weather.report.ObservationTime = moment.unix(values.dt).utcOffset(timezoneShift).format('HH:mm:ss');
 		}
 		else
 		{
 			this.parseReportOneCall(weather.report, values["current"]);
+			weather.report.ObservationTime = moment.unix(values["current"].dt).tz(timezone).format('HH:mm:ss');
 		}
-		let timezoneShift = timezone / 60
-		weather.report.ObservationTime = moment.unix(values.dt).utcOffset(timezoneShift).format('HH:mm:ss');
 
 		if (weather.forecasts)
 		{
@@ -301,6 +302,9 @@ class OpenWeatherMapAPI
 		}
 		else
 		{
+			let precip1h = values.rain === undefined || isNaN(parseFloat(values.rain['1h'])) ? 0 : parseFloat(values.rain['1h']);
+			precip1h += values.snow === undefined || isNaN(parseFloat(values.snow['1h'])) ? 0 : parseFloat(values.snow['1h']);
+			report.Rain1h = precip1h;
 			report.Temperature = typeof values.temp === 'object' ? parseFloat(values.temp.day) : parseFloat(values.temp);
 		}
 	}
