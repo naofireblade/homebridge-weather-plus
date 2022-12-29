@@ -250,3 +250,7 @@
 * Added backwards compatibility for old OpenWeatherMap API 2.5
 * Fixed getting geo coordinates with API 3.0
 * Removed possibility to get location from id. Please use city name or geo coordinates!
+
+## 3.2.9
+* Fixed rain last hour and observation time in OpenWeatherMap API 3.0
+* Fixed forecast in OpenWeatherMap API 3.0
