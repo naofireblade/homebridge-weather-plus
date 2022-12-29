@@ -110,7 +110,7 @@ class OpenWeatherMapAPI
 					}
 					else
 					{
-						this.generateForecasts(weather, result, result["timezone"], callback);
+						this.generateForecasts(weather, result["daily"], result["timezone"], callback);
 					}
 				}
 				else
@@ -189,6 +189,7 @@ class OpenWeatherMapAPI
 			values = legacyDays;
 		}
 
+		this.log.warn(values);
 		for (let i = 0; i < values.length; i++)
 		{
 			if (this.api === "2.5")
@@ -312,7 +313,7 @@ class OpenWeatherMapAPI
 	parseForecastOneCall(values, timezone)
 	{
 		let forecast = {};
-		this.parseReportOneCall(forecast, values);
+		this.parseReportOneCall(forecast, values, true);
 		
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
 		forecast.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
