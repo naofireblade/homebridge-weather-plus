@@ -254,3 +254,6 @@
 ## 3.2.9
 * Fixed rain last hour and observation time in OpenWeatherMap API 3.0
 * Fixed forecast in OpenWeatherMap API 3.0
+
+## 3.2.10
+* Fixed logging
