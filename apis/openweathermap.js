@@ -189,7 +189,6 @@ class OpenWeatherMapAPI
 			values = legacyDays;
 		}
 
-		this.log.warn(values);
 		for (let i = 0; i < values.length; i++)
 		{
 			if (this.api === "2.5")
