@@ -257,3 +257,6 @@
 
 ## 3.2.10
 * Fixed logging
+
+## 3.2.11
+* Fixed crash when weather report is empty

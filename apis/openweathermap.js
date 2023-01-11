@@ -115,7 +115,7 @@ class OpenWeatherMapAPI
 				}
 				else
 				{
-					if (JSON.stringify(result).includes("401"))
+					if (result !== undefined && JSON.stringify(result).includes("401"))
 					{
 						if (this.api === "3.0")
 						{
