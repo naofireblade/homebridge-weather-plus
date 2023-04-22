@@ -47,6 +47,18 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			this.log.debug("Separating humidity into an extra service");
 			this.HumidityService = new Service.HumiditySensor("Humidity")
 		}
+		
+		// Separate light level into a single service if configurated
+		if (this.config.extraLightLevel)
+		{
+			this.log.debug("Separating light level into an extra service");
+			this.LightLevelService = new Service.LightSensor("Light Level");
+			this.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+				.setProps({
+					minValue: 0,
+					maxValue: 200000
+				});
+		}
 	}
 
 
@@ -88,6 +100,33 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			else if (name === "Humidity")
 			{
 				this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
+			}
+			// Use separate service for light level if configured
+			else if (this.config.compatibility === "eve" && name === "LightLevel" && this.config.extraLightLevel)
+			{
+				//
+			}
+			// illuminance is a general apple home kit characteristic
+			else if (name === "LightLevel")
+			{
+				this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentAmbientLightLevel);
+				// Override the defaults for light level as default is too low for daylight
+				this.CurrentConditionsService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+					.setProps({
+						minValue: 0,
+						maxValue: 200000,
+						minStep: 1
+					});
+			}
+			// Battery level is a general apple home kit characteristic
+			else if (name === "BatteryLevel")
+			{
+				this.CurrentConditionsService.addCharacteristic(Characteristic.BatteryLevel);
+			}
+						// Battery level is a general apple home kit characteristic
+			else if (name === "BatteryIsCharging")
+			{
+				this.CurrentConditionsService.addCharacteristic(Characteristic.ChargingState);
 			}
 			// Add everything else as a custom characteristic to the temperature service
 			else

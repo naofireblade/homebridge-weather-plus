@@ -183,6 +183,18 @@ Used to indicate Weewx version.  The homekit plugin requires an location field t
 ```
 
 
+### Tempest Weatherflow
+
+The [Tempest Weatherflow]() is a local weather reporting device that publishes the current weather on the local network via [UDP packets](). Data is broadcast once per minute, so the Interval setting is ignored. As the physical station can only provide the current weather, future forecasts are not available with this weather source. This uses data published on your local network, and therefore runs fine without an internet connection. 
+
+```json
+"platforms": [
+    {
+        "platform": "WeatherPlus",
+        "service": "smartweather"
+    }
+]
+```
 
 ## Advanced Configuration
 
@@ -330,6 +342,7 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [Zerosignal84](https://github.com/Zerosignal84) for fixing the uv index range
 - [Vincent Niehues](https://github.com/vniehues) for adding rain chance characteristic to the OpenWeatherMap api
 - [Hendrik-Cv](https://github.com/Hendrik-Cv) for updating the OpenWeatherMap api to v3.0
+- [David Carson](https://github.com/dacarson) for integration with Tempest WeatherFlow
 
 Also thanks to numerous people helping with the docs.
 

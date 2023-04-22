@@ -1,7 +1,7 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
-const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
+const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "LightLevel", "RainBool", "SnowBool", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
 
 const createService = function (that, name, Service, Characteristic, CustomCharacteristic)
 {
@@ -27,6 +27,15 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 	{
 		that.HumidityService = new Service.HumiditySensor("Humidity");
 	}
+	if (name === "LightLevel")
+	{
+		that.LightLevelService = new Service.LightSensor("Light Level");
+		that.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+                                        .setProps({
+                                                minValue: 0.0,
+                                                maxValue: 200000.0
+                                        });
+	}
 	if (name === "RainBool")
 	{
 		that.RainBoolService = new Service.OccupancySensor("Rain", "Rain");
@@ -44,6 +53,11 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 	{
 		that.TemperatureApparentService = new Service.TemperatureSensor("Apparent Temperature", "TemperatureApparent");
 		that.TemperatureApparentService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
+	}
+	if (name === "TemperatureWetBulb")
+	{
+		that.TemperatureWetBulbService = new Service.TemperatureSensor("Wet-Bulb Temperature", "TemperatureWetBulb");
+		that.TemperatureWetBulbService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 	}
 	if (name === "UVIndex")
 	{

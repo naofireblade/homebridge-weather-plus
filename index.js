@@ -4,6 +4,7 @@ const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
       	weewx = require("./apis/weewx").WeewxAPI,
+    smartweather = require('./apis/smartweather').SmartWeatherAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
 
@@ -80,6 +81,11 @@ function WeatherPlusPlatform(_log, _config)
 			case "weewx":
 				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
 				this.stations.push(new weewx(config.key, this.log));
+                break;
+            case "smartweather":
+				this.log.info("Adding station with weather service SmartWeatherAPI named '" + config.nameNow + "'");
+				this.stations.push(new smartweather(this.log));
+				this.interval = 1;  // Smart Weather broadcasts new data every minute
 				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
@@ -139,7 +145,7 @@ WeatherPlusPlatform.prototype = {
 		station.locationId = stationConfig.locationId || station.locationId;
 		station.locationGeo = stationConfig.locationGeo;
 		station.locationCity = stationConfig.locationCity;
-		if (!station.locationId && !station.locationCity && !station.locationGeo)
+		if (!station.locationId && !station.locationCity && !station.locationGeo && !(station.service === "smartweather"))
 		{
 			this.log.error("No location configured for station: " + station.service + ". Please provide locationId, locationCity or locationGeo for each station.")
 			return false;
@@ -167,6 +173,10 @@ WeatherPlusPlatform.prototype = {
 		// Separate humidity accessory
 		station.extraHumidity = stationConfig.extraHumidity || false;
 		station.extraHumidity = station.compatibility === "eve" ? station.extraHumidity : false; // Only allow extraHumidity with eve mode
+
+		// Separate light level accessory
+		station.extraLightLevel = stationConfig.extraLightLevel || false;
+		station.extraLightLevel = station.compatibility === "eve" ? station.extraLightLevel : false; // Only allow extraLightLevel with eve mode
 
 		// Other options
 		station.now = "now" in stationConfig ? stationConfig.now : true;
@@ -375,6 +385,10 @@ WeatherPlusPlatform.prototype = {
 				{
 					accessory.TemperatureApparentService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 				}
+				else if (name === "TemperatureWetBulb")
+				{
+					accessory.TemperatureWetBulbService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
+				}
 				else if (name === "UVIndex")
 				{
 					if (config.thresholdUvIndex === undefined)
@@ -411,6 +425,9 @@ WeatherPlusPlatform.prototype = {
 					accessory.RainDayService.setCharacteristic(Characteristic.OccupancyDetected, value > 0);
 					accessory.RainDayService.setCharacteristic(Characteristic.Name, "Total Precip: " + convertedValue + " " + accessory.RainDayService.unit);
 				}
+				else if (name === "LightLevel") {
+					// do nothing, light level is ok
+				}
 				else
 				{
 					this.log.error("Unknown compatibility type " + name);
@@ -425,6 +442,26 @@ WeatherPlusPlatform.prototype = {
 			else if (name === "Humidity")
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
+			}
+			// Light Level might have an extra service if configured (only for current conditions)
+			else if (config.compatibility === "eve" && name === "LightLevel" && config.extraLightLevel && type === "current")
+			{
+				accessory.LightLevelService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, value);
+			}
+			// light level not a custom but a general apple home kit characteristic
+			else if (name === "LightLevel") {
+				temperatureService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, value);
+			}
+			// battery level not a custom but a general apple home kit characteristic
+			else if (name === "BatteryLevel") {
+				temperatureService.setCharacteristic(Characteristic.BatteryLevel, value);
+			}
+			else if (name === "BatteryIsCharging") {
+				if (value == true) {
+					temperatureService.setCharacteristic(Characteristic.ChargingState, Characteristic.ChargingState.CHARGING);
+				} else {
+					temperatureService.setCharacteristic(Characteristic.ChargingState, Characteristic.ChargingState.NOT_CHARGING);
+				}
 			}
 			// Set everything else as a custom characteristic in the temperature service
 			else
