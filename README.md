@@ -185,7 +185,7 @@ Used to indicate Weewx version.  The homekit plugin requires an location field t
 
 ### Tempest Weatherflow
 
-The [Tempest Weatherflow]() is a local weather reporting device that publishes the current weather on the local network via [UDP packets](). Data is broadcast once per minute, so the Interval setting is ignored. As the physical station can only provide the current weather, future forecasts are not available with this weather source. This uses data published on your local network, and therefore runs fine without an internet connection. 
+The [Tempest Weatherflow](https://weatherflow.com/tempest-home-weather-system/) is a local weather reporting device that publishes the current weather on the local network via [UDP packets](https://weatherflow.github.io/Tempest/api/). Data is broadcast once per minute, so the Interval setting is ignored. As the physical station can only provide the current weather, future forecasts are not available with this weather source. This uses data published on your local network, and therefore runs fine without an internet connection. 
 
 ```json
 "platforms": [
