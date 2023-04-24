@@ -201,10 +201,12 @@ class SmartWeatherAPI
 		return (batteryVoltage * 100 - 260);
 	}
 	
-	// Tempest battery ranges from 2.30 (flat) to 2.65 (full)
+	// Tempest battery ranges from 2.355 (low) to 2.8 (full)
+	// https://help.weatherflow.com/hc/en-us/articles/360048877194-Solar-Power-Rechargeable-Battery
+	// Assume "low" to be 5%, so "zero" battery level is approx. 2.11v
 	getTempestBatteryPercent(batteryVoltage)
 	{
-		var percent = (batteryVoltage * 100.0 - 230.0)/0.3;
+		var percent = (batteryVoltage * 100.0 - 211.0)/0.69;
 		return (percent > 100) ? 100 : (percent < 0.0) ? 0 : percent;
 	}
 	
