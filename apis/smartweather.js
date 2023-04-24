@@ -5,14 +5,9 @@ const converter = require('../util/converter'),
 	dgram = require("dgram"),
 	wformula = require('weather-formulas');
 
-// To make debug lines appear, set Env variable DEBUG to homebridge-weather-plus
-
-// TODO: Extract out calculated values into common function
-
-	
 class SmartWeatherAPI
 {
-	constructor (log)
+	constructor (conditionDetail, log)
 	{
 		this.attribution = 'Powered by Smart Weather';
 		this.reportCharacteristics = [
@@ -41,6 +36,7 @@ class SmartWeatherAPI
 			'BatteryIsCharging' // Device Battery charging state
 		];
 	
+		this.conditionDetail = conditionDetail;
 		this.log = log;
 		this.rainAccumulation = [];
 		// Fill the array with zeros so that when we sum them up, it doesn't get NaN
@@ -49,6 +45,8 @@ class SmartWeatherAPI
 		
 		this.currentReport = {};
 	
+		// Need to initialize values because a report could be requested before
+		// we have received any information from the weather station.
 		this.currentReport.AirPressure = 0;
 		this.currentReport.Condition = "Unknown";
 		this.currentReport.ConditionCategory = 0;
@@ -126,6 +124,7 @@ class SmartWeatherAPI
 	}
 
 	// Calculate Wet Bulb Temperature
+	// TODO: May want to move this to converter file
 	getWetBulbTemperature(dryBulbTemperature, relativeHumidity)
 	{
 		let T = dryBulbTemperature;
@@ -149,16 +148,23 @@ class SmartWeatherAPI
 
 
 	// Map Smart Weather precipitation values to Eve Condition Categories
-	getConditionCategorySmartWeather(precipitationType)
+	getConditionCategory(precipitationType, detail = false)
 	{
-	// Eve: 0 = clear; 3 = snow/hail; 2 = rain; 1 = overcast
+	// Tempest: 0 = none, 1 = rain, 2 = hail, 3 = rain + hail (experimental)
+	
+	// Eve (simple): 0 = clear; 3 = snow; 2 = rain; 1 = overcast
+	// Eve (detailed): 0 = clear; 1 = Few clouds;2 = Broken clouds;3 =  Overcast;
+	//   4 = Fog; 5 = Drizzle; 6 = Rain; 7 = Hail; 8 = Snow; 9 = Severe weather
 
 		if (precipitationType == 1) {
 			// Rain
-			return 2;
+			return detail ? 6 : 2;
 		} else if (precipitationType == 2) {
 			// Hail
-			return 3;
+			return detail ? 7 : 2;
+		} else if (precipitationType == 3){
+			// Rain + Hail (return as hail)
+			return detail ? 7 : 2;
 		} else {
 			// 0 = Clear
 			return 0;
@@ -172,7 +178,9 @@ class SmartWeatherAPI
 		
 		that.rainAccumulation[that.rainAccumulationMinute] = mmOfRainInLastMinute;
 	
-		// Look at using the converter function getRainAccumulated(array[values][field], field)
+		// Can't use util/converter function getRainAccumulated(array[values][field], field)
+		// as it takes two dimension array, and SmartWeather only needs one dimension, also
+		// it may convert the sum to int and this needs to be float.
 		var accumulation = 0.0;
 		for (var i = 0; i < 60; i++) {
 			accumulation += parseFloat(that.rainAccumulation[i]);
@@ -230,10 +238,10 @@ class SmartWeatherAPI
 		
 		if (message.type == 'evt_precip') {
 			// Only update if it isn't raining already
-			if (that.currentReport.ConditionCategory != 2) {
+			if (that.currentReport.ConditionCategory != getConditionCategory(1, this.conditionDetail)) {
 				that.currentReport.ObservationStation = message.serial_number;
 				that.currentReport.ObservationTime = moment.unix(message.evt[0]).format('HH:mm:ss');
-				that.currentReport.ConditionCategory = 2; // It's raining
+				that.currentReport.ConditionCategory = getConditionCategory(1, this.conditionDetail); // It's raining
 			}
 		}
 		
@@ -309,7 +317,7 @@ class SmartWeatherAPI
 				that.currentReport.RainDay = parseFloat(message.obs[0][3]);
 				that.currentReport.TemperatureMin = that.currentReport.Temperature;
 			}
-			that.currentReport.ConditionCategory = this.getConditionCategorySmartWeather(message.obs[0][12]);
+			that.currentReport.ConditionCategory = this.getConditionCategory(message.obs[0][12], this.conditionDetail);
 		}
 
        if (message.type == 'obs_st') {
@@ -365,7 +373,7 @@ class SmartWeatherAPI
                 that.currentReport.RainDay = parseFloat(message.obs[0][12]);
                 that.currentReport.TemperatureMin = that.currentReport.Temperature;
             }
-            that.currentReport.ConditionCategory = this.getConditionCategorySmartWeather(message.obs[0][13]);
+            that.currentReport.ConditionCategory = this.getConditionCategory(message.obs[0][13], this.conditionDetail);
             that.currentReport.LightningAvgDistance = message.obs[0][14];
             that.currentReport.LightningStrikes = message.obs[0][15];
             that.currentReport.SkySensorBatteryLevel = this.getTempestBatteryPercent(message.obs[0][16]);

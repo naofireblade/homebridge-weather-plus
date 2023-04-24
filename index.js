@@ -84,7 +84,7 @@ function WeatherPlusPlatform(_log, _config)
                 break;
             case "smartweather":
 				this.log.info("Adding station with weather service SmartWeatherAPI named '" + config.nameNow + "'");
-				this.stations.push(new smartweather(this.log));
+				this.stations.push(new smartweather(config.conditionDetail, this.log));
 				this.interval = 1;  // Smart Weather broadcasts new data every minute
 				break;
 			default:
