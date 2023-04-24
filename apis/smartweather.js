@@ -19,6 +19,7 @@ class SmartWeatherAPI
 			'ObservationStation', // Serial Number of Hub
 			'ObservationTime', // Time Epoch
 			'Rain1h', // Rain Accumulated
+			'RainBool', // Is it raining now
 			'RainDay', // Local Day Rain Accumulation
 			'SolarRadiation', // Solar Radiation
 			'Temperature', // Air Temperature
@@ -237,12 +238,10 @@ class SmartWeatherAPI
 		}
 		
 		if (message.type == 'evt_precip') {
-			// Only update if it isn't raining already
-			if (that.currentReport.ConditionCategory != getConditionCategory(1, this.conditionDetail)) {
-				that.currentReport.ObservationStation = message.serial_number;
-				that.currentReport.ObservationTime = moment.unix(message.evt[0]).format('HH:mm:ss');
-				that.currentReport.ConditionCategory = getConditionCategory(1, this.conditionDetail); // It's raining
-			}
+			that.currentReport.ObservationStation = message.serial_number;
+			that.currentReport.ObservationTime = moment.unix(message.evt[0]).format('HH:mm:ss');
+			that.currentReport.ConditionCategory = getConditionCategory(1, this.conditionDetail); // It has started to rain
+			that.currentReport.RainBool = true;
 		}
 		
 		if (message.type == 'rapid_wind') {
@@ -310,6 +309,7 @@ class SmartWeatherAPI
 			that.currentReport.SolarRadiation = message.obs[0][10];
 			// currentReport.RainDay = message.obs[0][11];
 			// Note that Local Day Rain Accumulation (Field 11) is always null as it is calculate at WeatherFlow
+			that.currentReport.RainBool = message.obs[0][3] > 0 ? true : false;
 			if (that.rainDayDate === moment.unix(message.obs[0][0]).format('DD')) {
 				that.currentReport.RainDay += parseFloat(message.obs[0][3]);
 			} else {
@@ -362,6 +362,7 @@ class SmartWeatherAPI
             that.currentReport.UVIndex = message.obs[0][10];
             that.currentReport.SolarRadiation = message.obs[0][11];
             that.currentReport.Rain1h = this.getHourlyAccumulatedRain(message.obs[0][12]);
+            that.currentReport.RainBool = message.obs[0][12] > 0 ? true : false;
             if (that.rainDayDate === moment.unix(message.obs[0][0]).format('DD')) {
 		this.log.debug("Adding rain " + parseFloat(message.obs[0][12]) + " for day " + that.rainDayDate);
                 that.currentReport.RainDay += parseFloat(message.obs[0][12]);
