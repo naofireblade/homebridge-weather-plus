@@ -7,7 +7,7 @@ const converter = require('../util/converter'),
 
 class SmartWeatherAPI
 {
-	constructor (conditionDetail, log)
+	constructor (conditionDetail, log, cacheDirectory)
 	{
 		this.attribution = 'Powered by Smart Weather';
 		this.reportCharacteristics = [
@@ -39,6 +39,8 @@ class SmartWeatherAPI
 	
 		this.conditionDetail = conditionDetail;
 		this.log = log;
+		this.storage = require('node-persist');
+		this.storage.initSync({dir:cacheDirectory, forgiveParseErrors: true});
 		this.rainAccumulation = [];
 		// Fill the array with zeros so that when we sum them up, it doesn't get NaN
 		for (var i = 0; i < 60; i++) this.rainAccumulation[i] = 0.0;
@@ -86,6 +88,8 @@ class SmartWeatherAPI
 		this.currentReport.HumiditySensorFail = 0;
 		this.currentReport.TemperatureSensorFail = 0;
 
+		// Attempt to restore previous values
+		this.load();
 	
 		// Create UDP listener and start listening
 		this.server = dgram.createSocket({type: 'udp4', reuseAddr: true});
@@ -112,7 +116,30 @@ class SmartWeatherAPI
 	
 		this.server.bind(50222);
 	}
-	
+
+	load() {
+		this.log("Restoring last readings");
+		this.reportCharacteristics.forEach((name) => {
+			this.log.debug(`Loading ${name}`);
+			let result = this.storage.getItemSync(name);
+			// Only update the default value if loaded something
+			if (result) {
+					this.currentReport[name] = result;
+					this.log.debug(`Loaded ${name} with ${result}`);
+			}
+			// Reset last hour
+			this.currentReport.Rain1h = 0.0;
+		})
+	}
+
+	save(currentReport) {
+		// Save each value of the current report
+		this.reportCharacteristics.forEach((name) => {
+			this.log.debug(`Persisting ${name}: ${currentReport[name]}`);
+			this.storage.setItemSync(name, currentReport[name]);
+		})
+	}
+
 	update(forecastDays, callback)
 	{
 		this.log.debug("Updating weather with smart weather");
@@ -122,6 +149,10 @@ class SmartWeatherAPI
 		let that = this;
 		weather.report = that.currentReport;
 		callback(null, weather);
+		
+		// Save the state after updating plugin state so we don't
+		// delay the update
+		this.save(that.currentReport);
 	}
 
 	// Calculate Wet Bulb Temperature

@@ -3,7 +3,7 @@
 const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
-      	weewx = require("./apis/weewx").WeewxAPI,
+	weewx = require("./apis/weewx").WeewxAPI,
     smartweather = require('./apis/smartweather').SmartWeatherAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
@@ -14,6 +14,7 @@ let Service,
 	CustomCharacteristic,
 	CurrentConditionsWeatherAccessory,
 	ForecastWeatherAccessory,
+	HomebridgeAPI,
 	FakeGatoHistoryService;
 
 module.exports = function (homebridge)
@@ -21,6 +22,7 @@ module.exports = function (homebridge)
 	// Homekit services and characteristics
 	Service = homebridge.hap.Service;
 	Characteristic = homebridge.hap.Characteristic;
+	HomebridgeAPI = homebridge;
 
 	// History service
 	FakeGatoHistoryService = require("fakegato-history")(homebridge);
@@ -84,7 +86,7 @@ function WeatherPlusPlatform(_log, _config)
                 break;
             case "smartweather":
 				this.log.info("Adding station with weather service SmartWeatherAPI named '" + config.nameNow + "'");
-				this.stations.push(new smartweather(config.conditionDetail, this.log));
+				this.stations.push(new smartweather(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
 				this.interval = 1;  // Smart Weather broadcasts new data every minute
 				break;
 			default:
@@ -471,3 +473,4 @@ WeatherPlusPlatform.prototype = {
 		}
 	}
 };
+
