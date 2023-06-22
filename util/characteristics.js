@@ -469,6 +469,7 @@ module.exports = function (Characteristic, units)
     inherits(CustomCharacteristic.LightningAvgDistance, Characteristic);
     CustomCharacteristic.LightningAvgDistance._unitvalue = visibilityValue;
 
+	// @see https://en.wikipedia.org/wiki/Wet-bulb_temperature
     CustomCharacteristic.TemperatureWetBulb = function ()
 	{
 		Characteristic.call(this, 'Wet-bulb temperature', CustomUUID.TemperatureWetBulb);
