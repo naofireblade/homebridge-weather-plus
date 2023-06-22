@@ -51,7 +51,8 @@ class SmartWeatherAPI
 		this.conditionDetail = conditionDetail;
 		this.log = log;
 		this.storage = require('node-persist');
-		this.storage.initSync({dir:cacheDirectory, forgiveParseErrors: true});
+		// The saved data is only valid for up to 24hrs (TTL)
+		this.storage.initSync({dir:cacheDirectory, forgiveParseErrors: true, ttl: true});
 		this.rainAccumulation = [];
 		// Fill the array with zeros so that when we sum them up, it doesn't get NaN
 		for (var i = 0; i < 60; i++) this.rainAccumulation[i] = 0.0;
@@ -138,9 +139,19 @@ class SmartWeatherAPI
 					this.currentReport[name] = result;
 					this.log.debug(`Loaded ${name} with ${result}`);
 			}
-			// Reset last hour
-			this.currentReport.Rain1h = 0.0;
 		})
+		
+		// Reload last hour of rainfall
+		let lastRainAccumulationMinute = this.storage.getItemSync('rainAccumulationMinute');
+		if (typeof lastRainAccumulationMinute !== 'undefined') {
+			this.log.debug("Restoring rain readings");
+			this.rainAccumulationMinute = lastRainAccumulationMinute;
+			for (var i = 0; i < 60; i++)
+				this.rainAccumulation[i] = this.storage.getItemSync('rainAccumulation'+i);
+		} else {
+			this.log.debug("Reset rain readings");
+			this.currentReport.Rain1h = 0.0;
+		}
 	}
 
 	save(currentReport) {
@@ -149,6 +160,12 @@ class SmartWeatherAPI
 			this.log.debug(`Persisting ${name}: ${currentReport[name]}`);
 			this.storage.setItemSync(name, currentReport[name]);
 		})
+		
+		// Store last hour rain fall
+		let hourTTL = 1000 * 60 * 60; // Rainfall data is only valid for an hour.
+		this.storage.setItemSync('rainAccumulationMinute', this.rainAccumulationMinute, {ttl: hourTTL});
+		for (var i = 0; i < 60; i++)
+			this.storage.setItemSync('rainAccumulation'+i, this.rainAccumulation[i], {ttl: hourTTL});
 	}
 
 	update(forecastDays, callback)
@@ -215,12 +232,21 @@ class SmartWeatherAPI
 		}
 	}
 
-	// Relying on the update happening every minute
-	getHourlyAccumulatedRain(mmOfRainInLastMinute)
+	getHourlyAccumulatedRain(observationTime, mmOfRainInLastMinute)
 	{
 		let that = this;
 		
-		that.rainAccumulation[that.rainAccumulationMinute] = mmOfRainInLastMinute;
+		// Have we moved on to the next minute
+		let currentObservationMinute = moment.unix(observationTime).minute();
+		if (that.rainAccumulationMinute == currentObservationMinute)
+			that.rainAccumulation[currentObservationMinute] += mmOfRainInLastMinute;
+		else {
+			// Erase the minutes between last recorded minute and current minute
+			for (var i = that.rainAccumulationMinute; (i % 60) != currentObservationMinute; i++)
+				that.rainAccumulation[i % 60] = 0;
+			that.rainAccumulation[currentObservationMinute] = mmOfRainInLastMinute;
+		}
+		that.rainAccumulationMinute = currentObservationMinute;
 	
 		// Can't use util/converter function getRainAccumulated(array[values][field], field)
 		// as it takes two dimension array, and SmartWeather only needs one dimension, also
@@ -230,10 +256,6 @@ class SmartWeatherAPI
 			accumulation += parseFloat(that.rainAccumulation[i]);
 		}
 	
-		that.rainAccumulationMinute++;
-		if (that.rainAccumulationMinute > 59) {
-			that.rainAccumulationMinute = 0;
-		}
 		this.log.debug("getHourlyAccumulatedRain last minute: " + mmOfRainInLastMinute + " last hour: " + accumulation);
 		return accumulation;
 	}
@@ -339,7 +361,7 @@ class SmartWeatherAPI
 			else
 				that.currentReport.LightLevel = message.obs[0][1];
 			that.currentReport.UVIndex = message.obs[0][2];
-			that.currentReport.Rain1h = this.getHourlyAccumulatedRain(message.obs[0][3]);
+			that.currentReport.Rain1h = this.getHourlyAccumulatedRain(message.obs[0][0], message.obs[0][3]);
 		
 			// Use wind values reported by rapid_wind as they are instantanous,
 			// whereas obs_sky are averaged values over last minute
@@ -406,7 +428,7 @@ class SmartWeatherAPI
                 that.currentReport.LightLevel = message.obs[0][9];
             that.currentReport.UVIndex = message.obs[0][10];
             that.currentReport.SolarRadiation = message.obs[0][11];
-            that.currentReport.Rain1h = this.getHourlyAccumulatedRain(message.obs[0][12]);
+            that.currentReport.Rain1h = this.getHourlyAccumulatedRain(message.obs[0][0], message.obs[0][12]);
             that.currentReport.RainBool = message.obs[0][12] > 0 ? true : false;
             if (that.rainDayDate === moment.unix(message.obs[0][0]).format('DD')) {
 		this.log.debug("Adding rain " + parseFloat(message.obs[0][12]) + " for day " + that.rainDayDate);
