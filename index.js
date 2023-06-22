@@ -4,7 +4,7 @@ const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
 	weewx = require("./apis/weewx").WeewxAPI,
-    smartweather = require('./apis/smartweather').SmartWeatherAPI,
+	smartweather = require('./apis/smartweather').SmartWeatherAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
 
@@ -84,10 +84,12 @@ function WeatherPlusPlatform(_log, _config)
 				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
 				this.stations.push(new weewx(config.key, this.log));
                 break;
-            case "smartweather":
+            case "tempest":
 				this.log.info("Adding station with weather service SmartWeatherAPI named '" + config.nameNow + "'");
 				this.stations.push(new smartweather(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
 				this.interval = 1;  // Smart Weather broadcasts new data every minute
+				// Set a location city so that in HomeKit the Serial Number is reported as "tempest - local"
+				this.locationCity = "local";
 				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
@@ -147,7 +149,7 @@ WeatherPlusPlatform.prototype = {
 		station.locationId = stationConfig.locationId || station.locationId;
 		station.locationGeo = stationConfig.locationGeo;
 		station.locationCity = stationConfig.locationCity;
-		if (!station.locationId && !station.locationCity && !station.locationGeo && !(station.service === "smartweather"))
+		if (!station.locationId && !station.locationCity && !station.locationGeo && !(station.service === "tempest"))
 		{
 			this.log.error("No location configured for station: " + station.service + ". Please provide locationId, locationCity or locationGeo for each station.")
 			return false;
@@ -427,9 +429,6 @@ WeatherPlusPlatform.prototype = {
 					accessory.RainDayService.setCharacteristic(Characteristic.OccupancyDetected, value > 0);
 					accessory.RainDayService.setCharacteristic(Characteristic.Name, "Total Precip: " + convertedValue + " " + accessory.RainDayService.unit);
 				}
-				else if (name === "LightLevel") {
-					// do nothing, light level is ok
-				}
 				else
 				{
 					this.log.error("Unknown compatibility type " + name);
@@ -450,11 +449,11 @@ WeatherPlusPlatform.prototype = {
 			{
 				accessory.LightLevelService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, value);
 			}
-			// light level not a custom but a general apple home kit characteristic
+			// light level not a custom but a general Apple HomeKit characteristic
 			else if (name === "LightLevel") {
 				temperatureService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, value);
 			}
-			// battery level not a custom but a general apple home kit characteristic
+			// battery level not a custom but a general Apple HomeKit characteristic
 			else if (name === "BatteryLevel") {
 				temperatureService.setCharacteristic(Characteristic.BatteryLevel, value);
 			}

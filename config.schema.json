@@ -68,7 +68,7 @@
               },
               {
                 "title": "Tempest Weather Station",
-                "const": "smartweather"
+                "const": "tempest"
               }
             ]
           },
@@ -340,7 +340,7 @@
               "key": "stations[].key",
               "notitle": true,
               "condition": {
-                "functionBody": "return model.stations[0].service != 'smartweather'"
+                "functionBody": "return model.stations[0].service != 'tempest'"
               }
             },
             {
