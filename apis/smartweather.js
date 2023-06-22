@@ -1,5 +1,13 @@
 "use strict";
 
+/*
+	Support for the WeatherFlow Tempest (and legacy) weather station.
+	https://weatherflow.com
+	
+	Full details of the developer APIs is published here:
+	https://weatherflow.github.io/Tempest/
+ */
+
 const converter = require('../util/converter'),
 	moment = require('moment-timezone'),
 	dgram = require("dgram"),
@@ -9,12 +17,10 @@ class SmartWeatherAPI
 {
 	constructor (conditionDetail, log, cacheDirectory)
 	{
-		this.attribution = 'Powered by Smart Weather';
+		this.attribution = 'Weatherflow Tempest';
 		this.reportCharacteristics = [
 			'AirPressure', // Station Pressure
 			'ConditionCategory', // Precipitation Type
-			'DewPoint', // Calculated from Humidity & Temperature
-			'TemperatureApparent', // Calculdated from Humidity, Temperature & Windspeed
 			'Humidity', // Relative Humidity
 			'ObservationStation', // Serial Number of Hub
 			'ObservationTime', // Time Epoch
@@ -24,7 +30,6 @@ class SmartWeatherAPI
 			'SolarRadiation', // Solar Radiation
 			'Temperature', // Air Temperature
 			'TemperatureMin', // Minimum temperature
-			'TemperatureWetBulb', // Wet Bulb Temperature
 			'UVIndex', // UV
 			'WindDirection', // Wind Direction
 			'WindSpeed', // Wind Avg
@@ -34,7 +39,13 @@ class SmartWeatherAPI
 			'LightningAvgDistance', // Average distance to the lightning strikes
 			'LightLevel', // Illuminance
 			'BatteryLevel', // Device Battery level percent
-			'BatteryIsCharging' // Device Battery charging state
+			'BatteryIsCharging', // Device Battery charging state
+			
+			// Derived values
+			// @see https://weatherflow.github.io/Tempest/api/derived-metric-formulas.html
+			'DewPoint', // Calculated from Humidity & Temperature
+			'TemperatureApparent', // Calculated from Humidity, Temperature & Windspeed
+			'TemperatureWetBulb' // Calculated from Humidity & Temperature
 		];
 	
 		this.conditionDetail = conditionDetail;
@@ -157,6 +168,7 @@ class SmartWeatherAPI
 
 	// Calculate Wet Bulb Temperature
 	// TODO: May want to move this to converter file
+	// @see https://www.omnicalculator.com/physics/wet-bulb
 	getWetBulbTemperature(dryBulbTemperature, relativeHumidity)
 	{
 		let T = dryBulbTemperature;
@@ -242,7 +254,7 @@ class SmartWeatherAPI
 	}
 	
 
-	// API: https://weatherflow.github.io/SmartWeather/api/udp/v119/
+	// API for UDP data: https://weatherflow.github.io/Tempest/api/udp.html
 	parseMessage(message)
 	{
 		let that = this;
@@ -422,7 +434,11 @@ class SmartWeatherAPI
 	}
 	parseForecasts(forecastObjs, timezone)
 	{
-		/* NO FORECAST DATA FROM API */
+		/*
+		TODO: Add support for forecasts
+		Weatherflow do provide an API to get forecasts
+		https://weatherflow.github.io/Tempest/api/remote-developer-policy.html
+		 */
 		return [];
 	}
 
