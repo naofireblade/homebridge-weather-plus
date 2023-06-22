@@ -14,7 +14,7 @@ class SmartWeatherAPI
 			'AirPressure', // Station Pressure
 			'ConditionCategory', // Precipitation Type
 			'DewPoint', // Calculated from Humidity & Temperature
-			'TemperatureApparent', // Calculdated from Humidity, Temperature & Windspeed
+			'TemperatureApparent', // Calculated from Humidity, Temperature & Windspeed
 			'Humidity', // Relative Humidity
 			'ObservationStation', // Serial Number of Hub
 			'ObservationTime', // Time Epoch
