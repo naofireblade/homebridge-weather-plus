@@ -54,11 +54,6 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 		that.TemperatureApparentService = new Service.TemperatureSensor("Apparent Temperature", "TemperatureApparent");
 		that.TemperatureApparentService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
 	}
-	if (name === "TemperatureWetBulb")
-	{
-		that.TemperatureWetBulbService = new Service.TemperatureSensor("Wet-Bulb Temperature", "TemperatureWetBulb");
-		that.TemperatureWetBulbService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
-	}
 	if (name === "UVIndex")
 	{
 		that.UVIndexService = new Service.OccupancySensor("UV Index", "UV Index");
