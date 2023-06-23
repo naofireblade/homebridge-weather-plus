@@ -470,10 +470,11 @@ module.exports = function (Characteristic, units)
     CustomCharacteristic.LightningAvgDistance._unitvalue = visibilityValue;
 
 	// @see https://en.wikipedia.org/wiki/Wet-bulb_temperature
+	// Max value based on max observed temperature for wet bulb in wikipedia
     CustomCharacteristic.TemperatureWetBulb = function ()
 	{
 		Characteristic.call(this, 'Wet-bulb temperature', CustomUUID.TemperatureWetBulb);
-		this.setProps(temperatureProps(-50, 100));
+		this.setProps(temperatureProps(-50, 40));
 		this.value = this.getDefaultValue();
 	};
 	inherits(CustomCharacteristic.TemperatureWetBulb, Characteristic);
