@@ -4,7 +4,7 @@ const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
 	weewx = require("./apis/weewx").WeewxAPI,
-	smartweather = require('./apis/smartweather').SmartWeatherAPI,
+	tempest = require('./apis/weatherflow').TempestAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
 
@@ -85,9 +85,9 @@ function WeatherPlusPlatform(_log, _config)
 				this.stations.push(new weewx(config.key, this.log));
 				break;
 			case "tempest":
-				this.log.info("Adding station with weather service SmartWeatherAPI named '" + config.nameNow + "'");
-				this.stations.push(new smartweather(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
-				this.interval = 1;  // Smart Weather broadcasts new data every minute
+				this.log.info("Adding station with weather service TempestAPI named '" + config.nameNow + "'");
+				this.stations.push(new tempest(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
+				this.interval = 1;  // Tempest broadcasts new data every minute
 				// Set a location city so that in HomeKit the Serial Number is reported as "tempest - local"
 				this.locationCity = "local";
 				break;

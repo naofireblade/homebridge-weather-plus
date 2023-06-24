@@ -13,7 +13,7 @@ const converter = require('../util/converter'),
 	dgram = require("dgram"),
 	wformula = require('weather-formulas');
 
-class SmartWeatherAPI
+class TempestAPI
 {
 	constructor (conditionDetail, log, cacheDirectory)
 	{
@@ -165,10 +165,13 @@ class SmartWeatherAPI
 		let hourTTL = 1000 * 60 * 60; // Rainfall data is only valid for an hour.
 		this.storage.setItemSync('rainAccumulationMinute', this.rainAccumulationMinute, {ttl: hourTTL});
 		this.storage.setItemSync('rainAccumulation', this.rainAccumulation, {ttl: hourTTL});
+		for (var i = 0; i < 60; i++)
+			this.storage.setItemSync('rainAccumulation'+i, this.rainAccumulation[i], {ttl: hourTTL});
+	}
 
 	update(forecastDays, callback)
 	{
-		this.log.debug("Updating weather with smart weather");
+		this.log.debug("Updating weather from Weatherflow Tempest");
 
 		let weather = {};
 		weather.forecasts = [];
@@ -206,7 +209,7 @@ class SmartWeatherAPI
 	}
 
 
-	// Map Smart Weather precipitation values to Eve Condition Categories
+	// Map Tempest precipitation values to Eve Condition Categories
 	getConditionCategory(precipitationType, detail = false)
 	{
 	// Tempest: 0 = none, 1 = rain, 2 = hail, 3 = rain + hail (experimental)
@@ -247,7 +250,7 @@ class SmartWeatherAPI
 		that.rainAccumulationMinute = currentObservationMinute;
 	
 		// Can't use util/converter function getRainAccumulated(array[values][field], field)
-		// as it takes two dimension array, and SmartWeather only needs one dimension, also
+		// as it takes two dimension array, and Tempest only needs one dimension, also
 		// it may convert the sum to int and this needs to be float.
 		var accumulation = 0.0;
 		for (var i = 0; i < 60; i++) {
@@ -464,5 +467,5 @@ class SmartWeatherAPI
 }
 
 module.exports = {
-	SmartWeatherAPI: SmartWeatherAPI
+	TempestAPI: TempestAPI
 };
