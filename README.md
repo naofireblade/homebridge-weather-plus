@@ -191,7 +191,7 @@ The [Tempest Weatherflow](https://weatherflow.com/tempest-home-weather-system/) 
 "platforms": [
     {
         "platform": "WeatherPlus",
-        "service": "smartweather"
+        "service": "tempest"
     }
 ]
 ```
