@@ -106,7 +106,7 @@ class SmartWeatherAPI
 		// Create UDP listener and start listening
 		this.server = dgram.createSocket({type: 'udp4', reuseAddr: true});
 		this.server.on('error', (err) => {
-			  this.log(`server error:\n${err.stack}`);
+			  this.log.error(`server error:\n${err.stack}`);
 			  this.server.close();
 			  });
 	
