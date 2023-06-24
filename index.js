@@ -83,8 +83,8 @@ function WeatherPlusPlatform(_log, _config)
 			case "weewx":
 				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
 				this.stations.push(new weewx(config.key, this.log));
-                break;
-            case "tempest":
+				break;
+			case "tempest":
 				this.log.info("Adding station with weather service SmartWeatherAPI named '" + config.nameNow + "'");
 				this.stations.push(new smartweather(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
 				this.interval = 1;  // Smart Weather broadcasts new data every minute
