@@ -17,7 +17,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Features
 - Get [27 observation and forecast](#observations-and-forecasts) values for up to 7 days
-- Choose from 3 different weather [services](#choose-your-weather-service)
+- Choose from 4 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
 - See all values, translations and [icons](#screenshots) in the Eve App
@@ -29,22 +29,23 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 This plugin supports multiple weather services. Each has its own advantages. The following table shows a comparison to help you to choose one.
 
-|                            |       Dark Sky <sup>[1](#a1)</sup>       |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |
-|----------------------------|:----------------------------------------:|:-----------------------------------------------------:|:----------------------------------------------------:|
-| Current observation values |                    19                    |                          15                           |                          12                          |
-| Forecast values            |                    22                    |                 18<sup>[6](#a6)</sup>                 |                          0                           |
-| Forecast days              |                today + 7                 |             today + 7<sup>[6](#a6)</sup>              |                          0                           |
-| Location                   |             geo-coordinates              |              city name, geo-coordinates               |                      station id                      |
-| Personal weather stations  |                   :x:                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |
-| Free                       | :heavy_check_mark: (only existing users) |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |
-| Register                   |                  closed                  | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |
+|                            |       Dark Sky <sup>[1](#a1)</sup>       |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |     Tempest weather station <sup>[7](#a7)</sup>      |
+|----------------------------|:----------------------------------------:|:-----------------------------------------------------:|:----------------------------------------------------:|:----------------------------------------------------:|
+| Current observation values |                    19                    |                          15                           |                          12                          |                          20                          |
+| Forecast values            |                    22                    |                 18<sup>[6](#a6)</sup>                 |                          0                           |                          0                           |
+| Forecast days              |                today + 7                 |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                 0<sup>[8](#a8)</sup>                 |
+| Location                   |             geo-coordinates              |              city name, geo-coordinates               |                      station id                      |                        local                         |
+| Personal weather stations  |                   :x:                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |                  :heavy_check_mark:                  |
+| Free                       | :heavy_check_mark: (only existing users) |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |      :heavy_check_mark: (you need the station)       |
+| Register                   |                  closed                  | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |                          -                           |
 
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 > <b name="a1">1</b> [It is no longer possible](https://blog.darksky.net/dark-sky-has-a-new-home/) to register as a new user for Dark Sky. Existing users can use the service [until 31 Dec 2022](https://blog.darksky.net).  
 > <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.  
 > <b name="a6">6</b> uv-index, dew point, sunrise, sunset are only available after registering for the new OpenWeatherMap One Call API 3.0, which is free as well. The old API also has 4 instead of 7 forecast days.
-
+> <b name="a7">7</b> [Weatherflow's Tempest](https://weatherflow.com) is a physical weather station that can be installed in your home. Current weather conditions are published on home network. 
+> <b name="a8">8</b> Weatherflow does provide an API to retrieve forecast. That capability has not been added to this plugin. 
 
 ## Installation
 
@@ -55,7 +56,7 @@ This plugin supports multiple weather services. Each has its own advantages. The
 
 ## Observations and Forecasts
 
-The following observation and forecast values can be displayed and used in HomeKit rules.  
+The following observation and forecast values can be displayed and used in HomeKit rules, though not all weather sources provide all values below.  
 I recommend using the Eve app to see all the values. However, if you don't want to use a 3rd party app, use the [compatibility mode](#compatibility) `home` for displaying most values in the Apple home app.
 
 - Air Pressure
@@ -77,11 +78,16 @@ I recommend using the Eve app to see all the values. However, if you don't want 
 - Temperature Min
 - Temperature Max
 - Temperature Apparent
+- Wet Bulb Temperature
 - UV-Index
 - Visibility
+- Light level
 - Wind Direction
 - Wind Speed
 - Wind Speed Maximum
+- Wind Speed Lull
+- Lightning Avg Distance
+- Lightning Strikes
 - *Observation Time*
 - *Observation Station*
 - *Day of the forecast*
@@ -185,7 +191,7 @@ Used to indicate Weewx version.  The homekit plugin requires an location field t
 
 ### Tempest Weatherflow
 
-The [Tempest Weatherflow](https://weatherflow.com/tempest-home-weather-system/) is a local weather reporting device that publishes the current weather on the local network via [UDP packets](https://weatherflow.github.io/Tempest/api/). Data is broadcast once per minute, so the Interval setting is ignored. As the physical station can only provide the current weather, future forecasts are not available with this weather source. This uses data published on your local network, and therefore runs fine without an internet connection. 
+The [Tempest Weatherflow](https://weatherflow.com/tempest-home-weather-system/) is a local weather reporting device that publishes the current weather on the local network via [UDP packets](https://weatherflow.github.io/Tempest/api/). Data is broadcast once per minute, so the Interval setting is ignored. The physical station can only provide the current weather. Future forecasts are available with this weather source, though has not been implemented yet. This uses data published on your local network for the current weather, and therefore runs fine without an internet connection. 
 
 ```json
 "platforms": [
