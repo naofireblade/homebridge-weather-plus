@@ -374,8 +374,7 @@ class SmartWeatherAPI
 			
 			that.currentReport.SkySensorBatteryLevel = this.getBatteryPercent(message.obs[0][8]);
 			that.currentReport.SolarRadiation = message.obs[0][10];
-			// currentReport.RainDay = message.obs[0][11];
-			// Note that Local Day Rain Accumulation (Field 11) is always null as it is calculate at WeatherFlow
+			// Note that Local Day Rain Accumulation (Field 11) is currently always null. Hence we have to approximate it with data available to us.
 			that.currentReport.RainBool = message.obs[0][3] > 0 ? true : false;
 			if (that.rainDayDate === moment.unix(message.obs[0][0]).format('DD')) {
 				that.currentReport.RainDay += parseFloat(message.obs[0][3]);
