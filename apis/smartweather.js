@@ -164,9 +164,7 @@ class SmartWeatherAPI
 		// Store last hour rain fall
 		let hourTTL = 1000 * 60 * 60; // Rainfall data is only valid for an hour.
 		this.storage.setItemSync('rainAccumulationMinute', this.rainAccumulationMinute, {ttl: hourTTL});
-		for (var i = 0; i < 60; i++)
-			this.storage.setItemSync('rainAccumulation'+i, this.rainAccumulation[i], {ttl: hourTTL});
-	}
+		this.storage.setItemSync('rainAccumulation', this.rainAccumulation, {ttl: hourTTL});
 
 	update(forecastDays, callback)
 	{
