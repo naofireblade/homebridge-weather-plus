@@ -43,9 +43,9 @@ This plugin supports multiple weather services. Each has its own advantages. The
 
 > <b name="a1">1</b> [It is no longer possible](https://blog.darksky.net/dark-sky-has-a-new-home/) to register as a new user for Dark Sky. Existing users can use the service [until 31 Dec 2022](https://blog.darksky.net).  
 > <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.  
-> <b name="a6">6</b> uv-index, dew point, sunrise, sunset are only available after registering for the new OpenWeatherMap One Call API 3.0, which is free as well. The old API also has 4 instead of 7 forecast days.
-> <b name="a7">7</b> [Weatherflow's Tempest](https://weatherflow.com) is a physical weather station that can be installed in your home. Current weather conditions are published on home network. 
-> <b name="a8">8</b> Weatherflow does provide an API to retrieve forecast. That capability has not been added to this plugin. 
+> <b name="a6">6</b> uv-index, dew point, sunrise, sunset are only available after registering for the new OpenWeatherMap One Call API 3.0, which is free as well. The old API also has 4 instead of 7 forecast days.  
+> <b name="a7">7</b> [Weatherflow's Tempest](https://weatherflow.com) is a physical weather station that can be installed in your home. Current weather conditions are published on home network.  
+> <b name="a8">8</b> Weatherflow does provide an API to retrieve forecast. That capability has not been added to this plugin.  
 
 ## Installation
 
