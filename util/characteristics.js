@@ -30,7 +30,13 @@ const inherits = require('util').inherits,
 		Visibility: 'd24ecc1e-6fad-4fb5-8137-5af88bd5e857',
 		WindDirection: '46f1284c-1912-421b-82f5-eb75008b167e',
 		WindSpeed: '49C8AE5A-A3A5-41AB-BF1F-12D5654F9F41',
-		WindSpeedMax: '6b8861e5-d6f3-425c-83b6-069945ffd1f1'
+		WindSpeedMax: '6b8861e5-d6f3-425c-83b6-069945ffd1f1',
+		
+		// Custom UUIDs
+		LightningStrikes: '848c304a-97fe-41df-b284-ec2e2a6f5104',
+		LightningAvgDistance: '903043ee-2e82-4272-901e-871d775a4747',
+		WindSpeedLull: 'c3b4c4f8-79b7-4b1a-be3c-765ac065c379',
+		TemperatureWetBulb: 'dc5c6ca2-ec2c-4d32-8e7a-db4288c2b8d5'
 	};
 
 let CustomCharacteristic = {};
@@ -433,6 +439,45 @@ module.exports = function (Characteristic, units)
 	};
 	inherits(CustomCharacteristic.WindSpeedMax, Characteristic);
 	CustomCharacteristic.WindSpeedMax._unitvalue = windspeedValue;
+
+    CustomCharacteristic.WindSpeedLull = function () {
+        Characteristic.call(this, 'Wind Speed Lull', CustomUUID.WindSpeedLull);
+        this.setProps(windspeedProps(100));
+        this.value = this.getDefaultValue();
+    };
+    inherits(CustomCharacteristic.WindSpeedLull, Characteristic);
+    CustomCharacteristic.WindSpeedLull._unitvalue = windspeedValue;
+    
+	CustomCharacteristic.LightningStrikes = function () {
+        Characteristic.call(this, 'Lightning Strikes', CustomUUID.LightningStrikes);
+        this.setProps({
+            format: Characteristic.Formats.UINT8,
+            maxValue: 1000,
+            minValue: 0,
+            minStep: 1,
+            perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+        });
+        this.value = this.getDefaultValue();
+    };
+    inherits(CustomCharacteristic.LightningStrikes, Characteristic);
+    
+    CustomCharacteristic.LightningAvgDistance = function () {
+        Characteristic.call(this, 'Lightning Avg Distance', CustomUUID.LightningAvgDistance);
+        this.setProps(visibilityProps(100));
+        this.value = this.getDefaultValue();
+    };
+    inherits(CustomCharacteristic.LightningAvgDistance, Characteristic);
+    CustomCharacteristic.LightningAvgDistance._unitvalue = visibilityValue;
+
+	// @see https://en.wikipedia.org/wiki/Wet-bulb_temperature
+	// Max value based on max observed temperature for wet bulb in wikipedia
+    CustomCharacteristic.TemperatureWetBulb = function ()
+	{
+		Characteristic.call(this, 'Wet-bulb temperature', CustomUUID.TemperatureWetBulb);
+		this.setProps(temperatureProps(-50, 40));
+		this.value = this.getDefaultValue();
+	};
+	inherits(CustomCharacteristic.TemperatureWetBulb, Characteristic);
 
 	return CustomCharacteristic;
 };

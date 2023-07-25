@@ -3,7 +3,8 @@
 const darksky = require("./apis/darksky").DarkSkyAPI,
 	weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
-      	weewx = require("./apis/weewx").WeewxAPI,
+	weewx = require("./apis/weewx").WeewxAPI,
+	tempest = require('./apis/weatherflow').TempestAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
 
@@ -13,6 +14,7 @@ let Service,
 	CustomCharacteristic,
 	CurrentConditionsWeatherAccessory,
 	ForecastWeatherAccessory,
+	HomebridgeAPI,
 	FakeGatoHistoryService;
 
 module.exports = function (homebridge)
@@ -20,6 +22,7 @@ module.exports = function (homebridge)
 	// Homekit services and characteristics
 	Service = homebridge.hap.Service;
 	Characteristic = homebridge.hap.Characteristic;
+	HomebridgeAPI = homebridge;
 
 	// History service
 	FakeGatoHistoryService = require("fakegato-history")(homebridge);
@@ -81,6 +84,13 @@ function WeatherPlusPlatform(_log, _config)
 				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
 				this.stations.push(new weewx(config.key, this.log));
 				break;
+			case "tempest":
+				this.log.info("Adding station with weather service TempestAPI named '" + config.nameNow + "'");
+				this.stations.push(new tempest(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
+				this.interval = 1;  // Tempest broadcasts new data every minute
+				// Set a location city so that in HomeKit the Serial Number is reported as "tempest - local"
+				this.locationCity = "local";
+				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
 		}
@@ -139,7 +149,7 @@ WeatherPlusPlatform.prototype = {
 		station.locationId = stationConfig.locationId || station.locationId;
 		station.locationGeo = stationConfig.locationGeo;
 		station.locationCity = stationConfig.locationCity;
-		if (!station.locationId && !station.locationCity && !station.locationGeo)
+		if (!station.locationId && !station.locationCity && !station.locationGeo && !(station.service === "tempest"))
 		{
 			this.log.error("No location configured for station: " + station.service + ". Please provide locationId, locationCity or locationGeo for each station.")
 			return false;
@@ -167,6 +177,10 @@ WeatherPlusPlatform.prototype = {
 		// Separate humidity accessory
 		station.extraHumidity = stationConfig.extraHumidity || false;
 		station.extraHumidity = station.compatibility === "eve" ? station.extraHumidity : false; // Only allow extraHumidity with eve mode
+
+		// Separate light level accessory
+		station.extraLightLevel = stationConfig.extraLightLevel || false;
+		station.extraLightLevel = station.compatibility === "eve" ? station.extraLightLevel : false; // Only allow extraLightLevel with eve mode
 
 		// Other options
 		station.now = "now" in stationConfig ? stationConfig.now : true;
@@ -375,6 +389,10 @@ WeatherPlusPlatform.prototype = {
 				{
 					accessory.TemperatureApparentService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 				}
+				else if (name === "TemperatureWetBulb")
+				{
+					accessory.TemperatureWetBulbService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
+				}
 				else if (name === "UVIndex")
 				{
 					if (config.thresholdUvIndex === undefined)
@@ -426,6 +444,26 @@ WeatherPlusPlatform.prototype = {
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 			}
+			// Light Level might have an extra service if configured (only for current conditions)
+			else if (config.compatibility === "eve" && name === "LightLevel" && config.extraLightLevel && type === "current")
+			{
+				accessory.LightLevelService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, value);
+			}
+			// light level not a custom but a general Apple HomeKit characteristic
+			else if (name === "LightLevel") {
+				temperatureService.setCharacteristic(Characteristic.CurrentAmbientLightLevel, value);
+			}
+			// battery level not a custom but a general Apple HomeKit characteristic
+			else if (name === "BatteryLevel") {
+				temperatureService.setCharacteristic(Characteristic.BatteryLevel, value);
+			}
+			else if (name === "BatteryIsCharging") {
+				if (value == true) {
+					temperatureService.setCharacteristic(Characteristic.ChargingState, Characteristic.ChargingState.CHARGING);
+				} else {
+					temperatureService.setCharacteristic(Characteristic.ChargingState, Characteristic.ChargingState.NOT_CHARGING);
+				}
+			}
 			// Set everything else as a custom characteristic in the temperature service
 			else
 			{
@@ -434,3 +472,4 @@ WeatherPlusPlatform.prototype = {
 		}
 	}
 };
+

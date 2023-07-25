@@ -27,6 +27,15 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 	{
 		that.HumidityService = new Service.HumiditySensor("Humidity");
 	}
+	if (name === "LightLevel")
+	{
+		that.LightLevelService = new Service.LightSensor("Light Level");
+		that.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+                                        .setProps({
+                                                minValue: 0.0,
+                                                maxValue: 200000.0
+                                        });
+	}
 	if (name === "RainBool")
 	{
 		that.RainBoolService = new Service.OccupancySensor("Rain", "Rain");

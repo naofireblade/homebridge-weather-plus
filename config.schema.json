@@ -65,6 +65,10 @@
               {
                 "title": "Weewx",
                 "const": "weewx"
+              },
+              {
+                "title": "Tempest Weather Station",
+                "const": "tempest"
               }
             ]
           },
@@ -334,7 +338,10 @@
             },
             {
               "key": "stations[].key",
-              "notitle": true
+              "notitle": true,
+              "condition": {
+                "functionBody": "return model.stations[0].service != 'tempest'"
+              }
             },
             {
               "type": "help",

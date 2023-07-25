@@ -1,7 +1,7 @@
 {
   "name": "homebridge-weather-plus",
   "displayName": "Weather Plus",
-  "version": "3.2.11",
+  "version": "3.3",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
@@ -100,6 +100,10 @@
     {
       "name": "Hendrik-Cv",
       "url": "https://github.com/Hendrik-Cv"
+    },
+	{
+      "name": "David Carson",
+      "url": "https://github.com/dacarson"
     }
   ],
   "repository": {
@@ -112,7 +116,9 @@
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
     "underscore": "^1.13.6",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "weather-formulas": "^1",
+    "node-persist": "^2.1.0"
   },
   "funding": {
     "type": "buymeacoffee",
