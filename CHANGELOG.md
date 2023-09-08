@@ -261,5 +261,6 @@
 ## 3.2.11
 * Fixed crash when weather report is empty
 
-## 3.3
+
+## 3.3.0
 * Add support for WeatherFlow's Tempest weather station, that reports real time weather data over local network.
