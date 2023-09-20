@@ -307,7 +307,7 @@ class TempestAPI
 		if (message.type == 'evt_precip') {
 			that.currentReport.ObservationStation = message.serial_number;
 			that.currentReport.ObservationTime = moment.unix(message.evt[0]).format('HH:mm:ss');
-			that.currentReport.ConditionCategory = getConditionCategory(1, this.conditionDetail); // It has started to rain
+			that.currentReport.ConditionCategory = this.getConditionCategory(1, this.conditionDetail); // It has started to rain
 			that.currentReport.RainBool = true;
 		}
 		

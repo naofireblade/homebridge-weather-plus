@@ -88,8 +88,6 @@ function WeatherPlusPlatform(_log, _config)
 				this.log.info("Adding station with weather service TempestAPI named '" + config.nameNow + "'");
 				this.stations.push(new tempest(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
 				this.interval = 1;  // Tempest broadcasts new data every minute
-				// Set a location city so that in HomeKit the Serial Number is reported as "tempest - local"
-				this.locationCity = "local";
 				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
@@ -149,6 +147,11 @@ WeatherPlusPlatform.prototype = {
 		station.locationId = stationConfig.locationId || station.locationId;
 		station.locationGeo = stationConfig.locationGeo;
 		station.locationCity = stationConfig.locationCity;
+		if (!station.locationCity && (station.service === "tempest"))
+		{
+			// If location city is not set for Tempest, set it so that in HomeKit the Serial Number is reported as "tempest - local"
+			this.locationCity = "local";
+		}
 		if (!station.locationId && !station.locationCity && !station.locationGeo && !(station.service === "tempest"))
 		{
 			this.log.error("No location configured for station: " + station.service + ". Please provide locationId, locationCity or locationGeo for each station.")

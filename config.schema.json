@@ -350,12 +350,19 @@
                 "functionBody": "return model.stations[0].service === 'openweathermap'"
               }
             },
+			{
+              "type": "help",
+              "helpvalue": "<h6>City</h6><p class='help-block'>City only needed with Tempest when Eve app is used with multiple weather stations (same or different homes)</a>.</p>",
+              "condition": {
+                "functionBody": "return model.stations[0].service === 'tempest'"
+              }
+            },
             {
               "key": "stations[].locationCity",
               "notitle": true,
               "placeholder": "Berlin, DE",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
+                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'tempest'"
               }
             },
             {
