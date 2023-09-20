@@ -263,3 +263,7 @@
 
 ## 3.3.0
 * Add support for WeatherFlow's Tempest weather station, that reports real time weather data over local network.
+
+## 3.3.1
+* Tempest: Fix JSON parse issue for rain events
+* Tempest: Fix serial number to allow it to be unique so History events don't get merged with other weather stations
