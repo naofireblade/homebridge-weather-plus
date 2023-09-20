@@ -183,31 +183,6 @@ class TempestAPI
 		this.save(that.currentReport);
 	}
 
-	// Calculate Wet Bulb Temperature
-	// TODO: May want to move this to converter file
-	// @see https://www.omnicalculator.com/physics/wet-bulb
-	getWetBulbTemperature(dryBulbTemperature, relativeHumidity)
-	{
-		let T = dryBulbTemperature;
-		let rh = relativeHumidity;
-
-		let c1 = 0.152;
-		let c2 = 8.3136;
-		let c3 = 0.5;
-		let c4 = 1.6763;
-		let c5 = 0.00391838;
-		let c6 = 1.5;
-		let c7 = 0.0231;
-		let c8 = 4.686;
-
-		let Tw = T * Math.atan(c1 * Math.pow((rh + c2), c3)) +
-			Math.atan(T+rh) - Math.atan(rh-c4) + 
-			c5 * Math.pow(rh, c6) * Math.atan(c7 * rh) - c8;
-
-		return Tw;
-	}
-
-
 	// Map Tempest precipitation values to Eve Condition Categories
 	getConditionCategory(precipitationType, detail = false)
 	{
@@ -248,13 +223,7 @@ class TempestAPI
 		}
 		that.rainAccumulationMinute = currentObservationMinute;
 	
-		// Can't use util/converter function getRainAccumulated(array[values][field], field)
-		// as it takes two dimension array, and Tempest only needs one dimension, also
-		// it may convert the sum to int and this needs to be float.
-		var accumulation = 0.0;
-		for (var i = 0; i < 60; i++) {
-			accumulation += parseFloat(that.rainAccumulation[i]);
-		}
+		accumulation = converter.getRainAccumulated(that.rainAccumulation)
 	
 		this.log.debug("getHourlyAccumulatedRain last minute: " + mmOfRainInLastMinute + " last hour: " + accumulation);
 		return accumulation;
@@ -345,7 +314,7 @@ class TempestAPI
 			that.currentReport.TemperatureMin = (that.currentReport.Temperature < that.currentReport.TemperatureMin) ?
 					that.currentReport.Temperature : that.currentReport.TemperatureMin;
 			that.currentReport.TemperatureWetBulb = 
-					this.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
+					converter.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
 			that.currentReport.LightningStrikes = message.obs[0][4];
 			that.currentReport.LightningAvgDistance = message.obs[0][5];
 			that.currentReport.AirSensorBatteryLevel = this.getBatteryPercent(message.obs[0][6]);
@@ -420,7 +389,7 @@ class TempestAPI
 					that.currentReport.Humidity,
 					message.obs[0][2]));
 	    that.currentReport.TemperatureWetBulb = 
-					this.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
+					converter.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
 	    if (that.currentReport.LightLevelSensorFail == 1)
                 that.currentReport.LightLevel = 0;
 	    else
