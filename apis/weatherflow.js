@@ -69,6 +69,7 @@ class TempestAPI
 		this.currentReport.ObservationStation = "Unknown";
 		this.currentReport.ObservationTime = moment().format('HH:mm:ss');
 		this.currentReport.Rain1h = 0.0;
+		this.currentReport.RainBool = false;
 		this.currentReport.RainDay = 0.0;
 		this.currentReport.SolarRadiation = 0;
 		this.currentReport.Temperature = 0;
