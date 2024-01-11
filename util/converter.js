@@ -70,17 +70,41 @@ const getWindDirection = function (degree)
 	return dir;
 };
 
-const getRainAccumulated = function (array, parameter)
+const getRainAccumulated = function (array)
 {
-	let sum = 0;
+	let sum = 0.0;
 	for (let i = 0; i < array.length; i++)
 	{
-		sum += array[i][parameter];
+		sum += parseFloat(array[i]);
 	}
 	return sum;
 };
 
+	// Calculate Wet Bulb Temperature
+	// @see https://www.omnicalculator.com/physics/wet-bulb
+const getWetBulbTemperature = function (dryBulbTemperature, relativeHumidity)
+{
+	let T = dryBulbTemperature;
+	let rh = relativeHumidity;
+
+	let c1 = 0.152;
+	let c2 = 8.3136;
+	let c3 = 0.5;
+	let c4 = 1.6763;
+	let c5 = 0.00391838;
+	let c6 = 1.5;
+	let c7 = 0.0231;
+	let c8 = 4.686;
+
+	let Tw = T * Math.atan(c1 * Math.pow((rh + c2), c3)) +
+		Math.atan(T+rh) - Math.atan(rh-c4) +
+		c5 * Math.pow(rh, c6) * Math.atan(c7 * rh) - c8;
+
+	return Tw;
+}
+
 module.exports = {
 	getWindDirection,
-	getRainAccumulated
+	getRainAccumulated,
+	getWetBulbTemperature
 };

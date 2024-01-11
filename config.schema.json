@@ -55,10 +55,6 @@
                 "const": "openweathermap"
               },
               {
-                "title": "Dark Sky",
-                "const": "darksky"
-              },
-              {
                 "title": "Weather Underground",
                 "const": "weatherunderground"
               },
@@ -317,13 +313,6 @@
             },
             {
               "type": "help",
-              "helpvalue": "<h6>API Key</h6><p class='help-block'>Registrations are closed. Existing users will find their api key <a target='_blank' href='https://darksky.net/dev/account'>here</a> and can use the service till 31.12.2021.</p>",
-              "condition": {
-                "functionBody": "return model.stations[0].service === 'darksky'"
-              }
-            },
-            {
-              "type": "help",
               "helpvalue": "<h6>API Key</h6><p class='help-block'>Registration is available for users with a PWS. Get your free api key <a target='_blank' href='https://www.wunderground.com/member/api-keys'>here</a>.</p>",
               "condition": {
                 "functionBody": "return model.stations[0].service === 'weatherunderground'"
@@ -373,13 +362,6 @@
               }
             },
             {
-              "type": "help",
-              "helpvalue": "<h6>Geo coordinates</h6><p class='help-block'>Enter the latitude in the first box and the longitude in the second box.<br>Get your coordinates <a target='_blank' href='http://www.mapcoordinates.net/en'>here</a>.</p>",
-              "condition": {
-                "functionBody": "return model.stations[0].service === 'darksky'"
-              }
-            },
-            {
               "key": "stations[].locationGeo",
               "notitle": true,
               "type": "array",
@@ -391,14 +373,14 @@
                 }
               ],
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
               }
             },
             {
               "type": "help",
               "helpvalue": "<br/>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
               }
             },
             {
@@ -467,7 +449,7 @@
                 }
               ],
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'darksky'"
+                "functionBody": "return model.stations[0].service === 'openweathermap'"
               }
             },
             {

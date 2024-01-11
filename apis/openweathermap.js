@@ -105,7 +105,13 @@ class OpenWeatherMapAPI
 					{
 						this.getWeatherData(this.apiBaseURL + "/data/2.5/forecast", (error, result) =>
 						{
-							this.generateForecasts(weather, result["list"], result["city"]["timezone"], callback);
+							if (!error) {
+									this.generateForecasts(weather, result["list"], result["city"]["timezone"], callback);
+								} else {
+								    that.log.error("Error retrieving weather Forecast from API 2.5");
+						            that.log.error(result);
+						            callback();
+								}
 						});
 					}
 					else
