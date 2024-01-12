@@ -267,3 +267,10 @@
 ## 3.3.1
 * Fixed JSON parse issue for rain events in Tempest API
 * Fixed serial number to allow it to be unique so History events don't get merged with other weather stations
+
+## 3.3.2
+* Removed DarkSky API as it's no longer available
+* Fixed crash when an error occurs in OpenWeatherMap report
+* Fixed undefined rain boolean sensor value
+* Fixed several Tempest weather station issues
+* Improved usage of converter

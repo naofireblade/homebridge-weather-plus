@@ -17,7 +17,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Features
 - Get [27 observation and forecast](#observations-and-forecasts) values for up to 7 days
-- Choose from 4 different weather [services](#choose-your-weather-service)
+- Choose from 3 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
 - See all values, translations and [icons](#screenshots) in the Eve App
@@ -29,19 +29,18 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 This plugin supports multiple weather services. Each has its own advantages. The following table shows a comparison to help you to choose one.
 
-|                            |       Dark Sky <sup>[1](#a1)</sup>       |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |     Tempest weather station <sup>[7](#a7)</sup>      |
-|----------------------------|:----------------------------------------:|:-----------------------------------------------------:|:----------------------------------------------------:|:----------------------------------------------------:|
-| Current observation values |                    19                    |                          15                           |                          12                          |                          20                          |
-| Forecast values            |                    22                    |                 18<sup>[6](#a6)</sup>                 |                          0                           |                          0                           |
-| Forecast days              |                today + 7                 |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                 0<sup>[8](#a8)</sup>                 |
-| Location                   |             geo-coordinates              |              city name, geo-coordinates               |                      station id                      |                        local                         |
-| Personal weather stations  |                   :x:                    |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |                  :heavy_check_mark:                  |
-| Free                       | :heavy_check_mark: (only existing users) |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |      :heavy_check_mark: (you need the station)       |
-| Register                   |                  closed                  | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |                          -                           |
+|                            |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |     Tempest weather station <sup>[7](#a7)</sup>      |
+|----------------------------|:-----------------------------------------------------:|:----------------------------------------------------:|:----------------------------------------------------:|
+| Current observation values |                          15                           |                          12                          |                          20                          |
+| Forecast values            |                 18<sup>[6](#a6)</sup>                 |                          0                           |                          0                           |
+| Forecast days              |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                 0<sup>[8](#a8)</sup>                 |
+| Location                   |              city name, geo-coordinates               |                      station id                      |                        local                         |
+| Personal weather stations  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |                  :heavy_check_mark:                  |
+| Free                       |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |      :heavy_check_mark: (you need the station)       |
+| Register                   | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |                          -                           |
 
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
-> <b name="a1">1</b> [It is no longer possible](https://blog.darksky.net/dark-sky-has-a-new-home/) to register as a new user for Dark Sky. Existing users can use the service [until 31 Dec 2022](https://blog.darksky.net).  
 > <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.  
 > <b name="a6">6</b> uv-index, dew point, sunrise, sunset are only available after registering for the new OpenWeatherMap One Call API 3.0, which is free as well. The old API also has 4 instead of 7 forecast days.  
 > <b name="a7">7</b> [Weatherflow's Tempest](https://weatherflow.com) is a physical weather station that can be installed in your home. Current weather conditions are published on home network.  
@@ -98,25 +97,6 @@ I recommend using the Eve app to see all the values. However, if you don't want 
 ## Configuration
 
 Below are example configurations for all weather apis.
-
-### Dark Sky
-
-**key**  
-The API key that you get by [registering](https://darksky.net/dev/register) for the Dark Sky service.
-
-**locationGeo**  
-List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
-
-```json
-"platforms": [
-	{
-		"platform": "WeatherPlus",
-		"service": "darksky",
-		"key": "YOUR_API_KEY",
-		"locationGeo": [52.5200066, 13.404954]
-	}
-]
-```
 
 ### OpenWeatherMap
 
@@ -232,7 +212,7 @@ List of observation and forecast values that should not be displayed. Possible o
 Update interval in minutes. The default is `4` minutes because the rate for free API keys is limited.
 
 **language**  
-Translation for the current day and the weather report. Available languages can be found [here](https://github.com/darkskyapp/translations/tree/master/lib/lang). The default is `en`.
+Translation for the current day. The default is `en`.
 
 **nameNow**  
 Name for the current condition accessory. The default is `"Now"`. You could set this to your city name or weather service type.
@@ -273,9 +253,10 @@ Customization of the history storage system. By default, the history is persiste
 "platforms": [
     {
         "platform": "WeatherPlus",
-        "service": "darksky",
-        "key": "XXXXXXXXXXXXXXX",
-        "locationGeo": [52.5200066,13.404954],
+        "service": "openweathermap",
+        "key": "YOUR_API_KEY",
+        "locationCity": "Berlin, DE",
+        "locationGeo": [52.5200066, 13.404954],
         "compatibility": "both",
         "conditionCategory": "detailed",
         "forecast": [0,1,2,3,4,5,6],
@@ -309,7 +290,7 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
             {
                 "displayName": "Berlin",
                 "displayNameForecast": "Berlin forefacst",
-                "service": "darksky",
+                "service": "openweathermap",
                 "key": "YOUR_API_KEY",
                 "forecast": [0,1,2,3,4,5,6],
                 "locationGeo": [52.5200066,13.404954]
@@ -317,7 +298,7 @@ Each stations must have a unique displayName. If you don't set one, the plugin w
             {
                 "displayName": "Los Angeles",
                 "displayNameForecast": "Los Angeles forecast",
-                "service": "darksky",
+                "service": "openweathermap",
                 "key": "YOUR_API_KEY",
                 "forecast": [1],
                 "locationGeo": [34.0536909,-118.2427666]
@@ -348,13 +329,12 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [Zerosignal84](https://github.com/Zerosignal84) for fixing the uv index range
 - [Vincent Niehues](https://github.com/vniehues) for adding rain chance characteristic to the OpenWeatherMap api
 - [Hendrik-Cv](https://github.com/Hendrik-Cv) for updating the OpenWeatherMap api to v3.0
-- [David Carson](https://github.com/dacarson) for integration with Tempest WeatherFlow
+- [David Carson](https://github.com/dacarson) for integration with Tempest WeatherFlow and fixing several bugs in different apis (essentially maintaining the plugin since 2023)
 
 Also thanks to numerous people helping with the docs.
 
 This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwood/homebridge-weather-station) which is no longer being developed. That one was a fork of [homebridge-wunderground](https://www.npmjs.com/package/homebridge-wunderground).
 
 ## Attribution
-- [Powered by Dark Sky](https://darksky.net/poweredby/)
 - [Powered by Weather Underground](https://www.wunderground.com/)
 - [Powered by OpenWeatherMap](https://openweathermap.org/)
