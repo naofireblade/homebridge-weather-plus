@@ -224,7 +224,7 @@ class TempestAPI
 		}
 		that.rainAccumulationMinute = currentObservationMinute;
 	
-		accumulation = converter.getRainAccumulated(that.rainAccumulation)
+		var accumulation = converter.getRainAccumulated(that.rainAccumulation)
 	
 		this.log.debug("getHourlyAccumulatedRain last minute: " + mmOfRainInLastMinute + " last hour: " + accumulation);
 		return accumulation;
@@ -438,3 +438,4 @@ class TempestAPI
 module.exports = {
 	TempestAPI: TempestAPI
 };
+
