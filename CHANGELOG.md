@@ -277,3 +277,4 @@
 
 ## 3.3.3
 * Fix Tempest weather station breakage introduced in 3.3.2
+* Fix Rain accumulation
