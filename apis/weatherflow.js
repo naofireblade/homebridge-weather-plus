@@ -218,7 +218,7 @@ class TempestAPI
 			that.rainAccumulation[currentObservationMinute] += mmOfRainInLastMinute;
 		else {
 			// Erase the minutes between last recorded minute and current minute
-			for (var i = that.rainAccumulationMinute; (i % 60) != currentObservationMinute; i++)
+			for (var i = that.rainAccumulationMinute + 1; (i % 60) != currentObservationMinute; i++)
 				that.rainAccumulation[i % 60] = 0;
 			that.rainAccumulation[currentObservationMinute] = mmOfRainInLastMinute;
 		}
@@ -226,7 +226,7 @@ class TempestAPI
 	
 		var accumulation = converter.getRainAccumulated(that.rainAccumulation)
 	
-		this.log.debug("getHourlyAccumulatedRain last minute: " + mmOfRainInLastMinute + " last hour: " + accumulation);
+		this.log.debug("getHourlyAccumulatedRain last minute: " + mmOfRainInLastMinute + " rainAccumulation: " + this.rainAccumulation + " last hour: " + accumulation);
 		return accumulation;
 	}
 
