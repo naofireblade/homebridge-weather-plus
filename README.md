@@ -32,8 +32,8 @@ This plugin supports multiple weather services. Each has its own advantages. The
 |                            |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |     Tempest weather station <sup>[7](#a7)</sup>      |
 |----------------------------|:-----------------------------------------------------:|:----------------------------------------------------:|:----------------------------------------------------:|
 | Current observation values |                          15                           |                          12                          |                          20                          |
-| Forecast values            |                 18<sup>[6](#a6)</sup>                 |                          0                           |                          0                           |
-| Forecast days              |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                 0<sup>[8](#a8)</sup>                 |
+| Forecast values            |                          18                           |                          0                           |                          0                           |
+| Forecast days              |                      today + 7                        |                          0                           |                 0<sup>[8](#a8)</sup>                 |
 | Location                   |              city name, geo-coordinates               |                      station id                      |                        local                         |
 | Personal weather stations  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |                  :heavy_check_mark:                  |
 | Free                       |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |      :heavy_check_mark: (you need the station)       |
@@ -42,7 +42,6 @@ This plugin supports multiple weather services. Each has its own advantages. The
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 > <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.  
-> <b name="a6">6</b> uv-index, dew point, sunrise, sunset are only available after registering for the new OpenWeatherMap One Call API 3.0, which is free as well. The old API also has 4 instead of 7 forecast days.  
 > <b name="a7">7</b> [Weatherflow's Tempest](https://weatherflow.com) is a physical weather station that can be installed in your home. Current weather conditions are published on home network.  
 > <b name="a8">8</b> Weatherflow does provide an API to retrieve forecast. That capability has not been added to this plugin.  
 
