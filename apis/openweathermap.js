@@ -109,7 +109,7 @@ class OpenWeatherMapAPI
 						{
 							that.log.info("Could not retrieve weather report with API 3.0, trying API 2.5 now ...")
 							this.api = "2.5";
-							this.forecastDays = 7; // 2.5 has one day less and than 3.0
+							this.forecastDays = 7; // 2.5 has one day less than 3.0
 							this.update(forecastDays, callback);
 						}
 						else
