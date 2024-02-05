@@ -1,7 +1,7 @@
 {
   "name": "homebridge-weather-plus",
   "displayName": "Weather Plus",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
