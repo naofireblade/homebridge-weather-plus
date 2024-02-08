@@ -258,6 +258,9 @@ class TempestAPI
 			that.currentReport.ObservationTime = moment.unix(message.timestamp).format('HH:mm:ss');
 			
 			// Handle sensor failures
+			// Per API v171, only intepret values defined, ignore all others
+			message.sensor_status = message.sensor_status & 0x1FFFF;
+
 			// Any value other than zero for sensor_status means we have a failure
 			that.currentReport.StatusFault = message.sensor_status == 0 ? false : true;
 			if (message.sensor_status == 0) {
