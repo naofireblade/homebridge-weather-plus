@@ -281,4 +281,4 @@
 
 ## 3.3.4
 * Add support to detect failing sensors on Tempest weather station and report failure HomeKit
-
+* Fix tile naming for Home app so it contains name and value
