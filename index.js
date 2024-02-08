@@ -462,6 +462,13 @@ WeatherPlusPlatform.prototype = {
 					temperatureService.setCharacteristic(Characteristic.ChargingState, Characteristic.ChargingState.NOT_CHARGING);
 				}
 			}
+			else if (name === "StatusFault") {
+				if (value == true) {
+					temperatureService.setCharacteristic(Characteristic.StatusFault, Characteristic.StatusFault.GENERAL_FAULT);
+				} else {
+					temperatureService.setCharacteristic(Characteristic.StatusFault, Characteristic.StatusFault.NO_FAULT);
+				}
+			}
 			// Set everything else as a custom characteristic in the temperature service
 			else
 			{

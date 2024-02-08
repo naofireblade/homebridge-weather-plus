@@ -40,6 +40,7 @@ class TempestAPI
 			'LightLevel', // Illuminance
 			'BatteryLevel', // Device Battery level percent
 			'BatteryIsCharging', // Device Battery charging state
+			'StatusFault', // Report if there is a fault
 			
 			// Derived values
 			// @see https://weatherflow.github.io/Tempest/api/derived-metric-formulas.html
@@ -89,6 +90,7 @@ class TempestAPI
 		this.currentReport.LightningAvgDistance = 0;
 		this.currentReport.LightLevel = 0;
 		this.currentReport.TemperatureWetBulb = 0;
+		this.currentReport.StatusFault = 0;
 
 		// Non-exposed Weather report characteristics
 		this.currentReport.SkySensorBatteryLevel = 100;
@@ -97,9 +99,9 @@ class TempestAPI
 		this.currentReport.AirSensorBatteryLevel = 100;
 		this.currentReport.AirSerialNumber = "AR-";
 		this.currentReport.AirFirmware = "1.0";
-		this.currentReport.LightLevelSensorFail = 0;
 		this.currentReport.HumiditySensorFail = 0;
 		this.currentReport.TemperatureSensorFail = 0;
+		this.currentReport.SensorString = "Ok";
 
 		// Attempt to restore previous values
 		this.load();
@@ -254,14 +256,58 @@ class TempestAPI
 		if (message.type == 'device_status') {
 			that.currentReport.ObservationStation = message.serial_number;
 			that.currentReport.ObservationTime = moment.unix(message.timestamp).format('HH:mm:ss');
-			that.currentReport.TemperatureSensorFail = (message.sensor_status & 0x00000010) ? 1 : 0;
-			that.currentReport.HumiditySensorFail = (message.sensor_status & 0x00000020) ? 1 : 0;
-			that.currentReport.LightLevelSensorFail = (message.sensor_status & 0x00000100) ? 1 : 0;
-			// TODO: Check if a sensor has failed, and log it!
-			this.log.debug("Temperature Sensor Fail: %d, Humidity Sensor Fail: %d, Light Level Sensor Fail: %d", 
-				that.currentReport.TemperatureSensorFail, 
-				that.currentReport.HumiditySensorFail, 
-				that.currentReport.LightLevelSensorFail);
+			
+			// Handle sensor failures
+			// Any value other than zero for sensor_status means we have a failure
+			that.currentReport.StatusFault = message.sensor_status == 0 ? false : true;
+			if (message.sensor_status == 0) {
+				this.currentReport.SensorString = "Ok";
+				
+				// Need to track Humidity and Temperature sensors as their values are used
+				// in calculations, and if they are bad, it could cause a crash.
+				this.currentReport.HumiditySensorFail = 0;
+				this.currentReport.TemperatureSensorFail = 0;
+			} else {
+				this.currentReport.SensorString = "";
+				if (message.sensor_status & 0x00000001) {
+					this.currentReport.SensorString += "Lightning failed "
+				}
+				if (message.sensor_status & 0x00000002) {
+					this.currentReport.SensorString += "Lightning noise "
+				}
+				if (message.sensor_status & 0x00000004) {
+					this.currentReport.SensorString += "Lightning disturber "
+				}
+				if (message.sensor_status & 0x00000008) {
+					this.currentReport.SensorString += "Pressure failed "
+				}
+				if (message.sensor_status & 0x00000010) {
+					this.currentReport.SensorString += "Temperature failed "
+					this.currentReport.TemperatureSensorFail = 1;
+				}
+				if (message.sensor_status & 0x00000020) {
+					this.currentReport.SensorString += "Relative Humidity failed "
+					this.currentReport.HumiditySensorFail = 1;
+				}
+				if (message.sensor_status & 0x00000040) {
+					this.currentReport.SensorString += "Wind failed "
+				}
+				if (message.sensor_status & 0x00000080) {
+					this.currentReport.SensorString += "Precipitation failed "
+				}
+				if (message.sensor_status & 0x00000100) {
+					this.currentReport.SensorString += "Light/UV failed "
+				}
+				if (message.sensor_status & 0x00008000) {
+					this.currentReport.SensorString += "Power booster depleted "
+				}
+				if (message.sensor_status & 0x00010000) {
+					this.currentReport.SensorString += "Power booster shore power "
+				}
+				this.log.debug("Sensor failed: %d", message.sensor_status);
+				this.log.error("Sensor fail: " + this.currentReport.SensorString);
+			}
+			
 			var previousLevel = that.currentReport.BatteryLevel;
 			that.currentReport.BatteryIsCharging = false;
 			if (message.serial_number.charAt(1) == 'T') {  // Tempest 
@@ -326,10 +372,7 @@ class TempestAPI
 			that.currentReport.ObservationStation = that.currentReport.SkySerialNumber;
 			that.currentReport.SkyFirmware = message.firmware_revision;
 			that.currentReport.ObservationTime = moment.unix(message.obs[0][0]).format('HH:mm:ss');
-			if (that.currentReport.LightLevelSensorFail == 1)
-				that.currentReportLightLevel = 0;
-			else
-				that.currentReport.LightLevel = message.obs[0][1];
+			that.currentReport.LightLevel = message.obs[0][1];
 			that.currentReport.UVIndex = message.obs[0][2];
 			that.currentReport.Rain1h = this.getHourlyAccumulatedRain(message.obs[0][0], message.obs[0][3]);
 		
@@ -391,10 +434,8 @@ class TempestAPI
 					message.obs[0][2]));
 	    that.currentReport.TemperatureWetBulb = 
 					converter.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
-	    if (that.currentReport.LightLevelSensorFail == 1)
-                that.currentReport.LightLevel = 0;
-	    else
-                that.currentReport.LightLevel = message.obs[0][9];
+
+            that.currentReport.LightLevel = message.obs[0][9];
             that.currentReport.UVIndex = message.obs[0][10];
             that.currentReport.SolarRadiation = message.obs[0][11];
             that.currentReport.Rain1h = this.getHourlyAccumulatedRain(message.obs[0][0], message.obs[0][12]);

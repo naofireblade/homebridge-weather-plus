@@ -128,6 +128,10 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				this.CurrentConditionsService.addCharacteristic(Characteristic.ChargingState);
 			}
+			else if (name === "StatusFault")
+			{
+				this.CurrentConditionsService.addCharacteristic(Characteristic.StatusFault);
+			}
 			// Add everything else as a custom characteristic to the temperature service
 			else
 			{

@@ -278,3 +278,7 @@
 ## 3.3.3
 * Fix Tempest weather station breakage introduced in 3.3.2
 * Fix Rain accumulation
+
+## 3.3.4
+* Add support to detect failing sensors on Tempest weather station and report failure HomeKit
+
