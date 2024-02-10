@@ -36,6 +36,8 @@ class OpenWeatherMapAPI
 			'Rain1h',
 			'RainBool',
 			'SnowBool',
+			'SunriseTime',
+			'SunsetTime',
 			'Temperature',
 			'TemperatureApparent',
 			'UVIndex',
@@ -165,7 +167,7 @@ class OpenWeatherMapAPI
 		}
 		else
 		{
-			this.parseReportOneCall(weather.report, values["current"]);
+			this.parseReportOneCall(weather.report, values["current"], timezone);
 			weather.report.ObservationTime = moment.unix(values["current"].dt).tz(timezone).format('HH:mm:ss');
 		}
 
@@ -282,7 +284,7 @@ class OpenWeatherMapAPI
 		return forecast;
 	}
 
-	parseReportOneCall(report, values, isForecast = false)
+	parseReportOneCall(report, values, timezone, isForecast = false)
 	{
 		report.AirPressure = parseInt(values.pressure);
 		report.CloudCover = parseInt(values.clouds);
@@ -293,6 +295,8 @@ class OpenWeatherMapAPI
 		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
 		report.RainBool = [5, 6, 9].includes(detailedCondition);
 		report.SnowBool = [7, 8].includes(detailedCondition);
+		report.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
+		report.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
 		report.TemperatureApparent = typeof values.feels_like === 'object' ? parseInt(values.feels_like.day) : parseInt(values.feels_like);
 		report.UVIndex = parseInt(values.uvi);
 		report.WindDirection = converter.getWindDirection(values.wind_deg);
@@ -318,11 +322,9 @@ class OpenWeatherMapAPI
 	parseForecastOneCall(values, timezone)
 	{
 		let forecast = {};
-		this.parseReportOneCall(forecast, values, true);
+		this.parseReportOneCall(forecast, values, timezone, true);
 		
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
-		forecast.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
-		forecast.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
 
 		return forecast;
 	}
