@@ -131,6 +131,8 @@ class OpenWeatherMapAPI
 							this.api = "2.5";
 							this.removeCharacteristic(this.reportCharacteristics, "UVIndex");
 							this.removeCharacteristic(this.reportCharacteristics, "DewPoint");
+							this.removeCharacteristic(this.reportCharacteristics, "SunriseTime");
+							this.removeCharacteristic(this.reportCharacteristics, "SunsetTime");
 							this.removeCharacteristic(this.forecastCharacteristics, "UVIndex");
 							this.removeCharacteristic(this.forecastCharacteristics, "DewPoint");
 							this.removeCharacteristic(this.forecastCharacteristics, "SunriseTime");
