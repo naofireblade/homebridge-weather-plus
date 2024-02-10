@@ -282,3 +282,5 @@
 ## 3.3.4
 * Add support to detect failing sensors on Tempest weather station and report failure HomeKit
 * Fix tile naming for Home app so it contains name and value
+* Add support for Sunrise and Sunset for current conditions and forecast with OpenWeather v2.5 (Legacy/Free) API
+* Add support for Sunrise and Sunset for current conditions with OpenWeather v3.0 OneCall API
