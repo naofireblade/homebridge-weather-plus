@@ -105,6 +105,10 @@ class TempestAPI
 
 		// Attempt to restore previous values
 		this.load();
+		
+		// Keep track of previous message so that
+		// we can remove duplicates
+		this.prevMsg = "";
 	
 		// Create UDP listener and start listening
 		this.server = dgram.createSocket({type: 'udp4', reuseAddr: true});
@@ -117,7 +121,12 @@ class TempestAPI
 			try {
 				var message = JSON.parse(msg);
 				this.log.debug(`Server got: ${message.type}`);
-				this.parseMessage(message);
+				if (msg.toString() === this.prevMsg) {
+				    this.log.debug(`Duplicate msg ${msg}`);
+				} else {
+				    this.parseMessage(message);
+				}
+				this.prevMsg = msg.toString();
 				}
 			catch(ex) {
 				this.log(`JSON Parse Exception: ${msg} ${ex}`);
