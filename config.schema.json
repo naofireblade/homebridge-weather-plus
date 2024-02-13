@@ -326,11 +326,15 @@
               }
             },
             {
-              "key": "stations[].key",
-              "notitle": true,
+              "type": "help",
+              "helpvalue": "<h6>Token</h6><p class='help-block'>(Optional) Personal Access Token to obtain forecasts. Log into <a target='_blank' href='http://tempestwx.com'>Tempest</a> and go to Settings -> Data Authorizations -> Create Token</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service != 'tempest'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'tempest'"
               }
+            },
+            {
+              "key": "stations[].key",
+              "notitle": true
             },
             {
               "type": "help",
@@ -388,7 +392,7 @@
               "title": "Station Id",
               "description": "Your personal StationID.",
               "condition": {
-                "functionBody": "return model.stations[arrayIndices[0]].service === 'weatherunderground'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'weatherunderground' || model.stations[arrayIndices[0]].service === 'tempest'"
               }
             },
             {
@@ -449,7 +453,7 @@
                 }
               ],
               "condition": {
-                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap' || model.stations[arrayIndices[0]].service === 'tempest'"
               }
             },
             {

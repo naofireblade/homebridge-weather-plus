@@ -32,19 +32,18 @@ This plugin supports multiple weather services. Each has its own advantages. The
 |                            |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |     Tempest weather station <sup>[7](#a7)</sup>      |
 |----------------------------|:-----------------------------------------------------:|:----------------------------------------------------:|:----------------------------------------------------:|
 | Current observation values |                          15                           |                          12                          |                          20                          |
-| Forecast values            |                 18<sup>[6](#a6)</sup>                 |                          0                           |                          0                           |
-| Forecast days              |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                 0<sup>[8](#a8)</sup>                 |
+| Forecast values            |                 18<sup>[6](#a6)</sup>                 |                          0                           |                          10                          |
+| Forecast days              |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                      today + 9                       |
 | Location                   |              city name, geo-coordinates               |                      station id                      |                        local                         |
 | Personal weather stations  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |                  :heavy_check_mark:                  |
 | Free                       |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |      :heavy_check_mark: (you need the station)       |
-| Register                   | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |                          -                           |
+| Register                   | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |      [here](https://tempestwx.com/settings/tokens)   |
 
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
 > <b name="a2">2</b> You can use the weather underground service only if you can provide weather data from your own station in exchange.  
 > <b name="a6">6</b> uv-index, dew point, sunrise, sunset are only available after registering for the new OpenWeatherMap One Call API 3.0, which is free as well. The old API also has 4 instead of 7 forecast days.  
-> <b name="a7">7</b> [Weatherflow's Tempest](https://weatherflow.com) is a physical weather station that can be installed in your home. Current weather conditions are published on home network.  
-> <b name="a8">8</b> Weatherflow does provide an API to retrieve forecast. That capability has not been added to this plugin.  
+> <b name="a7">7</b> [Weatherflow's Tempest](https://weatherflow.com) is a physical weather station that can be installed in your home. Current weather conditions are published on home network.   
 
 ## Installation
 
@@ -171,13 +170,21 @@ Used to indicate Weewx version.  The homekit plugin requires an location field t
 
 ### Tempest Weatherflow
 
-The [Tempest Weatherflow](https://weatherflow.com/tempest-home-weather-system/) is a local weather reporting device that publishes the current weather on the local network via [UDP packets](https://weatherflow.github.io/Tempest/api/). Data is broadcast once per minute, so the Interval setting is ignored. The physical station can only provide the current weather. Future forecasts are available with this weather source, though has not been implemented yet. This uses data published on your local network for the current weather, and therefore runs fine without an internet connection. 
+The [Tempest Weatherflow](https://weatherflow.com/tempest-home-weather-system/) is a local weather reporting device that publishes the current weather on the local network via [UDP packets](https://weatherflow.github.io/Tempest/api/). Data is broadcast once per minute, so the Interval setting is ignored. The physical station can only provide the current weather. This uses data published on your local network for the current weather, and therefore runs fine without an internet connection. Future forecasts are available from Tempest for your weather station using a Personal Use Token and your station id. 
+
+**key**  
+(Optional - only needed for Forecasts) The API key that you get by logging into your [Account](https://tempestwx.com/settings/tokens) and creating a personal use token.
+
+**stationId**  
+(Optional - only needed for Forecasts) Your personal StationID. Viewing your [station settings](https://tempestwx.com/settings/station/), it is the number on the end of the URL.
 
 ```json
 "platforms": [
     {
         "platform": "WeatherPlus",
-        "service": "tempest"
+        "service": "tempest",
+        "key": "PERSONAL_USE_TOKEN",
+        "stationId": "STATION_ID"
     }
 ]
 ```
@@ -338,3 +345,4 @@ This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwo
 ## Attribution
 - [Powered by Weather Underground](https://www.wunderground.com/)
 - [Powered by OpenWeatherMap](https://openweathermap.org/)
+- [Powered by WeatherFlow - Tempest](https://tempest.earth/tempest-home-weather-system/)

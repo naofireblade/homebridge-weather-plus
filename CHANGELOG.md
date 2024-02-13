@@ -284,3 +284,5 @@
 * Fix tile naming for Home app so it contains name and value
 * Add support for Sunrise and Sunset for current conditions and forecast with OpenWeather v2.5 (Legacy/Free) API
 * Add support for Sunrise and Sunset for current conditions with OpenWeather v3.0 OneCall API
+* Fix configuration UI to save the threshold values
+* Add support for Forecasts with Tempest weather station.

@@ -11,11 +11,12 @@
 const converter = require('../util/converter'),
 	moment = require('moment-timezone'),
 	dgram = require("dgram"),
-	wformula = require('weather-formulas');
+	wformula = require('weather-formulas'),
+	request = require('request');
 
 class TempestAPI
 {
-	constructor (conditionDetail, log, cacheDirectory)
+	constructor (apiKey, locationId, conditionDetail, log, cacheDirectory)
 	{
 		this.attribution = 'Weatherflow Tempest';
 		this.reportCharacteristics = [
@@ -48,9 +49,28 @@ class TempestAPI
 			'TemperatureApparent', // Calculated from Humidity, Temperature & Windspeed
 			'TemperatureWetBulb' // Calculated from Humidity & Temperature
 		];
+		
+		this.forecastCharacteristics = [
+			'ObservationTime', // Forecast update time
+			'Condition', //Conditions
+			'ConditionCategory',
+			'ForecastDay', // day_num, month_num, day_start_local
+			'RainBool', // precip_icon contains === 'rain' || 'sleet' || 'storm'
+			'SnowBool', // precip_icon contains === 'snow'
+			'SunriseTime', //sunrise
+			'SunsetTime', // sunset
+			'TemperatureMax',  // air_temp_high
+			'TemperatureMin', // air_temp_low
+			'RainChance' // precip_probability
+		];
+		this.forecastDays = 10;
+		this.lastForecastUpdate = -1;
 	
 		this.conditionDetail = conditionDetail;
 		this.log = log;
+		this.apiKey = apiKey;
+		this.locationId = locationId;
+		
 		this.storage = require('node-persist');
 		// The saved data is only valid for up to 24hrs (TTL)
 		this.storage.initSync({dir:cacheDirectory, forgiveParseErrors: true, ttl: true});
@@ -186,13 +206,34 @@ class TempestAPI
 
 		let weather = {};
 		weather.forecasts = [];
-		let that = this;
-		weather.report = that.currentReport;
-		callback(null, weather);
 		
-		// Save the state after updating plugin state so we don't
-		// delay the update
-		this.save(that.currentReport);
+		// Limit forecast updates to once every hour. Forecast won't change that quickly
+		if (moment().hour() != this.lastForecastUpdate) {
+			this.lastForecastUpdate = moment().hour();
+			this.getForecastData((error, result) =>
+								 {
+				if (!error) {
+					weather.forecasts = this.parseForecasts(result["current_conditions"]["time"], result["forecast"]["daily"], result["timezone"]);
+				} else {
+					this.log.error("Error retrieving weather Forecast");
+					this.log.error(result);
+				}
+				
+				let that = this;
+				weather.report = that.currentReport;
+				callback(null, weather);
+				
+				// Save the state after updating plugin state so we don't
+				// delay the update
+				this.save(that.currentReport);
+			});
+		}
+		else {
+			// Don't update the forecast, just update current conditions
+			let that = this;
+			weather.report = that.currentReport;
+			callback(null, weather);
+		}
 	}
 
 	// Map Tempest precipitation values to Eve Condition Categories
@@ -476,14 +517,115 @@ class TempestAPI
             
         }
 	}
-	parseForecasts(forecastObjs, timezone)
+	
+	getForecastConditionCategory(icon, detail = false)
+	{
+		// Convert the icon names to condition category
+		// See https://weatherflow.github.io/Tempest/api/swagger/#!/forecast/getBetterForecast
+		
+		if (icon.includes("thunderstorm") || icon.includes("windy"))
+		{
+			// Severe weather
+			return detail ? 9 : 2;
+		}
+		else if (icon.includes("snow"))
+		{
+			// Snow
+			return detail ? 8 : 3;
+		}
+		else if (icon.includes("sleet"))
+		{
+			// Hail
+			return detail ? 7 : 3;
+		}
+		else if (icon.includes("rain"))
+		{
+			// Rain
+			return detail ? 6 : 2;
+		}
+		else if (icon.includes("fog"))
+		{
+			// Fog
+			return detail ? 4 : 1;
+		}
+		else if (icon.includes("partly-cloudy"))
+		{
+			// Few Clouds
+			return detail ? 1 : 0;
+		}
+		else if (icon.includes("cloudy"))
+		{
+			// Overcast
+			return detail ? 3 : 1;
+		}
+		else if (icon.includes("clear"))
+		{
+			// Clear
+			return 0;
+		}
+		else
+		{
+			this.log.warn("Unknown Tempest Forecast icon " + icon);
+			return 0;
+		}
+	};
+	
+	getForecastData(callback)
 	{
 		/*
-		TODO: Add support for forecasts
 		Weatherflow do provide an API to get forecasts
 		https://weatherflow.github.io/Tempest/api/remote-developer-policy.html
+		https://weatherflow.github.io/Tempest/api/swagger/#!/forecast/getBetterForecast
 		 */
-		return [];
+		this.log.debug("Getting weather forecast for station %s", this.locationId);
+
+		// Response defaults to metric
+		const queryUri = "https://swd.weatherflow.com/swd/rest/better_forecast?station_id=" + this.locationId + "&token=" + this.apiKey;
+		request(encodeURI(queryUri), (requestError, response, body) =>
+		{
+			if (!requestError)
+			{
+				let parseError;
+				let weather
+				try
+				{
+					weather = JSON.parse(body);
+				} catch (e)
+				{
+					parseError = e;
+				}
+				callback(parseError, weather);
+			}
+			else
+			{
+				callback(requestError);
+			}
+		});
+	}
+	
+	
+	parseForecasts(observation_time, values, timezone)
+	{
+		let forecasts = [];
+		 
+		for (let i = 0; i < values.length; i++) {
+			// this.log(values[i]);
+			let forecast = {};
+			forecast.Condition = values[i].conditions;
+			forecast.ConditionCategory = this.getForecastConditionCategory(values[i].icon, this.conditionDetail)
+			forecast.ForecastDay =  moment.unix(values[i].day_start_local).tz(timezone).format('dddd');
+			forecast.RainBool = values[i].precip_icon.includes('rain') || values[i].precip_icon.includes('sleet') || values[i].precip_icon.includes('storm');
+			forecast.SnowBool = values[i].precip_icon.includes('snow');
+			forecast.SunriseTime = moment.unix(values[i].sunrise).tz(timezone).format('HH:mm:ss');
+			forecast.SunsetTime = moment.unix(values[i].sunset).tz(timezone).format('HH:mm:ss');
+			forecast.TemperatureMax = values[i].air_temp_high;
+			forecast.TemperatureMin = values[i].air_temp_low;
+			forecast.RainChance = values[i].precip_probability;
+			forecast.ObservationTime = moment.unix(observation_time).tz(timezone).format('HH:mm:ss');
+			
+			forecasts[i] = forecast;
+		}
+		return forecasts;
 	}
 
 }
