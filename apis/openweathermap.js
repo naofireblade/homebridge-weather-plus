@@ -111,8 +111,9 @@ class OpenWeatherMapAPI
 									// Pass the entire "city" JSON array as it has both the timezone and sunrise & sunset values
 									this.generateForecasts(weather, result["list"], result["city"], callback);
 								} else {
-								    that.log.error("Error retrieving weather Forecast from API 2.5");
-						            that.log.error(result);
+								    that.log.error("Error retrieving OpenWeatherMap Forecast from API 2.5");
+								    that.log.error("Error result: " + result);
+								    that.log.error("Error message: " + error);
 						            callback();
 								}
 						});
@@ -140,14 +141,16 @@ class OpenWeatherMapAPI
 						else
 						{
 							that.log.error("Could not retreive weather report with neither API 3.0 or API 2.5. You may need to wait up to 30 minutes after creating your api key. If the error persist, check if you copied the api key correctly.");
-							that.log.error(result);
+							that.log.error("Error result: " + result);
+							that.log.error("Error message: " + error);
 							callback();
 						}
 					}
 					else
 					{
-						that.log.error("Error retrieving weather report");
-						that.log.error(result);
+						that.log.error("Error retrieving OpenWeatherMap report");
+						that.log.error("Error result: " + result);
+						that.log.error("Error message: " + error);
 						callback();
 					}
 				}
