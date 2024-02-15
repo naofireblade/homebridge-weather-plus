@@ -290,3 +290,5 @@
 * Add support for light level history
 * Add error handling to WeatherUnderground to indicate if PWS is offline
 * Increase max UV Index value as UV Index values in Australia's outback goes higher than 12
+* Add Rain sensor support to WeatherUnderground
+* Fix units in WeatherUnderground so that values are not converted multiple times

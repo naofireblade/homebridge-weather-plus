@@ -21,7 +21,8 @@ class WundergroundAPI
 			'AirPressure',
 			'WindSpeed',
 			'WindSpeedMax',
-			'RainDay'
+			'RainDay',
+			'RainBool'
 		];
 
 		this.log = log;
@@ -39,7 +40,7 @@ class WundergroundAPI
 		let weather = {};
 		let that = this;
 
-		const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey=" + this.apiKey + "&stationId=" + this.location + "&format=json&units=" + this.units + '&numericPrecision=decimal';
+		const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey=" + this.apiKey + "&stationId=" + this.location + "&format=json&units=m" + '&numericPrecision=decimal';
 		request(encodeURI(queryUri), function (err, response, body)
 		{
 			if (!err && body.length > 0)
@@ -87,26 +88,7 @@ class WundergroundAPI
 		try
 		{
 			let observation = json.observations[0];
-			let values;
-			this.log.debug("Units: " + this.units);
-
-			// Get values depending on chosen unit in request
-			if (this.units === 's')
-			{
-				values = observation.metric_si;
-			}
-			else if (this.units === 'm')
-			{
-				values = observation.metric;
-			}
-			else if (this.units === 'e')
-			{
-				values = observation.imperial;
-			}
-			else
-			{ // 'h'
-				values = observation.uk_hybrid;
-			}
+			let values = observation.metric;
 
 			report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
 			report.ObservationTime = moment(Date.parse(observation.obsTimeUtc)).format('HH:mm:ss');
@@ -120,6 +102,7 @@ class WundergroundAPI
 			report.WindSpeed = isNaN(values.windSpeed) ? 0 : values.windSpeed;
 			report.WindSpeedMax = isNaN(values.windGust) ? 0 : values.windGust;
 			report.RainDay = isNaN(values.precipTotal) ? 0 : values.precipTotal;
+			report.RainBool = isNaN(values.precipRate) ? false : (values.precipRate > 0 ? true : false);
 
 		} catch (error)
 		{
