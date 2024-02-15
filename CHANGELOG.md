@@ -289,3 +289,4 @@
 * Add extra error logging when OpenWeatherMap URL load fails
 * Add support for light level history
 * Add error handling to WeatherUnderground to indicate if PWS is offline
+* Increase max UV Index value as UV Index values in Australia's outback goes higher than 12

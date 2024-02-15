@@ -393,7 +393,7 @@ module.exports = function (Characteristic, units)
 		Characteristic.call(this, 'UV Index', CustomUUID.UVIndex);
 		this.setProps({
 			format: Characteristic.Formats.UINT8,
-			maxValue: 12,
+			maxValue: 15,
 			minValue: 0,
 			minStep: 1,
 			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
