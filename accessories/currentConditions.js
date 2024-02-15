@@ -26,6 +26,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	this.name = this.config.nameNow;
 	this.displayName = this.config.nameNow;
 	this.stationIndex = stationIndex;
+	this.services = [];
 
 	// Use homekit temperature service or eve weather service depending on compatibility setting
 	this.log.debug("Using compatibility mode '%s'", this.config.compatibility);
@@ -60,6 +61,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 				});
 		}
 	}
+	this.services.push(this.CurrentConditionsService);
 
 
 	// Add all current condition characteristics that are supported by the selected api
@@ -139,6 +141,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			}
 		}
 	});
+	this.services.concat(compatibility.getServices(this));
 
 	// Create information service
 	this.informationService = new Service.AccessoryInformation();
@@ -147,9 +150,11 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	.setCharacteristic(Characteristic.Model, this.platform.stations[stationIndex].attribution)
 	.setCharacteristic(Characteristic.SerialNumber, this.config.serial)
 	.setCharacteristic(Characteristic.FirmwareRevision, version);
+	this.services.push(this.informationService);
 
 	// Create history service
-	this.historyService = new FakeGatoHistoryService("weather", this, this.config.fakegatoParameters);
+	this.historyService = new FakeGatoHistoryService("custom", this, this.config.fakegatoParameters);
+	this.services.push(this.historyService);
 }
 
 CurrentConditionsWeatherAccessory.prototype = {
@@ -174,6 +179,6 @@ CurrentConditionsWeatherAccessory.prototype = {
 
 	getServices: function ()
 	{
-		return [this.informationService, this.CurrentConditionsService, this.historyService].concat(compatibility.getServices(this));
+		return this.services;
 	}
 };

@@ -286,3 +286,5 @@
 * Add support for Sunrise and Sunset for current conditions with OpenWeather v3.0 OneCall API
 * Fix configuration UI to save the threshold values
 * Add support for Forecasts with Tempest weather station.
+* Add extra error logging when OpenWeatherMap URL load fails
+* Add support for light level history

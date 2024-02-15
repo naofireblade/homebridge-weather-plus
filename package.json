@@ -111,7 +111,7 @@
     "url": "https://github.com/naofireblade/homebridge-weather-plus.git"
   },
   "dependencies": {
-    "fakegato-history": "^0.6.3",
+    "fakegato-history": "^0.6.4",
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
     "underscore": "^1.13.6",
