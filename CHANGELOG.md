@@ -288,3 +288,4 @@
 * Add support for Forecasts with Tempest weather station.
 * Add extra error logging when OpenWeatherMap URL load fails
 * Add support for light level history
+* Add error handling to WeatherUnderground to indicate if PWS is offline
