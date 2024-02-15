@@ -37,11 +37,11 @@
     "Wind Speed Maximum",
     "Observation Time",
     "Observation Station",
-    "yahoo",
     "openweather",
     "openweathermap",
     "weather underground",
-    "tempest weather station"
+    "tempest weather station",
+    "weatherflow weather station"
   ],
   "engines": {
     "node": ">=10.0.0",
