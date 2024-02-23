@@ -393,28 +393,23 @@ class TempestAPI
 			that.currentReport.AirFirmware = message.firmware_revision;
 			that.currentReport.ObservationTime = moment.unix(message.obs[0][0]).format('HH:mm:ss');
 			that.currentReport.AirPressure = message.obs[0][1];
-			if (that.currentReport.TemperatureSensorFail == 1)
-				that.currentReport.Temperature = 0;
-			else
-				that.currentReport.Temperature = message.obs[0][2];
-			if (that.currentReport.HumiditySensorFail == 1) {
-				that.currentReport.Humidity = 0;
-				that.currentReport.DewPoint = 0;
-			}
-			else {
-				that.currentReport.Humidity = message.obs[0][3];
+			that.currentReport.Temperature = message.obs[0][2];
+			that.currentReport.Humidity = message.obs[0][3];
+			
+			// Only perform new calculations if temperature and humidity sensors are reportedly working
+			if (that.currentReport.TemperatureSensorFail == 0 && that.currentReport.HumiditySensorFail == 0) {
 				that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
 					wformula.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
-			}
-			that.currentReport.TemperatureApparent = wformula.kelvinToCelcius(wformula.australianAapparentTemperature(
+				that.currentReport.TemperatureApparent = wformula.kelvinToCelcius(wformula.australianAapparentTemperature(
 					wformula.celciusToKelvin(that.currentReport.Temperature),
 					that.currentReport.Humidity,
 					that.currentReport.WindSpeed));
+				that.currentReport.TemperatureWetBulb =
+					converter.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
+			}
 			that.currentReport.TemperatureMin = (that.currentReport.Temperature < that.currentReport.TemperatureMin) ?
 					that.currentReport.Temperature : that.currentReport.TemperatureMin;
-			that.currentReport.TemperatureWetBulb = 
-					converter.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
 			that.currentReport.LightningStrikes = message.obs[0][4];
 			that.currentReport.LightningAvgDistance = message.obs[0][5];
 			that.currentReport.AirSensorBatteryLevel = this.getBatteryPercent(message.obs[0][6]);
@@ -467,27 +462,23 @@ class TempestAPI
             //that.currentReport.WindDirection = converter.getWindDirection(message.obs[0][4]);
             
             that.currentReport.AirPressure = message.obs[0][6];
-	    if (that.currentReport.TemperatureSensorFail == 1)
-	            that.currentReport.Temperature = 0;
-	    else
-	            that.currentReport.Temperature = message.obs[0][7];
-            if (that.currentReport.HumiditySensorFail == 1) {
-                that.currentReport.Humidity = 0;
-                that.currentReport.DewPoint = 0;
-            }
-            else {
-                that.currentReport.Humidity = message.obs[0][8];
+            that.currentReport.Temperature = message.obs[0][7];
+            that.currentReport.Humidity = message.obs[0][8];
+	
+			// Only perform new calculations if temperature and humidity sensors are reportedly working
+            if (that.currentReport.TemperatureSensorFail == 0 && that.currentReport.HumiditySensorFail == 0) {
                 that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
 					wformula.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
-            }
-	    that.currentReport.TemperatureApparent = wformula.kelvinToCelcius(wformula.australianAapparentTemperature(
+
+                that.currentReport.TemperatureApparent = wformula.kelvinToCelcius(wformula.australianAapparentTemperature(
 					wformula.celciusToKelvin(that.currentReport.Temperature),
 					that.currentReport.Humidity,
 					message.obs[0][2]));
-	    that.currentReport.TemperatureWetBulb = 
+                that.currentReport.TemperatureWetBulb =
 					converter.getWetBulbTemperature(that.currentReport.Temperature, that.currentReport.Humidity);
-
+            }
+            
             that.currentReport.LightLevel = message.obs[0][9];
             that.currentReport.UVIndex = message.obs[0][10];
             that.currentReport.SolarRadiation = message.obs[0][11];
