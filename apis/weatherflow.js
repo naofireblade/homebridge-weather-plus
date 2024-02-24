@@ -113,14 +113,16 @@ class TempestAPI
 		this.currentReport.StatusFault = 0;
 
 		// Non-exposed Weather report characteristics
+		// Sky or Tempest station (unlikely to have both)
 		this.currentReport.SkySensorBatteryLevel = 100;
 		this.currentReport.SkySerialNumber = "SK-";
 		this.currentReport.SkyFirmware = "1.0";
+		this.currentReport.SkySensorFailureLog = -1;
+		// Air station
 		this.currentReport.AirSensorBatteryLevel = 100;
 		this.currentReport.AirSerialNumber = "AR-";
 		this.currentReport.AirFirmware = "1.0";
-		this.currentReport.HumiditySensorFail = 0;
-		this.currentReport.TemperatureSensorFail = 0;
+		this.currentReport.AirSensorFailureLog = -1;
 		this.currentReport.SensorString = "Ok";
 
 		// Attempt to restore previous values
@@ -316,10 +318,13 @@ class TempestAPI
 			if (message.sensor_status == 0) {
 				this.currentReport.SensorString = "Ok";
 				
-				// Need to track Humidity and Temperature sensors as their values are used
-				// in calculations, and if they are bad, it could cause a crash.
-				this.currentReport.HumiditySensorFail = 0;
-				this.currentReport.TemperatureSensorFail = 0;
+				// Reset logging interval for only the unit that is ok
+				// Unit prefixes: AR Air, SK Sky, ST Tempest
+				if (message.serial_number.charAt(1) == 'R') {
+					this.currentReport.AirSensorFailureLog = -1;
+				} else {
+					this.currentReport.SkySensorFailureLog = -1;
+				}
 			} else {
 				this.currentReport.SensorString = "";
 				if (message.sensor_status & 0x00000001) {
@@ -336,11 +341,9 @@ class TempestAPI
 				}
 				if (message.sensor_status & 0x00000010) {
 					this.currentReport.SensorString += "Temperature failed "
-					this.currentReport.TemperatureSensorFail = 1;
 				}
 				if (message.sensor_status & 0x00000020) {
 					this.currentReport.SensorString += "Relative Humidity failed "
-					this.currentReport.HumiditySensorFail = 1;
 				}
 				if (message.sensor_status & 0x00000040) {
 					this.currentReport.SensorString += "Wind failed "
@@ -357,8 +360,21 @@ class TempestAPI
 				if (message.sensor_status & 0x00010000) {
 					this.currentReport.SensorString += "Power booster shore power "
 				}
-				this.log.debug("Sensor failed: %d", message.sensor_status);
-				this.log.error("Sensor fail: " + this.currentReport.SensorString);
+				this.log.debug("Sensor on unit %s failed error code: %d", message.serial_number, message.sensor_status);
+				
+				// Track error logging per failed device
+				// Unit prefixes: AR Air, SK Sky, ST Tempest
+				if (message.serial_number.charAt(1) == 'R') {
+					if (this.currentReport.AirSensorFailureLog != moment.unix(message.timestamp).hour()) {
+						this.log.error("Sensor on unit %s failed: ", message.serial_number, this.currentReport.SensorString);
+					}
+					this.currentReport.AirSensorFailureLog = moment.unix(message.timestamp).hour();
+				} else {
+					if (this.currentReport.SkySensorFailureLog != moment.unix(message.timestamp).hour()) {
+						this.log.error("Sensor on unit %s failed: ", message.serial_number, this.currentReport.SensorString);
+					}
+					this.currentReport.SkySensorFailureLog = moment.unix(message.timestamp).hour();
+				}
 			}
 			
 			var previousLevel = that.currentReport.BatteryLevel;
