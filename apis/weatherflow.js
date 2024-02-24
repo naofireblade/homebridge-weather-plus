@@ -119,9 +119,9 @@ class TempestAPI
 		this.currentReport.AirSensorBatteryLevel = 100;
 		this.currentReport.AirSerialNumber = "AR-";
 		this.currentReport.AirFirmware = "1.0";
-		this.currentReport.HumiditySensorFail = 0;
-		this.currentReport.TemperatureSensorFail = 0;
 		this.currentReport.SensorString = "Ok";
+		
+		this.lastSensorFailureLog = -1;
 
 		// Attempt to restore previous values
 		this.load();
@@ -208,7 +208,7 @@ class TempestAPI
 		weather.forecasts = [];
 		
 		// Limit forecast updates to once every hour. Forecast won't change that quickly
-		if (moment().hour() != this.lastForecastUpdate) {
+		if (0) { //moment().hour() != this.lastForecastUpdate) {
 			this.lastForecastUpdate = moment().hour();
 			this.getForecastData((error, result) =>
 								 {
@@ -316,10 +316,7 @@ class TempestAPI
 			if (message.sensor_status == 0) {
 				this.currentReport.SensorString = "Ok";
 				
-				// Need to track Humidity and Temperature sensors as their values are used
-				// in calculations, and if they are bad, it could cause a crash.
-				this.currentReport.HumiditySensorFail = 0;
-				this.currentReport.TemperatureSensorFail = 0;
+				this.lastSensorFailureLog = -1;
 			} else {
 				this.currentReport.SensorString = "";
 				if (message.sensor_status & 0x00000001) {
@@ -336,11 +333,9 @@ class TempestAPI
 				}
 				if (message.sensor_status & 0x00000010) {
 					this.currentReport.SensorString += "Temperature failed "
-					this.currentReport.TemperatureSensorFail = 1;
 				}
 				if (message.sensor_status & 0x00000020) {
 					this.currentReport.SensorString += "Relative Humidity failed "
-					this.currentReport.HumiditySensorFail = 1;
 				}
 				if (message.sensor_status & 0x00000040) {
 					this.currentReport.SensorString += "Wind failed "
@@ -358,7 +353,10 @@ class TempestAPI
 					this.currentReport.SensorString += "Power booster shore power "
 				}
 				this.log.debug("Sensor failed: %d", message.sensor_status);
-				this.log.error("Sensor fail: " + this.currentReport.SensorString);
+				if (this.lastSensorFailureLog != moment.unix(message.timestamp).hour()) {
+				    this.log.error("Sensor fail: " + this.currentReport.SensorString);
+				}
+				this.lastSensorFailureLog = moment.unix(message.timestamp).hour();
 			}
 			
 			var previousLevel = that.currentReport.BatteryLevel;
