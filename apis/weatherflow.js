@@ -396,8 +396,10 @@ class TempestAPI
 			that.currentReport.Temperature = message.obs[0][2];
 			that.currentReport.Humidity = message.obs[0][3];
 			
-			// Only perform new calculations if temperature and humidity sensors are reportedly working
-			if (that.currentReport.TemperatureSensorFail == 0 && that.currentReport.HumiditySensorFail == 0) {
+			// Only perform new calculations if temperature and humidity values are within a good range
+			// We could get out of range values if the sensors have failed.
+			if (that.currentReport.Humidity > 0 && that.currentReport.Humidity <= 100 &&
+				that.currentReport.Temperature > 0 && that.currentReport.Temperature < 100) {
 				that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
 					wformula.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
@@ -465,8 +467,10 @@ class TempestAPI
             that.currentReport.Temperature = message.obs[0][7];
             that.currentReport.Humidity = message.obs[0][8];
 	
-			// Only perform new calculations if temperature and humidity sensors are reportedly working
-            if (that.currentReport.TemperatureSensorFail == 0 && that.currentReport.HumiditySensorFail == 0) {
+            // Only perform new calculations if temperature and humidity values are within a good range
+            // We could get out of range values if the sensors have failed.
+            if (that.currentReport.Humidity > 0 && that.currentReport.Humidity <= 100 &&
+                    that.currentReport.Temperature > 0 && that.currentReport.Temperature < 100) {
                 that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
 					wformula.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
