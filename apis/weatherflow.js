@@ -64,7 +64,11 @@ class TempestAPI
 			'RainChance' // precip_probability
 		];
 		this.forecastDays = 10;
-		this.lastForecastUpdate = -1;
+		
+		// Only define the update variable if we have an apiKey and locationId
+		if (apiKey && apiKey.length > 0 && locationId && locationId.length > 0) {
+			this.lastForecastUpdate = -1;
+			}
 	
 		this.conditionDetail = conditionDetail;
 		this.log = log;
@@ -210,7 +214,7 @@ class TempestAPI
 		weather.forecasts = [];
 		
 		// Limit forecast updates to once every hour. Forecast won't change that quickly
-		if (moment().hour() != this.lastForecastUpdate) {
+		if (this.lastForecastUpdate && moment().hour() != this.lastForecastUpdate) {
 			this.lastForecastUpdate = moment().hour();
 			this.getForecastData((error, result) =>
 								 {
@@ -596,16 +600,20 @@ class TempestAPI
 		{
 			if (!requestError)
 			{
-				let parseError;
-				let weather
-				try
-				{
-					weather = JSON.parse(body);
-				} catch (e)
-				{
-					parseError = e;
+				if (response.statusCode == 200) {
+					let parseError;
+					let weather
+					try
+					{
+						weather = JSON.parse(body);
+					} catch (e)
+					{
+						parseError = e;
+					}
+					callback(parseError, weather);
+				} else {
+					callback(true, body);
 				}
-				callback(parseError, weather);
 			}
 			else
 			{
