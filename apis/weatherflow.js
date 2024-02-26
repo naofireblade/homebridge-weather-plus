@@ -439,7 +439,7 @@ class TempestAPI
 			var previousLevel = that.currentReport.AirSensorBatteryLevel;
 			that.currentReport.AirSensorBatteryLevel = this.getBatteryPercent(message.obs[0][6]);
 			// If the AIR sensor has the lowest battery level, then report it as the Station battery level
-			if (that.currentReport.AirSensorBatteryLevel < that.currentReport.BatteryLevel) {
+			if (that.currentReport.AirSensorBatteryLevel < that.currentReport.SkySensorBatteryLevel) {
 				that.currentReport.BatteryLevel = that.currentReport.AirSensorBatteryLevel;
 				// It could have a solar panel on it, so check to see if it is going up (charging)
 				that.currentReport.BatteryIsCharging = false;
@@ -471,8 +471,8 @@ class TempestAPI
 			var previousLevel = that.currentReport.SkySensorBatteryLevel;
 			that.currentReport.SkySensorBatteryLevel = this.getBatteryPercent(message.obs[0][8]);
 			// If the SKY sensor has the lowest battery level, then report it as the Station battery level
-			if (that.currentReport.SkySensorBatteryLevel < that.currentReport.BatteryLevel) {
-				that.currentReport.BatteryLevel = that.currentReport.AirSensorBatteryLevel;
+			if (that.currentReport.SkySensorBatteryLevel < that.currentReport.AirSensorBatteryLevel) {
+				that.currentReport.BatteryLevel = that.currentReport.SkySensorBatteryLevel;
 				// It could have a solar panel on it, so check to see if it is going up (charging)
 				that.currentReport.BatteryIsCharging = false;
 				if (that.currentReport.BatteryLevel > previousLevel) {
