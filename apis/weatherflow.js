@@ -288,10 +288,11 @@ class TempestAPI
 		return accumulation;
 	}
 
-	// Assume that zero battery level is 2.6v
+	// For AIR/SKY sensor units, assume to be the same as
+	// the Tempest documentation.
 	getBatteryPercent(batteryVoltage)
 	{
-		return (batteryVoltage * 100 - 260);
+		return this.getTempestBatteryPercent(batteryVoltage);
 	}
 	
 	// Tempest battery ranges from 2.355 (low) to 2.8 (full)
@@ -390,17 +391,6 @@ class TempestAPI
 					this.currentReport.SkySensorFailureLog = moment.unix(message.timestamp).hour();
 				}
 			}
-			
-			var previousLevel = that.currentReport.BatteryLevel;
-			that.currentReport.BatteryIsCharging = false;
-			if (message.serial_number.charAt(1) == 'T') {  // Tempest 
-				that.currentReport.BatteryLevel = this.getTempestBatteryPercent(message.voltage);
-			} else {
-				that.currentReport.BatteryLevel = this.getBatteryPercent(message.voltage);
-			}
-			if (that.currentReport.BatteryLevel > previousLevel) {
-				that.currentReport.BatteryIsCharging = true;
-			}
 		}
 		
 		if (message.type == 'evt_precip') {
@@ -444,7 +434,19 @@ class TempestAPI
 					that.currentReport.Temperature : that.currentReport.TemperatureMin;
 			that.currentReport.LightningStrikes = message.obs[0][4];
 			that.currentReport.LightningAvgDistance = message.obs[0][5];
+			
+			// Report battery status.
+			var previousLevel = that.currentReport.AirSensorBatteryLevel;
 			that.currentReport.AirSensorBatteryLevel = this.getBatteryPercent(message.obs[0][6]);
+			// If the AIR sensor has the lowest battery level, then report it as the Station battery level
+			if (that.currentReport.AirSensorBatteryLevel < that.currentReport.BatteryLevel) {
+				that.currentReport.BatteryLevel = that.currentReport.AirSensorBatteryLevel;
+				// It could have a solar panel on it, so check to see if it is going up (charging)
+				that.currentReport.BatteryIsCharging = false;
+				if (that.currentReport.BatteryLevel > previousLevel) {
+					that.currentReport.BatteryIsCharging = true;
+				}
+			}
 		}
 
 		if (message.type == 'obs_sky') {
@@ -465,7 +467,19 @@ class TempestAPI
 			that.currentReport.WindSpeedLull = message.obs[0][4];
 			that.currentReport.WindSpeedMax = message.obs[0][6];
 			
+			// Report battery status.
+			var previousLevel = that.currentReport.SkySensorBatteryLevel;
 			that.currentReport.SkySensorBatteryLevel = this.getBatteryPercent(message.obs[0][8]);
+			// If the SKY sensor has the lowest battery level, then report it as the Station battery level
+			if (that.currentReport.SkySensorBatteryLevel < that.currentReport.BatteryLevel) {
+				that.currentReport.BatteryLevel = that.currentReport.AirSensorBatteryLevel;
+				// It could have a solar panel on it, so check to see if it is going up (charging)
+				that.currentReport.BatteryIsCharging = false;
+				if (that.currentReport.BatteryLevel > previousLevel) {
+					that.currentReport.BatteryIsCharging = true;
+				}
+			}
+			
 			that.currentReport.SolarRadiation = message.obs[0][10];
 			// Note that Local Day Rain Accumulation (Field 11) is currently always null. Hence we have to approximate it with data available to us.
 			that.currentReport.RainBool = message.obs[0][3] > 0 ? true : false;
