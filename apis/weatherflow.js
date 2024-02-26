@@ -332,37 +332,47 @@ class TempestAPI
 			} else {
 				this.currentReport.SensorString = "";
 				if (message.sensor_status & 0x00000001) {
-					this.currentReport.SensorString += "Lightning failed "
+					this.currentReport.SensorString += "Lightning failed"
 				}
 				if (message.sensor_status & 0x00000002) {
-					this.currentReport.SensorString += "Lightning noise "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Lightning noise"
 				}
 				if (message.sensor_status & 0x00000004) {
-					this.currentReport.SensorString += "Lightning disturber "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Lightning disturber"
 				}
 				if (message.sensor_status & 0x00000008) {
-					this.currentReport.SensorString += "Pressure failed "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Pressure failed"
 				}
 				if (message.sensor_status & 0x00000010) {
-					this.currentReport.SensorString += "Temperature failed "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Temperature failed"
 				}
 				if (message.sensor_status & 0x00000020) {
-					this.currentReport.SensorString += "Relative Humidity failed "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Relative Humidity failed"
 				}
 				if (message.sensor_status & 0x00000040) {
-					this.currentReport.SensorString += "Wind failed "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Wind failed"
 				}
 				if (message.sensor_status & 0x00000080) {
-					this.currentReport.SensorString += "Precipitation failed "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Precipitation failed"
 				}
 				if (message.sensor_status & 0x00000100) {
-					this.currentReport.SensorString += "Light/UV failed "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Light/UV failed"
 				}
 				if (message.sensor_status & 0x00008000) {
-					this.currentReport.SensorString += "Power booster depleted "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Power booster depleted"
 				}
 				if (message.sensor_status & 0x00010000) {
-					this.currentReport.SensorString += "Power booster shore power "
+					if (this.currentReport.SensorString.length > 0) this.currentReport.SensorString += ", ";
+					this.currentReport.SensorString += "Power booster shore power"
 				}
 				this.log.debug("Sensor on unit %s failed error code: %d", message.serial_number, message.sensor_status);
 				
@@ -419,7 +429,7 @@ class TempestAPI
 			// Only perform new calculations if temperature and humidity values are within a good range
 			// We could get out of range values if the sensors have failed.
 			if (that.currentReport.Humidity > 0 && that.currentReport.Humidity <= 100 &&
-				that.currentReport.Temperature > 0 && that.currentReport.Temperature < 100) {
+				that.currentReport.Temperature > -100 && that.currentReport.Temperature < 100) {
 				that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
 					wformula.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
@@ -490,7 +500,7 @@ class TempestAPI
             // Only perform new calculations if temperature and humidity values are within a good range
             // We could get out of range values if the sensors have failed.
             if (that.currentReport.Humidity > 0 && that.currentReport.Humidity <= 100 &&
-                    that.currentReport.Temperature > 0 && that.currentReport.Temperature < 100) {
+                    that.currentReport.Temperature > -100 && that.currentReport.Temperature < 100) {
                 that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
 					wformula.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
