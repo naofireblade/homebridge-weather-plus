@@ -219,7 +219,13 @@ class TempestAPI
 			this.getForecastData((error, result) =>
 								 {
 				if (!error) {
-					weather.forecasts = this.parseForecasts(result["current_conditions"]["time"], result["forecast"]["daily"], result["timezone"]);
+					try {
+						weather.forecasts = this.parseForecasts(result["current_conditions"]["time"], result["forecast"]["daily"], result["timezone"]);
+					} catch (e) {
+						this.log.error("Error parsing weather Forecast");
+						this.log.error(result);
+						this.log.error(e);
+					}
 				} else {
 					this.log.error("Error retrieving weather Forecast");
 					this.log.error(result);
