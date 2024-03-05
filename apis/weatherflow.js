@@ -663,8 +663,9 @@ class TempestAPI
 			forecast.Condition = values[i].conditions;
 			forecast.ConditionCategory = this.getForecastConditionCategory(values[i].icon, this.conditionDetail)
 			forecast.ForecastDay =  moment.unix(values[i].day_start_local).tz(timezone).format('dddd');
-			forecast.RainBool = values[i].precip_icon.includes('rain') || values[i].precip_icon.includes('sleet') || values[i].precip_icon.includes('storm');
-			forecast.SnowBool = values[i].precip_icon.includes('snow');
+			let detailedCondition = this.getForecastConditionCategory(values[i].icon, true);
+			forecast.RainBool = [5, 6, 9].includes(detailedCondition);
+			forecast.SnowBool = [7, 8].includes(detailedCondition);
 			forecast.SunriseTime = moment.unix(values[i].sunrise).tz(timezone).format('HH:mm:ss');
 			forecast.SunsetTime = moment.unix(values[i].sunset).tz(timezone).format('HH:mm:ss');
 			forecast.TemperatureMax = values[i].air_temp_high;
