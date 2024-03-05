@@ -214,7 +214,7 @@ class TempestAPI
 		weather.forecasts = [];
 		
 		// Limit forecast updates to once every hour. Forecast won't change that quickly
-		if (this.lastForecastUpdate && moment().hour() != this.lastForecastUpdate) {
+		if ((typeof this.lastForecastUpdate !== 'undefined')  && moment().hour() != this.lastForecastUpdate) {
 			this.lastForecastUpdate = moment().hour();
 			this.getForecastData((error, result) =>
 								 {
