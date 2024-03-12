@@ -70,11 +70,13 @@ class WundergroundAPI
 			else
 			{
 				that.log.error("Weather Underground Request failed");
-				that.log.error("Response statusCode: " + response.statusCode + " statusMessage: " + response.statusMessage);
-				if (response.statusCode == 204) {
-					that.log.error("Check to make sure your PWS is not offline. https://www.wunderground.com/member/devices")
-				}
 				that.log.error("Error Message: " + err);
+				if (typeof response !== 'undefined') {
+					that.log.error("Response statusCode: " + response.statusCode + " statusMessage: " + response.statusMessage);
+					if (response.statusCode == 204) {
+						that.log.error("Check to make sure your PWS is not offline. https://www.wunderground.com/member/devices")
+					}
+				}
 				callback(err);
 			}
 		}.bind(this));
