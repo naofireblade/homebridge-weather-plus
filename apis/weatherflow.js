@@ -657,11 +657,18 @@ class TempestAPI
 	{
 		let forecasts = [];
 		 
+		// Check to see if we have 'Todays' forecast as it may be too late
+		// in the day (11pm-midnight) for a daily forecast
+		// If we don't have 'Todays' forecast, then the forecasts will start from tomorrow.
+		let currentDay = moment.unix(observation_time).tz(timezone).date();
+		let forecastOffset = values[0].day_num == currentDay ? 0 : 1;
+		this.log.debug("Weatherflow forecast. Today is:" + currentDay + " First forecast day:" + values[0].day_num);
+		
 		for (let i = 0; i < values.length; i++) {
 			// this.log(values[i]);
 			let forecast = {};
 			forecast.Condition = values[i].conditions;
-			forecast.ConditionCategory = this.getForecastConditionCategory(values[i].icon, this.conditionDetail)
+			forecast.ConditionCategory = this.getForecastConditionCategory(values[i].icon, this.conditionDetail);
 			forecast.ForecastDay =  moment.unix(values[i].day_start_local).tz(timezone).format('dddd');
 			let detailedCondition = this.getForecastConditionCategory(values[i].icon, true);
 			forecast.RainBool = [5, 6, 9].includes(detailedCondition);
@@ -673,8 +680,19 @@ class TempestAPI
 			forecast.RainChance = values[i].precip_probability;
 			forecast.ObservationTime = moment.unix(observation_time).tz(timezone).format('HH:mm:ss');
 			
-			forecasts[i] = forecast;
+			forecasts[i+forecastOffset] = forecast;
 		}
+		
+		if (forecastOffset == 0) {
+			// If we have the current day forecast save it away
+			this.savedDayForecast = forecasts[0];
+			this.log.debug("Weatherflow storing today's forecast");
+		} else {
+			// If we don't have the current day forecast, present the last saved one
+			this.log.debug("Weatherflow inserting saved today's forecast");
+			forecasts[0] = this.savedDayForecast;
+		}
+		
 		return forecasts;
 	}
 
