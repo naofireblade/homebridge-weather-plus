@@ -81,8 +81,8 @@ function WeatherPlusPlatform(_log, _config)
 				break;
 			case "tempest":
 				this.log.info("Adding station with weather service TempestAPI named '" + config.nameNow + "'");
-				this.stations.push(new tempest(config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
-				this.interval = 1;  // Tempest broadcasts new data every minute
+				this.stations.push(new tempest(config.key, config.locationId, config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
+				this.interval = 1;  // Tempest broadcasts new data every minute, forecasts are limited to once per hour
 				break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
@@ -273,7 +273,8 @@ WeatherPlusPlatform.prototype = {
 									time: new Date().getTime() / 1000,
 									temp: accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
 									pressure: accessory.AirPressureService ? accessory.AirPressureService.value : accessory.CurrentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
-									humidity: accessory.HumidityService ? accessory.HumidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value
+									humidity: accessory.HumidityService ? accessory.HumidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value,
+									lux: accessory.LightLevelService ? accessory.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value
 								});
 							} catch (error2)
 							{
@@ -352,7 +353,7 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdAirPressure);
 					}
-					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + convertedValue + " " + accessory.AirPressureService.unit);
+					accessory.AirPressureService.setCharacteristic(Characteristic.ConfiguredName, "Air Pressure: " + convertedValue + " " + accessory.AirPressureService.unit);
 					accessory.AirPressureService.value = convertedValue; // Save value to use in history
 				}
 				else if (name === "CloudCover")
@@ -365,7 +366,7 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdCloudCover);
 					}
-					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Cover: " + convertedValue);
+					accessory.CloudCoverService.setCharacteristic(Characteristic.ConfiguredName, "Cloud Cover: " + convertedValue);
 				}
 				else if (name === "DewPoint")
 				{
@@ -401,15 +402,15 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdUvIndex);
 					}
-					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + convertedValue);
+					accessory.UVIndexService.setCharacteristic(Characteristic.ConfiguredName, "UV Index: " + convertedValue);
 				}
 				else if (name === "Visibility")
 				{
-					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibility: " + convertedValue + " " + accessory.VisibilityService.unit);
+					accessory.VisibilityService.setCharacteristic(Characteristic.ConfiguredName, "Visibility: " + convertedValue + " " + accessory.VisibilityService.unit);
 				}
 				else if (name === "WindDirection")
 				{
-					accessory.WindDirectionService.setCharacteristic(Characteristic.Name, "Wind Dir: " + convertedValue);
+					accessory.WindDirectionService.setCharacteristic(Characteristic.ConfiguredName, "Wind Dir: " + convertedValue);
 				}
 				else if (name === "WindSpeed")
 				{
@@ -421,11 +422,11 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdWindSpeed);
 					}
-					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + " " + accessory.WindSpeedService.unit);
+					accessory.WindSpeedService.setCharacteristic(Characteristic.ConfiguredName, "Wind Speed: " + convertedValue + " " + accessory.WindSpeedService.unit);
 				}
 				else if(name === "RainDay") {
 					accessory.RainDayService.setCharacteristic(Characteristic.OccupancyDetected, value > 0);
-					accessory.RainDayService.setCharacteristic(Characteristic.Name, "Total Precip: " + convertedValue + " " + accessory.RainDayService.unit);
+					accessory.RainDayService.setCharacteristic(Characteristic.ConfiguredName, "Total Precip: " + convertedValue + " " + accessory.RainDayService.unit);
 				}
 				else
 				{
@@ -460,6 +461,13 @@ WeatherPlusPlatform.prototype = {
 					temperatureService.setCharacteristic(Characteristic.ChargingState, Characteristic.ChargingState.CHARGING);
 				} else {
 					temperatureService.setCharacteristic(Characteristic.ChargingState, Characteristic.ChargingState.NOT_CHARGING);
+				}
+			}
+			else if (name === "StatusFault") {
+				if (value == true) {
+					temperatureService.setCharacteristic(Characteristic.StatusFault, Characteristic.StatusFault.GENERAL_FAULT);
+				} else {
+					temperatureService.setCharacteristic(Characteristic.StatusFault, Characteristic.StatusFault.NO_FAULT);
 				}
 			}
 			// Set everything else as a custom characteristic in the temperature service

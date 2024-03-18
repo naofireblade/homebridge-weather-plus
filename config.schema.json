@@ -249,16 +249,16 @@
           "fakegatoParameters": {
             "type": "string"
           },
-          "tresholdAirPressure": {
+          "thresholdAirPressure": {
             "type": "integer"
           },
-          "tresholdCloudCover": {
+          "thresholdCloudCover": {
             "type": "integer"
           },
-          "tresholdUvIndex": {
+          "thresholdUvIndex": {
             "type": "integer"
           },
-          "tresholdWindSpeed": {
+          "thresholdWindSpeed": {
             "type": "integer"
           }
         }
@@ -308,42 +308,46 @@
               "type": "help",
               "helpvalue": "<h6>API Key</h6><p class='help-block'>Generate your free api key after registering <a target='_blank' href='https://home.openweathermap.org/users/sign_up'>here</a>.</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap'"
               }
             },
             {
               "type": "help",
               "helpvalue": "<h6>API Key</h6><p class='help-block'>Registration is available for users with a PWS. Get your free api key <a target='_blank' href='https://www.wunderground.com/member/api-keys'>here</a>.</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'weatherunderground'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'weatherunderground'"
               }
             },
             {
               "type": "help",
               "helpvalue": "<h6>JSON URL</h6><p class='help-block'>URL for JSON File (Include full URL).</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'weewx'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'weewx'"
+              }
+            },
+            {
+              "type": "help",
+              "helpvalue": "<h6>Token</h6><p class='help-block'>(Optional) Personal Access Token to obtain forecasts. Log into <a target='_blank' href='http://tempestwx.com'>Tempest</a> and go to Settings -> Data Authorizations -> Create Token</p>",
+              "condition": {
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'tempest'"
               }
             },
             {
               "key": "stations[].key",
-              "notitle": true,
-              "condition": {
-                "functionBody": "return model.stations[0].service != 'tempest'"
-              }
+              "notitle": true
             },
             {
               "type": "help",
               "helpvalue": "<h6>City</h6><p class='help-block'>Find your city <a target='_blank' href='https://openweathermap.org/find'>here</a>.</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap'"
               }
             },
 			{
               "type": "help",
               "helpvalue": "<h6>City</h6><p class='help-block'>City only needed with Tempest when Eve app is used with multiple weather stations (same or different homes)</a>.</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'tempest'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'tempest'"
               }
             },
             {
@@ -351,14 +355,14 @@
               "notitle": true,
               "placeholder": "Berlin, DE",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap' ||  model.stations[0].service === 'tempest'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap' ||  model.stations[arrayIndices[0]].service === 'tempest'"
               }
             },
             {
               "type": "help",
               "helpvalue": "<h6>Geo coordinates</h6><p class='help-block'>Optional: Enter geo coordinates (1. latitude, 2. longitude). Find your coordinates <a target='_blank' href='http://www.mapcoordinates.net/en'>here</a>.</p>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap'"
               }
             },
             {
@@ -373,14 +377,14 @@
                 }
               ],
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap'"
               }
             },
             {
               "type": "help",
               "helpvalue": "<br/>",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap'"
               }
             },
             {
@@ -388,14 +392,14 @@
               "title": "Station Id",
               "description": "Your personal StationID.",
               "condition": {
-                "functionBody": "return model.stations[0].service === 'weatherunderground'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'weatherunderground' || model.stations[arrayIndices[0]].service === 'tempest'"
               }
             },
             {
               "key": "stations[].language",
               "title": "Daily weather report language",
               "condition": {
-                "functionBody": "return model.stations[0].service != 'weewx'"
+                "functionBody": "return model.stations[arrayIndices[0]].service != 'weewx'"
               }  
             },
             {
@@ -405,28 +409,28 @@
               "key": "stations[].thresholdAirPressure",
               "title": "Threshold for air pressure sensor",
               "condition": {
-                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+                "functionBody": "return model.stations[arrayIndices[0]].compatibility === 'home' ||  model.stations[arrayIndices[0]].compatibility === 'both'"
               }
             },
             {
               "key": "stations[].thresholdCloudCover",
               "title": "Threshold for cloud cover sensor",
               "condition": {
-                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+                "functionBody": "return model.stations[arrayIndices[0]].compatibility === 'home' ||  model.stations[arrayIndices[0]].compatibility === 'both'"
               }
             },
             {
               "key": "stations[].thresholdUvIndex",
               "title": "Threshold for uv index sensor",
               "condition": {
-                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+                "functionBody": "return model.stations[arrayIndices[0]].compatibility === 'home' ||  model.stations[arrayIndices[0]].compatibility === 'both'"
               }
             },
             {
               "key": "stations[].thresholdWindSpeed",
               "title": "Threshold for wind speed sensor",
               "condition": {
-                "functionBody": "return model.stations[0].compatibility === 'home' ||  model.stations[0].compatibility === 'both'"
+                "functionBody": "return model.stations[arrayIndices[0]].compatibility === 'home' ||  model.stations[arrayIndices[0]].compatibility === 'both'"
               }
             },
             {
@@ -449,7 +453,7 @@
                 }
               ],
               "condition": {
-                "functionBody": "return model.stations[0].service === 'openweathermap'"
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'openweathermap' || model.stations[arrayIndices[0]].service === 'tempest'"
               }
             },
             {
@@ -476,7 +480,7 @@
                   "title": "Separate humidity",
                   "description": "Separate humidity from the weather accessory to an own accessory.",
                   "condition": {
-                    "functionBody": "return model.stations[0].compatibility === 'eve' ||  model.stations[0].compatibility === 'both'"
+                    "functionBody": "return model.stations[arrayIndices[0]].compatibility === 'eve' ||  model.stations[arrayIndices[0]].compatibility === 'both'"
                   }
                 },
                 {

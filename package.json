@@ -37,11 +37,11 @@
     "Wind Speed Maximum",
     "Observation Time",
     "Observation Station",
-    "yahoo",
     "openweather",
     "openweathermap",
     "weather underground",
-    "tempest weather station"
+    "tempest weather station",
+    "weatherflow weather station"
   ],
   "engines": {
     "node": ">=10.0.0",
@@ -111,7 +111,7 @@
     "url": "https://github.com/naofireblade/homebridge-weather-plus.git"
   },
   "dependencies": {
-    "fakegato-history": "^0.6.3",
+    "fakegato-history": "^0.6.4",
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
     "underscore": "^1.13.6",

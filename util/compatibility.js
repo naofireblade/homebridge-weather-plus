@@ -13,15 +13,18 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 
 		that.AirPressureService = new Service.OccupancySensor("Air Pressure", "Air Pressure");
 		that.AirPressureService.unit = temporaryService.getCharacteristic(CustomCharacteristic.AirPressure).props.unit;
+		that.AirPressureService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Air Pressure");
 	}
 	if (name === "CloudCover")
 	{
 		that.CloudCoverService = new Service.OccupancySensor("Cloud Cover", "Cloud Cover");
+		that.CloudCoverService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Cloud Cover");
 	}
 	if (name === "DewPoint")
 	{
 		that.DewPointService = new Service.TemperatureSensor("Dew Point", "Dew Point");
 		that.DewPointService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
+		that.DewPointService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Dew Point");
 	}
 	if (name === "Humidity")
 	{
@@ -39,24 +42,29 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 	if (name === "RainBool")
 	{
 		that.RainBoolService = new Service.OccupancySensor("Rain", "Rain");
+		that.RainBoolService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Rain");
 	}
 	if (name === "SnowBool")
 	{
 		that.SnowBoolService = new Service.OccupancySensor("Snow", "Snow");
+		that.SnowBoolService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Snow");
 	}
 	if (name === "TemperatureMin")
 	{
 		that.TemperatureMinService = new Service.TemperatureSensor("Minimum Temperature", "TemperatureMin");
 		that.TemperatureMinService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
+		that.TemperatureMinService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Minimum Temperature");
 	}
 	if (name === "TemperatureApparent")
 	{
 		that.TemperatureApparentService = new Service.TemperatureSensor("Apparent Temperature", "TemperatureApparent");
 		that.TemperatureApparentService.getCharacteristic(Characteristic.CurrentTemperature).props.minValue = -50;
+		that.TemperatureApparentService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Apparent Temperature");
 	}
 	if (name === "UVIndex")
 	{
 		that.UVIndexService = new Service.OccupancySensor("UV Index", "UV Index");
+		that.UVIndexService.getCharacteristic(Characteristic.ConfiguredName).updateValue("UV Index");
 	}
 	if (name === "Visibility")
 	{
@@ -66,10 +74,12 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 
 		that.VisibilityService = new Service.OccupancySensor("Visibility", "Visibility");
 		that.VisibilityService.unit = temporaryService.getCharacteristic(CustomCharacteristic.Visibility).props.unit;
+		that.VisibilityService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Visibility");
 	}
 	if (name === "WindDirection")
 	{
 		that.WindDirectionService = new Service.OccupancySensor("Wind Direction", "Wind Dir");
+		that.WindDirectionService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Wind Direction");
 	}
 	if (name === "WindSpeed")
 	{
@@ -79,6 +89,7 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 
 		that.WindSpeedService = new Service.OccupancySensor("Wind Speed", "Wind Speed");
 		that.WindSpeedService.unit = temporaryService.getCharacteristic(CustomCharacteristic.WindSpeed).props.unit;
+		that.WindSpeedService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Wind Speed");
 	}
 	if (name === "RainDay")
 	{
@@ -88,6 +99,7 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 
 		that.RainDayService = new Service.OccupancySensor("RainDay", "RainDay");
 		that.RainDayService.unit = temporaryService.getCharacteristic(CustomCharacteristic.RainDay).props.unit;
+		that.RainDayService.getCharacteristic(Characteristic.ConfiguredName).updateValue("RainDay");
 	}
 
 };

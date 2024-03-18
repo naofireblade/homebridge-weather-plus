@@ -278,3 +278,17 @@
 ## 3.3.3
 * Fix Tempest weather station breakage introduced in 3.3.2
 * Fix Rain accumulation
+
+## 3.3.4
+* Add support to detect failing sensors on Tempest weather station and report failure HomeKit
+* Fix tile naming for Home app so it contains name and value
+* Add support for Sunrise and Sunset for current conditions and forecast with OpenWeather v2.5 (Legacy/Free) API
+* Add support for Sunrise and Sunset for current conditions with OpenWeather v3.0 OneCall API
+* Fix configuration UI to save the threshold values
+* Add support for Forecasts with Tempest weather station.
+* Add extra error logging when OpenWeatherMap URL load fails
+* Add support for light level history
+* Add error handling to WeatherUnderground to indicate if PWS is offline
+* Increase max UV Index value as UV Index values in Australia's outback goes higher than 12
+* Add Rain sensor support to WeatherUnderground
+* Fix units in WeatherUnderground so that values are not converted multiple times

@@ -36,6 +36,8 @@ class OpenWeatherMapAPI
 			'Rain1h',
 			'RainBool',
 			'SnowBool',
+			'SunriseTime',
+			'SunsetTime',
 			'Temperature',
 			'TemperatureApparent',
 			'UVIndex',
@@ -106,10 +108,12 @@ class OpenWeatherMapAPI
 						this.getWeatherData(this.apiBaseURL + "/data/2.5/forecast", (error, result) =>
 						{
 							if (!error) {
-									this.generateForecasts(weather, result["list"], result["city"]["timezone"], callback);
+									// Pass the entire "city" JSON array as it has both the timezone and sunrise & sunset values
+									this.generateForecasts(weather, result["list"], result["city"], callback);
 								} else {
-								    that.log.error("Error retrieving weather Forecast from API 2.5");
-						            that.log.error(result);
+								    that.log.error("Error retrieving OpenWeatherMap Forecast from API 2.5");
+								    that.log.error("Error result: " + result);
+								    that.log.error("Error message: " + error);
 						            callback();
 								}
 						});
@@ -131,22 +135,22 @@ class OpenWeatherMapAPI
 							this.removeCharacteristic(this.reportCharacteristics, "DewPoint");
 							this.removeCharacteristic(this.forecastCharacteristics, "UVIndex");
 							this.removeCharacteristic(this.forecastCharacteristics, "DewPoint");
-							this.removeCharacteristic(this.forecastCharacteristics, "SunriseTime");
-							this.removeCharacteristic(this.forecastCharacteristics, "SunsetTime");
 							this.forecastDays = 5;
 							this.update(forecastDays, callback);
 						}
 						else
 						{
 							that.log.error("Could not retreive weather report with neither API 3.0 or API 2.5. You may need to wait up to 30 minutes after creating your api key. If the error persist, check if you copied the api key correctly.");
-							that.log.error(result);
+							that.log.error("Error result: " + result);
+							that.log.error("Error message: " + error);
 							callback();
 						}
 					}
 					else
 					{
-						that.log.error("Error retrieving weather report");
-						that.log.error(result);
+						that.log.error("Error retrieving OpenWeatherMap report");
+						that.log.error("Error result: " + result);
+						that.log.error("Error message: " + error);
 						callback();
 					}
 				}
@@ -165,7 +169,7 @@ class OpenWeatherMapAPI
 		}
 		else
 		{
-			this.parseReportOneCall(weather.report, values["current"]);
+			this.parseReportOneCall(weather.report, values["current"], timezone);
 			weather.report.ObservationTime = moment.unix(values["current"].dt).tz(timezone).format('HH:mm:ss');
 		}
 
@@ -181,6 +185,7 @@ class OpenWeatherMapAPI
 
 		// API 2.5 does not send a summary for the forecast day, instead it sends a report for every 3 hours.
 		// We need to combine 8 x 3hrs reports to get the forecast for 1 day.
+		// Also for API 2.5, timezone parameter is actually the result "city" JSON array
 		let legacyDays = [];
 		if (this.api === "2.5")
 		{
@@ -199,7 +204,7 @@ class OpenWeatherMapAPI
 		{
 			if (this.api === "2.5")
 			{
-				forecasts[forecasts.length] = this.parseForecastLegacy(values[i], timezone / 60);
+				forecasts[forecasts.length] = this.parseForecastLegacy(values[i], timezone);
 			}
 			else
 			{
@@ -224,6 +229,8 @@ class OpenWeatherMapAPI
 		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
 		report.RainBool = [5, 6, 9].includes(detailedCondition);
 		report.SnowBool = [7, 8].includes(detailedCondition);
+		report.SunriseTime = moment.unix(values.sys.sunrise).utcOffset(values.timezone / 60).format('HH:mm:ss');
+		report.SunsetTime = moment.unix(values.sys.sunset).utcOffset(values.timezone / 60).format('HH:mm:ss');
 		report.TemperatureApparent = typeof values.main.feels_like === 'object' ? parseInt(values.main.feels_like.day) : parseInt(values.main.feels_like);
 		report.TemperatureMax = parseInt(values.main.temp_max);
 		report.TemperatureMin = parseInt(values.main.temp_min);
@@ -249,7 +256,7 @@ class OpenWeatherMapAPI
 	 * @param timezoneShift shift in seconds from utc of location timezone
 	 * @returns {{}} forecast day
 	 */
-	parseForecastLegacy(values, timezoneShift)
+	parseForecastLegacy(values, city)
 	{
 		let forecast = {};
 		let combinedHourlyValues = {
@@ -265,6 +272,10 @@ class OpenWeatherMapAPI
 				"all": values.map(v => v.clouds.all).reduce((acc, v, i, a) => (acc + v / a.length), 0)
 			},
 			"weather": values[4].weather,
+			"sys": {
+				"sunrise": city["sunrise"],
+				"sunset": city["sunset"]
+			},
 			"wind": {
 				"speed": Math.max(...values.map(v => v.wind.speed)),
 				"deg": values[4].wind.deg,
@@ -273,16 +284,17 @@ class OpenWeatherMapAPI
 			"rain": {
 				"24h": values.map(v => v.rain === undefined || isNaN(parseFloat(v.rain['3h'])) ? 0 : parseFloat(v.rain['3h'])).reduce((a, b) => a + b)
 			},
-			"pop": Math.max(...values.map(v => v.pop))
+			"pop": Math.max(...values.map(v => v.pop)),
+			"timezone" : city["timezone"]
 		}
 		this.parseReportLegacy(forecast, combinedHourlyValues, true);
 		
-		forecast.ForecastDay = moment.unix(combinedHourlyValues.dt).utcOffset(timezoneShift).format('dddd');
+		forecast.ForecastDay = moment.unix(combinedHourlyValues.dt).utcOffset(city["timezone"] / 60).format('dddd');
 
 		return forecast;
 	}
 
-	parseReportOneCall(report, values, isForecast = false)
+	parseReportOneCall(report, values, timezone, isForecast = false)
 	{
 		report.AirPressure = parseInt(values.pressure);
 		report.CloudCover = parseInt(values.clouds);
@@ -293,6 +305,8 @@ class OpenWeatherMapAPI
 		let detailedCondition = this.getConditionCategory(values.weather[0].id, true);
 		report.RainBool = [5, 6, 9].includes(detailedCondition);
 		report.SnowBool = [7, 8].includes(detailedCondition);
+		report.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
+		report.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
 		report.TemperatureApparent = typeof values.feels_like === 'object' ? parseInt(values.feels_like.day) : parseInt(values.feels_like);
 		report.UVIndex = parseInt(values.uvi);
 		report.WindDirection = converter.getWindDirection(values.wind_deg);
@@ -318,11 +332,9 @@ class OpenWeatherMapAPI
 	parseForecastOneCall(values, timezone)
 	{
 		let forecast = {};
-		this.parseReportOneCall(forecast, values, true);
+		this.parseReportOneCall(forecast, values, timezone, true);
 		
 		forecast.ForecastDay = moment.unix(values.dt).tz(timezone).format('dddd');
-		forecast.SunriseTime = moment.unix(values.sunrise).tz(timezone).format('HH:mm:ss');
-		forecast.SunsetTime = moment.unix(values.sunset).tz(timezone).format('HH:mm:ss');
 
 		return forecast;
 	}
