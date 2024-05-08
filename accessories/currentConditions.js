@@ -141,7 +141,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			}
 		}
 	});
-	this.services.concat(compatibility.getServices(this));
+	this.services = this.services.concat(compatibility.getServices(this));
 
 	// Create information service
 	this.informationService = new Service.AccessoryInformation();
