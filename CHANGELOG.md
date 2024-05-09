@@ -292,3 +292,6 @@
 * Increase max UV Index value as UV Index values in Australia's outback goes higher than 12
 * Add Rain sensor support to WeatherUnderground
 * Fix units in WeatherUnderground so that values are not converted multiple times
+
+## 3.3.5
+* Fix issue where compatibility (occupancy) sensors are not showing in Apple's Home app
