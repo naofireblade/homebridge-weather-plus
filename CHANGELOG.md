@@ -295,3 +295,6 @@
 
 ## 3.3.5
 * Fix issue where compatibility (occupancy) sensors are not showing in Apple's Home app
+
+## 3.3.6
+* The fix in 3.3.4 for tile naming in Home app was not supported with HomeBridge. Add setting of Name property back for HomeBridge compatibility. 
