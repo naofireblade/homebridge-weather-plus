@@ -117,7 +117,8 @@
     "underscore": "^1.13.6",
     "request": "^2.88.2",
     "weather-formulas": "^1",
-    "node-persist": "^2.1.0"
+    "node-persist": "^2.1.0",
+    "module-alias": "^2.2.3"
   },
   "funding": {
     "type": "buymeacoffee",
