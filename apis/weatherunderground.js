@@ -29,9 +29,6 @@ class WundergroundAPI
 
 		this.location = location;
 		this.apiKey = apiKey;
-
-		// Get observation values only in si 's' for now.
-		this.units = 's';
 	}
 
 	update(forecastDays, callback)
@@ -40,7 +37,7 @@ class WundergroundAPI
 		let weather = {};
 		let that = this;
 
-		const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey=" + this.apiKey + "&stationId=" + this.location + "&format=json&units=m" + '&numericPrecision=decimal';
+		const queryUri = "https://api.weather.com/v2/pws/observations/current?apiKey=" + this.apiKey + "&stationId=" + this.location + "&format=json&units=s" + '&numericPrecision=decimal';
 		request(encodeURI(queryUri), function (err, response, body)
 		{
 			if (!err && body.length > 0)
@@ -90,7 +87,7 @@ class WundergroundAPI
 		try
 		{
 			let observation = json.observations[0];
-			let values = observation.metric;
+			let values = observation.metric_si;
 
 			report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
 			report.ObservationTime = moment(Date.parse(observation.obsTimeUtc)).format('HH:mm:ss');
