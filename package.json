@@ -114,7 +114,6 @@
     "fakegato-history": "^0.6.4",
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
-    "underscore": "^1.13.6",
     "request": "^2.88.2",
     "weather-formulas": "^1",
     "node-persist": "^2.1.0",

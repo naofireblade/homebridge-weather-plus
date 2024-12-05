@@ -299,4 +299,4 @@
 ## 3.3.6
 * The fix in 3.3.4 for tile naming in Home app was not supported with HomeBridge. Add setting of Name property back for HomeBridge compatibility. 
 * Fix issue with threshold triggers and WeatherUnderground. In 3.3.4, WeatherUnderground API call was modified and incorrectly return values in km, and km/h. 
-* Fix punycode deprication warning.
+* Fix punycode deprication warning and util._extend warning.

@@ -1,7 +1,5 @@
 /* jshint asi: true, esversion: 6, laxbreak: true, laxcomma: true, node: true, undef: true, unused: true */
 
-const underscore = require('underscore');
-
 const inherits = require('util').inherits,
 	CustomUUID = {
 		// Eve UUID
@@ -69,7 +67,7 @@ module.exports = function (Characteristic, units)
 		var range = (units !== 'imperial') ? {unit: 'mm', maxValue: max, minValue: 0, minStep: 0.1}
 			: {unit: 'in', maxValue: Math.round(max / 25.4), minValue: 0, minStep: 0.01};
 
-		return underscore.extend(
+		return Object.assign(
 			{
 				format: Characteristic.Formats.FLOAT
 				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
@@ -90,7 +88,7 @@ module.exports = function (Characteristic, units)
 						minValue: temperatureValue(min),
 						maxValue: temperatureValue(max)};
 
-		return underscore.extend(
+		return Object.assign(
 			{
 				format: Characteristic.Formats.FLOAT
 				, minStep: 0.1
@@ -107,7 +105,7 @@ module.exports = function (Characteristic, units)
 		var range = ((units === 'si') || (units === 'sitorr') || (units === 'ca')) ? {unit: 'km', maxValue: max, minValue: 0}
 			: {unit: 'mi', maxValue: km2mi(max), minValue: 0};
 
-		return underscore.extend(
+		return Object.assign(
 			{
 				format: Characteristic.Formats.UINT8
 				, minStep: 1
@@ -133,7 +131,7 @@ module.exports = function (Characteristic, units)
 			: (units === 'ca') ? {unit: 'km/h', maxValue: mtos2kmh(max), minValue: 0}
 				: {unit: 'mph', maxValue: mtos2mih(max), minValue: 0};
 
-		return underscore.extend(
+		return Object.assign(
 			{
 				format: Characteristic.Formats.UINT8
 				, minStep: 0.1
@@ -156,7 +154,7 @@ module.exports = function (Characteristic, units)
 		let range = (units === 'sitorr') ? {unit: 'mmhg', maxValue: hpa2mmhg(max), minValue: hpa2mmhg(min)}
 			: {unit: 'hPa', maxValue: max, minValue: min};
 
-		return underscore.extend(
+		return Object.assign(
 			{
 				format: Characteristic.Formats.UINT16
 				, minStep: 1
