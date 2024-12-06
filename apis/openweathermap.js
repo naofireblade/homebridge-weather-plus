@@ -3,7 +3,7 @@
 
 const converter = require('../util/converter'),
 	moment = require('moment-timezone'),
-	request = require('request');
+	axios = require('axios');
 
 class OpenWeatherMapAPI
 {
@@ -125,7 +125,7 @@ class OpenWeatherMapAPI
 				}
 				else
 				{
-					if (result !== undefined && JSON.stringify(result).includes("401"))
+					if (error !== undefined && error.toString().includes("401"))
 					{
 						if (this.api === "3.0")
 						{
@@ -404,42 +404,39 @@ class OpenWeatherMapAPI
 		this.log.debug("Getting weather data for location %s", this.locationGeo);
 
 		const queryUri = url + "?units=metric&lang=" + this.language + "&lat=" + this.locationGeo[0] + "&lon=" + this.locationGeo[1] + "&appid=" + this.apiKey;
-		request(encodeURI(queryUri), (requestError, response, body) =>
-		{
-			if (!requestError)
+		axios.get(encodeURI(queryUri))
+			.then(response =>
 			{
 				let parseError;
 				let weather
 				try
 				{
-					weather = JSON.parse(body);
+					weather = response.data;
 				} catch (e)
 				{
 					parseError = e;
 				}
 				callback(parseError, weather);
-			}
-			else
+			})
+			.catch(requestError =>
 			{
 				callback(requestError);
-			}
-		});
+			});
 	}
 
 	getLocationGeo(callback)
 	{
 		this.log.debug("Getting coordinates for %s", this.locationCity);
 		const queryUri = this.apiBaseURL + "/geo/1.0/direct?q=" + this.locationCity.toLowerCase() + "&limit=1&appid=" + this.apiKey;
-		request(encodeURI(queryUri), (requestError, response, body) =>
-		{
-			if (!requestError)
+		axios.get(encodeURI(queryUri)) 
+			.then(response =>
 			{
 				// Get locationGeo from weather report
 				let coordinates;
 				let parseError;
 				try
 				{
-					let json = JSON.parse(body);
+					let json = response.data;
 					if (json.length >= 1)
 					{
 						coordinates = {"lat": json[0].lat, "lon": json[0].lon};
@@ -447,19 +444,18 @@ class OpenWeatherMapAPI
 					}
 					else
 					{
-						parseError = body;
+						parseError = response;
 					}
 				} catch (e)
 				{
 					parseError = e;
 				}
 				callback(parseError, coordinates);
-			}
-			else
+			})
+			.catch(requestError =>
 			{
 				callback(requestError);
-			}
-		});
+			});
 	};
 
 	getWeatherUrl()

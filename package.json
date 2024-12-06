@@ -114,10 +114,10 @@
     "fakegato-history": "^0.6.4",
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
-    "request": "^2.88.2",
+    "axios": "^1.7.9",
     "weather-formulas": "^1",
     "node-persist": "^2.1.0",
-    "module-alias": "^2.2.3"
+    "debug": "^4.4.0"
   },
   "funding": {
     "type": "buymeacoffee",

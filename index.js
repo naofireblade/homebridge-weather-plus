@@ -1,9 +1,6 @@
 /* jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
-const moduleAlias = require('module-alias');
-moduleAlias.addAlias('punycode', 'punycode/');
-
 const weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
 	weewx = require("./apis/weewx").WeewxAPI,

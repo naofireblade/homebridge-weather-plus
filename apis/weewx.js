@@ -171,7 +171,7 @@
 
 "use strict";
 
-const request = require('request'),
+const axios = require('axios'),
 	converter = require('../util/converter'),
 	geoTz = require('geo-tz'),
 	moment = require('moment-timezone');
@@ -214,17 +214,16 @@ class WeewxAPI
 	{
 		this.log.debug("Updating weather with weewx");
 		let weather = {};
-		let that = this;
+
 		//formatting url as http://site/file.json (using apikey for URL)
 		const queryUri = this.apiKey;
-		request(encodeURI(queryUri), function (err, response, body)
-		{
-			if (!err)
-			{
-				// Current weather report
+		axios.get(encodeURI(queryUri))
+        .then(response =>
+		    {
+			    // Current weather report
 				try
 				{
-					const jsonObj = JSON.parse(body);
+					const jsonObj = response.data;
 					if (jsonObj.errors === undefined || jsonObj.errors.length === 0)
 					{
 						this.log.debug(JSON.stringify(jsonObj, null, 2));
@@ -241,14 +240,13 @@ class WeewxAPI
 					that.log.error("Error Message: " + e);
 					callback(e);
 				}
-			}
-			else
+		    })
+		.catch(err => 
 			{
 				that.log.error("Error retrieving weather report and forecast");
 				that.log.error("Error Message: " + err);
 				callback(err);
-			}
-		}.bind(this));
+			});
 	}
 
 	parseReport(json)

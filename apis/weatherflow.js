@@ -12,7 +12,7 @@ const converter = require('../util/converter'),
 	moment = require('moment-timezone'),
 	dgram = require("dgram"),
 	wformula = require('weather-formulas'),
-	request = require('request');
+	axios = require('axios');
 
 class TempestAPI
 {
@@ -626,30 +626,30 @@ class TempestAPI
 
 		// Response defaults to metric
 		const queryUri = "https://swd.weatherflow.com/swd/rest/better_forecast?station_id=" + this.locationId + "&token=" + this.apiKey;
-		request(encodeURI(queryUri), (requestError, response, body) =>
-		{
-			if (!requestError)
+		axios.get(encodeURI(queryUri))
+			.then(response =>
 			{
-				if (response.statusCode == 200) {
+				if (response.status == 200) {
 					let parseError;
 					let weather
 					try
 					{
-						weather = JSON.parse(body);
+						weather = response.data;
 					} catch (e)
 					{
 						parseError = e;
 					}
 					callback(parseError, weather);
 				} else {
-					callback(true, body);
+					this.log.error("Weatherflow forecast response failure");
+					callback(true, response.data);
 				}
-			}
-			else
+			})
+			.catch(requestError =>
 			{
+				this.log.error("Weatherflow forecast request failure: " + requestError.toString());
 				callback(requestError);
-			}
-		});
+			});
 	}
 	
 	
