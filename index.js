@@ -45,7 +45,7 @@ function WeatherPlusPlatform(_log, _config)
 
 	// Custom Services and Characteristics
 	CustomService = require("./util/services")(Service, Characteristic);
-	CustomCharacteristic = require("./util/characteristics")(Characteristic, this.units);
+	CustomCharacteristic = require("./util/characteristics")(Characteristic, HomebridgeAPI, this.units);
 	CurrentConditionsWeatherAccessory = require("./accessories/currentConditions")(Service, Characteristic, CustomService, CustomCharacteristic, FakeGatoHistoryService);
 	ForecastWeatherAccessory = require("./accessories/forecast")(Service, Characteristic, CustomService, CustomCharacteristic);
 

@@ -46,7 +46,7 @@ function round(value, decimals)
 	return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
-module.exports = function (Characteristic, units)
+module.exports = function (Characteristic, HomebridgeAPI, units)
 {
 
 	units =                    		//	rainfail    temperature    visibility	windspeed    airpressure
@@ -69,8 +69,8 @@ module.exports = function (Characteristic, units)
 
 		return Object.assign(
 			{
-				format: Characteristic.Formats.FLOAT
-				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+				format: HomebridgeAPI.hap.Formats.FLOAT
+				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let rainfallValue = (val) =>
@@ -84,15 +84,15 @@ module.exports = function (Characteristic, units)
 	};
 	let temperatureProps = (min, max) =>
 	{
-		var range = {unit: units === 'imperial' ? 'fahrenheit' : Characteristic.Units.CELSIUS,
+		var range = {unit: units === 'imperial' ? 'fahrenheit' : HomebridgeAPI.hap.Units.CELSIUS,
 						minValue: temperatureValue(min),
 						maxValue: temperatureValue(max)};
 
 		return Object.assign(
 			{
-				format: Characteristic.Formats.FLOAT
+				format: HomebridgeAPI.hap.Formats.FLOAT
 				, minStep: 0.1
-				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 
@@ -107,9 +107,9 @@ module.exports = function (Characteristic, units)
 
 		return Object.assign(
 			{
-				format: Characteristic.Formats.UINT8
+				format: HomebridgeAPI.hap.Formats.UINT8
 				, minStep: 1
-				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let visibilityValue = (val) =>
@@ -133,9 +133,9 @@ module.exports = function (Characteristic, units)
 
 		return Object.assign(
 			{
-				format: Characteristic.Formats.UINT8
+				format: HomebridgeAPI.hap.Formats.UINT8
 				, minStep: 0.1
-				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let windspeedValue = (val) =>
@@ -156,9 +156,9 @@ module.exports = function (Characteristic, units)
 
 		return Object.assign(
 			{
-				format: Characteristic.Formats.UINT16
+				format: HomebridgeAPI.hap.Formats.UINT16
 				, minStep: 1
-				, perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
+				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let airpressureValue = (val) =>
@@ -166,316 +166,355 @@ module.exports = function (Characteristic, units)
 		return (units === 'sitorr') ? hpa2mmhg(val) : val;
 	};
 
-	CustomCharacteristic.AirPressure = function ()
-	{
-		Characteristic.call(this, 'Air Pressure', CustomUUID.AirPressure);
-		this.setProps(airpressureProps(700, 1100));
-		this.value = this.getDefaultValue();
-	};
-	inherits(CustomCharacteristic.AirPressure, Characteristic);
-	CustomCharacteristic.AirPressure._unitvalue = airpressureValue;
+	class AirPressureCharacteristic extends Characteristic {
+		static _unitvalue = airpressureValue;
+	  
+		constructor() {
+		  super('Air Pressure', CustomUUID.AirPressure);
+		  this.setProps(airpressureProps(700, 1100));
+		  this.value = this.getDefaultValue();
+		}
+	}
+	CustomCharacteristic.AirPressure = AirPressureCharacteristic;
 
-	CustomCharacteristic.CloudCover = function ()
-	{
-		Characteristic.call(this, 'Cloud Cover', CustomUUID.CloudCover);
-		this.setProps({
-			format: Characteristic.Formats.UINT8,
-			unit: Characteristic.Units.PERCENTAGE,
-			maxValue: 100,
-			minValue: 0,
-			minStep: 1,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
-	};
-	inherits(CustomCharacteristic.CloudCover, Characteristic);
+	class CloudCoverCharacteristic extends Characteristic {
+		constructor() {
+			super('Cloud Cover', CustomUUID.CloudCover);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.UINT8,
+				unit: HomebridgeAPI.hap.Units.PERCENTAGE,
+				maxValue: 100,
+				minValue: 0,
+				minStep: 1,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
+	}
+	CustomCharacteristic.CloudCover = CloudCoverCharacteristic;
 
-	CustomCharacteristic.Condition = function ()
-	{
-		Characteristic.call(this, 'Weather Condition', CustomUUID.Condition);
-		this.setProps({
-			format: Characteristic.Formats.STRING,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicCondition extends Characteristic {
+		constructor() {
+			super('Weather Condition', CustomUUID.Condition);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.STRING,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.Condition, Characteristic);
+	CustomCharacteristic.Condition = CustomCharacteristicCondition;
 
-	CustomCharacteristic.ConditionCategory = function ()
-	{
-		Characteristic.call(this, 'Weather Condition Category', CustomUUID.ConditionCategory);
-		this.setProps({
-			format: Characteristic.Formats.UINT8,
-			maxValue: 9,
-			minValue: 0,
-			minStep: 1,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicConditionCategory extends Characteristic {
+		constructor() {
+			super( 'Weather Condition Category', CustomUUID.ConditionCategory);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.UINT8,
+				maxValue: 9,
+				minValue: 0,
+				minStep: 1,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.ConditionCategory, Characteristic);
+	CustomCharacteristic.ConditionCategory = CustomCharacteristicConditionCategory;
 
-	CustomCharacteristic.DewPoint = function ()
-	{
-		Characteristic.call(this, 'Dew Point', CustomUUID.DewPoint);
-		this.setProps(temperatureProps(-50, 100));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicDewPoint extends Characteristic {
+		constructor() {
+			super('Dew Point', CustomUUID.DewPoint);
+			this.setProps(temperatureProps(-50, 100));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.DewPoint, Characteristic);
+	CustomCharacteristic.DewPoint = CustomCharacteristicDewPoint;
 
-	CustomCharacteristic.ForecastDay = function ()
-	{
-		Characteristic.call(this, 'Day', CustomUUID.ForecastDay);
-		this.setProps({
-			format: Characteristic.Formats.STRING,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicForecastDay extends Characteristic {
+		constructor() {
+			super('Day', CustomUUID.ForecastDay);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.STRING,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.ForecastDay, Characteristic);
+	CustomCharacteristic.ForecastDay = CustomCharacteristicForecastDay;
 
-	CustomCharacteristic.ObservationStation = function ()
-	{
-		Characteristic.call(this, 'Station', CustomUUID.ObservationStation);
-		this.setProps({
-			format: Characteristic.Formats.STRING,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicObservationStation extends Characteristic {
+		constructor() {
+			super('Station', CustomUUID.ObservationStation);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.STRING,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.ObservationStation, Characteristic);
+	CustomCharacteristic.ObservationStation = CustomCharacteristicObservationStation;
 
-	CustomCharacteristic.ObservationTime = function ()
-	{
-		Characteristic.call(this, 'Observation Time', CustomUUID.ObservationTime);
-		this.setProps({
-			format: Characteristic.Formats.STRING,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicObservationTime extends Characteristic {
+		constructor() {
+			super('Observation Time', CustomUUID.ObservationTime);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.STRING,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.ObservationTime, Characteristic);
+	CustomCharacteristic.ObservationTime = CustomCharacteristicObservationTime;
 
-	CustomCharacteristic.Ozone = function ()
-	{
-		Characteristic.call(this, 'Ozone', CustomUUID.Ozone);
-		this.setProps({
-			format: Characteristic.Formats.UINT16,
-			unit: 'DU',
-			maxValue: 500,
-			minValue: 0,
-			minStep: 1,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicOzone extends Characteristic {
+		constructor() {
+			super('Ozone', CustomUUID.Ozone);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.UINT16,
+				unit: 'DU',
+				maxValue: 500,
+				minValue: 0,
+				minStep: 1,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.Ozone, Characteristic);
+	CustomCharacteristic.Ozone = CustomCharacteristicOzone;
 
-	CustomCharacteristic.Rain1h = function ()
-	{
-		Characteristic.call(this, 'Rain Last Hour', CustomUUID.Rain1h);
-		this.setProps(rainfallProps(50));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicRain1h extends Characteristic {
+		static _unitvalue = rainfallValue;
+
+		constructor() {
+			super('Rain Last Hour', CustomUUID.Rain1h);
+			this.setProps(rainfallProps(50));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.Rain1h, Characteristic);
-	CustomCharacteristic.Rain1h._unitvalue = rainfallValue;
+	CustomCharacteristic.Rain1h = CustomCharacteristicRain1h;
 
 	// Sensor if its raining
 	// True: It is raining at the moment (current conditions). It will rain on the day (forecast)
 	// False: It is not raining at the moment (current conditions). It will not rain on the day (forecast)
-	CustomCharacteristic.RainBool = function ()
-	{
-		Characteristic.call(this, 'Rain', CustomUUID.RainBool);
-		this.setProps({
-			format: Characteristic.Formats.BOOL,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicRainBool extends Characteristic {
+		constructor() {
+			super('Rain', CustomUUID.RainBool);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.BOOL,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.RainBool, Characteristic);
+	CustomCharacteristic.RainBool = CustomCharacteristicRainBool;
 
-	CustomCharacteristic.RainChance = function ()
-	{
-		Characteristic.call(this, 'Rain Chance', CustomUUID.RainChance);
-		this.setProps({
-			format: Characteristic.Formats.UINT8,
-			unit: Characteristic.Units.PERCENTAGE,
-			maxValue: 100,
-			minValue: 0,
-			minStep: 1,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicRainChance extends Characteristic {
+		constructor() {
+			super('Rain Chance', CustomUUID.RainChance);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.UINT8,
+				unit: HomebridgeAPI.hap.Units.PERCENTAGE,
+				maxValue: 100,
+				minValue: 0,
+				minStep: 1,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.RainChance, Characteristic);
+	CustomCharacteristic.RainChance = CustomCharacteristicRainChance;
 
-	CustomCharacteristic.RainDay = function ()
-	{
-		Characteristic.call(this, 'Rain All Day', CustomUUID.RainDay);
-		this.setProps(rainfallProps(500));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicRainDay extends Characteristic {
+		static _unitvalue = rainfallValue;
+
+		constructor() {
+			super('Rain All Day', CustomUUID.RainDay);
+			this.setProps(rainfallProps(500));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.RainDay, Characteristic);
-	CustomCharacteristic.RainDay._unitvalue = rainfallValue;
+	CustomCharacteristic.RainDay = CustomCharacteristicRainDay;
 
 
 	// Sensor if its snowing
 	// True: It is snowing at the moment (current conditions). It will snow on the day (forecast)
 	// False: It is not snowing at the moment (current conditions). It will not snow on the day (forecast)
-	CustomCharacteristic.SnowBool = function ()
-	{
-		Characteristic.call(this, 'Snow', CustomUUID.SnowBool);
-		this.setProps({
-			format: Characteristic.Formats.BOOL,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicSnowBool extends Characteristic {
+		constructor() {
+			super('Snow', CustomUUID.SnowBool);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.BOOL,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.SnowBool, Characteristic);
+	CustomCharacteristic.SnowBool = CustomCharacteristicSnowBool;
 
-	CustomCharacteristic.SolarRadiation = function ()
-	{
-		Characteristic.call(this, 'Solar Radiation', CustomUUID.SolarRadiation);
-		this.setProps({
-			format: Characteristic.Formats.UINT16,
-			unit: "W/m²",
-			maxValue: 2000,
-			minValue: 0,
-			minStep: 1,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicSolarRadiation extends Characteristic {
+		constructor() {
+			super('Solar Radiation', CustomUUID.SolarRadiation);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.UINT16,
+				unit: "W/m²",
+				maxValue: 2000,
+				minValue: 0,
+				minStep: 1,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.SolarRadiation, Characteristic);
+	CustomCharacteristic.SolarRadiation = CustomCharacteristicSolarRadiation;
 
-	CustomCharacteristic.SunriseTime = function ()
-	{
-		Characteristic.call(this, 'Sunrise', CustomUUID.SunriseTime);
-		this.setProps({
-			format: Characteristic.Formats.STRING,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicSunriseTime extends Characteristic {
+		constructor() {
+			super('Sunrise', CustomUUID.SunriseTime);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.STRING,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.SunriseTime, Characteristic);
+	CustomCharacteristic.SunriseTime = CustomCharacteristicSunriseTime;
 
-	CustomCharacteristic.SunsetTime = function ()
-	{
-		Characteristic.call(this, 'Sunset', CustomUUID.SunsetTime);
-		this.setProps({
-			format: Characteristic.Formats.STRING,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicSunsetTime extends Characteristic {
+		constructor() {
+			super('Sunset', CustomUUID.SunsetTime);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.STRING,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.SunsetTime, Characteristic);
+	CustomCharacteristic.SunsetTime = CustomCharacteristicSunsetTime;
 
-	CustomCharacteristic.TemperatureMin = function ()
-	{
-		Characteristic.call(this, 'Temperature Min', CustomUUID.TemperatureMin);
-		this.setProps(temperatureProps(-50, 100));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicTemperatureMin extends Characteristic {
+		constructor() {
+			super('Temperature Min', CustomUUID.TemperatureMin);
+			this.setProps(temperatureProps(-50, 100));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.TemperatureMin, Characteristic);
+	CustomCharacteristic.TemperatureMin = CustomCharacteristicTemperatureMin;
 
-	CustomCharacteristic.TemperatureApparent = function ()
-	{
-		Characteristic.call(this, 'Apparent temperature', CustomUUID.TemperatureApparent);
-		this.setProps(temperatureProps(-50, 100));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicTemperatureApparent extends Characteristic {
+		constructor() {
+			super('Apparent temperature', CustomUUID.TemperatureApparent);
+			this.setProps(temperatureProps(-50, 100));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.TemperatureApparent, Characteristic);
+	CustomCharacteristic.TemperatureApparent = CustomCharacteristicTemperatureApparent;
 
-	CustomCharacteristic.UVIndex = function ()
-	{
-		Characteristic.call(this, 'UV Index', CustomUUID.UVIndex);
-		this.setProps({
-			format: Characteristic.Formats.UINT8,
-			maxValue: 15,
-			minValue: 0,
-			minStep: 1,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicUVIndex extends Characteristic {
+		constructor() {
+			super('UV Index', CustomUUID.UVIndex);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.UINT8,
+				maxValue: 15,
+				minValue: 0,
+				minStep: 1,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.UVIndex, Characteristic);
+	CustomCharacteristic.UVIndex = CustomCharacteristicUVIndex;
 
-	CustomCharacteristic.Visibility = function ()
-	{
-		Characteristic.call(this, 'Visibility', CustomUUID.Visibility);
-		this.setProps(visibilityProps(100));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicVisibility extends Characteristic {
+		static _unitvalue = visibilityValue;
+
+		constructor() {
+			super('Visibility', CustomUUID.Visibility);
+			this.setProps(visibilityProps(100));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.Visibility, Characteristic);
-	CustomCharacteristic.Visibility._unitvalue = visibilityValue;
+	CustomCharacteristic.Visibility = CustomCharacteristicVisibility;
 
-	CustomCharacteristic.WindDirection = function ()
-	{
-		Characteristic.call(this, 'Wind Direction', CustomUUID.WindDirection);
-		this.setProps({
-			format: Characteristic.Formats.STRING,
-			perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-		});
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicWindDirection extends Characteristic {
+		constructor() {
+			super('Wind Direction', CustomUUID.WindDirection);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.STRING,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.WindDirection, Characteristic);
+	CustomCharacteristic.WindDirection = CustomCharacteristicWindDirection;
 
-	CustomCharacteristic.WindSpeed = function ()
-	{
-		Characteristic.call(this, 'Wind Speed', CustomUUID.WindSpeed);
-		this.setProps(windspeedProps(100));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicWindSpeed extends Characteristic {
+		static _unitvalue = windspeedValue;
+
+		constructor() {
+			super('Wind Speed', CustomUUID.WindSpeed);
+			this.setProps(windspeedProps(100));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.WindSpeed, Characteristic);
-	CustomCharacteristic.WindSpeed._unitvalue = windspeedValue;
+	CustomCharacteristic.WindSpeed = CustomCharacteristicWindSpeed;
 
-	CustomCharacteristic.WindSpeedMax = function ()
-	{
-		Characteristic.call(this, 'Wind Speed Max', CustomUUID.WindSpeedMax);
-		this.setProps(windspeedProps(100));
-		this.value = this.getDefaultValue();
+	class CustomCharacteristicWindSpeedMax extends Characteristic {
+		static _unitvalue = windspeedValue;
+
+		constructor() {
+			super('Wind Speed Max', CustomUUID.WindSpeedMax);
+			this.setProps(windspeedProps(100));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.WindSpeedMax, Characteristic);
-	CustomCharacteristic.WindSpeedMax._unitvalue = windspeedValue;
+	CustomCharacteristic.WindSpeedMax = CustomCharacteristicWindSpeedMax;
 
-    CustomCharacteristic.WindSpeedLull = function () {
-        Characteristic.call(this, 'Wind Speed Lull', CustomUUID.WindSpeedLull);
-        this.setProps(windspeedProps(100));
-        this.value = this.getDefaultValue();
+    class CustomCharacteristicWindSpeedLull extends Characteristic {
+		static _unitvalue = windspeedValue;
+
+		constructor() {
+			super('Wind Speed Lull', CustomUUID.WindSpeedLull);
+			this.setProps(windspeedProps(100));
+			this.value = this.getDefaultValue();
+		}
     };
-    inherits(CustomCharacteristic.WindSpeedLull, Characteristic);
-    CustomCharacteristic.WindSpeedLull._unitvalue = windspeedValue;
+    CustomCharacteristic.WindSpeedLull = CustomCharacteristicWindSpeedLull;
     
-	CustomCharacteristic.LightningStrikes = function () {
-        Characteristic.call(this, 'Lightning Strikes', CustomUUID.LightningStrikes);
-        this.setProps({
-            format: Characteristic.Formats.UINT8,
-            maxValue: 1000,
-            minValue: 0,
-            minStep: 1,
-            perms: [Characteristic.Perms.READ, Characteristic.Perms.NOTIFY]
-        });
-        this.value = this.getDefaultValue();
+	class CustomCharacteristicLightningStrikes extends Characteristic {
+		constructor() {
+			super('Lightning Strikes', CustomUUID.LightningStrikes);
+			this.setProps({
+				format: HomebridgeAPI.hap.Formats.UINT8,
+				maxValue: 1000,
+				minValue: 0,
+				minStep: 1,
+				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+			});
+			this.value = this.getDefaultValue();
+		}
     };
-    inherits(CustomCharacteristic.LightningStrikes, Characteristic);
-    
-    CustomCharacteristic.LightningAvgDistance = function () {
-        Characteristic.call(this, 'Lightning Avg Distance', CustomUUID.LightningAvgDistance);
-        this.setProps(visibilityProps(100));
-        this.value = this.getDefaultValue();
+    CustomCharacteristic.LightningStrikes = CustomCharacteristicLightningStrikes;
+
+    class CustomCharacteristicLightningAvgDistance extends Characteristic {
+		static _unitvalue = visibilityValue;
+
+		constructor() {
+			super('Lightning Avg Distance', CustomUUID.LightningAvgDistance);
+			this.setProps(visibilityProps(100));
+			this.value = this.getDefaultValue();
+		}
     };
-    inherits(CustomCharacteristic.LightningAvgDistance, Characteristic);
-    CustomCharacteristic.LightningAvgDistance._unitvalue = visibilityValue;
+    CustomCharacteristic.LightningAvgDistance = CustomCharacteristicLightningAvgDistance;
 
 	// @see https://en.wikipedia.org/wiki/Wet-bulb_temperature
 	// Max value based on max observed temperature for wet bulb in wikipedia
-    CustomCharacteristic.TemperatureWetBulb = function ()
-	{
-		Characteristic.call(this, 'Wet-bulb temperature', CustomUUID.TemperatureWetBulb);
-		this.setProps(temperatureProps(-50, 40));
-		this.value = this.getDefaultValue();
+    class CustomCharacteristicTemperatureWetBulb extends Characteristic {
+		constructor() {
+			super('Wet-bulb temperature', CustomUUID.TemperatureWetBulb);
+			this.setProps(temperatureProps(-50, 40));
+			this.value = this.getDefaultValue();
+		}
 	};
-	inherits(CustomCharacteristic.TemperatureWetBulb, Characteristic);
+	CustomCharacteristic.TemperatureWetBulb = CustomCharacteristicTemperatureWetBulb;
 
 	return CustomCharacteristic;
 };

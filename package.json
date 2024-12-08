@@ -44,8 +44,8 @@
     "weatherflow weather station"
   ],
   "engines": {
-    "node": ">=10.0.0",
-    "homebridge": ">=1.0.0"
+    "node": ">=10.0.0 || ^20.15.1",
+    "homebridge": ">=1.0.0 || ^2.0.0-beta.0"
   },
   "author": {
     "name": "Arne Blumentritt",
