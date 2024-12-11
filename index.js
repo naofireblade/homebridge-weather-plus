@@ -354,8 +354,8 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.AirPressureService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdAirPressure);
 					}
-					accessory.AirPressureService.setCharacteristic(Characteristic.ConfiguredName, "Air Pressure: " + convertedValue + " " + accessory.AirPressureService.unit);
-					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressure: " + convertedValue + " " + accessory.AirPressureService.unit);
+					accessory.AirPressureService.setCharacteristic(Characteristic.ConfiguredName, "Air Pressureː " + convertedValue + " " + accessory.AirPressureService.unit);
+					accessory.AirPressureService.setCharacteristic(Characteristic.Name, "Air Pressureː " + convertedValue + " " + accessory.AirPressureService.unit);
 					accessory.AirPressureService.value = convertedValue; // Save value to use in history
 				}
 				else if (name === "CloudCover")
@@ -368,8 +368,8 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.CloudCoverService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdCloudCover);
 					}
-					accessory.CloudCoverService.setCharacteristic(Characteristic.ConfiguredName, "Cloud Cover: " + convertedValue);
-					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Cover: " + convertedValue);
+					accessory.CloudCoverService.setCharacteristic(Characteristic.ConfiguredName, "Cloud Coverː " + convertedValue);
+					accessory.CloudCoverService.setCharacteristic(Characteristic.Name, "Cloud Coverː " + convertedValue);
 				}
 				else if (name === "DewPoint")
 				{
@@ -405,18 +405,18 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.UVIndexService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdUvIndex);
 					}
-					accessory.UVIndexService.setCharacteristic(Characteristic.ConfiguredName, "UV Index: " + convertedValue);
-					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Index: " + convertedValue);
+					accessory.UVIndexService.setCharacteristic(Characteristic.ConfiguredName, "UV Indexː " + convertedValue);
+					accessory.UVIndexService.setCharacteristic(Characteristic.Name, "UV Indexː " + convertedValue);
 				}
 				else if (name === "Visibility")
 				{
-					accessory.VisibilityService.setCharacteristic(Characteristic.ConfiguredName, "Visibility: " + convertedValue + " " + accessory.VisibilityService.unit);
-					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibility: " + convertedValue + " " + accessory.VisibilityService.unit);
+					accessory.VisibilityService.setCharacteristic(Characteristic.ConfiguredName, "Visibilityː " + convertedValue + " " + accessory.VisibilityService.unit);
+					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibilityː " + convertedValue + " " + accessory.VisibilityService.unit);
 				}
 				else if (name === "WindDirection")
 				{
-					accessory.WindDirectionService.setCharacteristic(Characteristic.ConfiguredName, "Wind Dir: " + convertedValue);
-					accessory.WindDirectionService.setCharacteristic(Characteristic.Name, "Wind Dir: " + convertedValue);
+					accessory.WindDirectionService.setCharacteristic(Characteristic.ConfiguredName, "Wind Dirː " + convertedValue);
+					accessory.WindDirectionService.setCharacteristic(Characteristic.Name, "Wind Dirː " + convertedValue);
 				}
 				else if (name === "WindSpeed")
 				{
@@ -428,13 +428,13 @@ WeatherPlusPlatform.prototype = {
 					{
 						accessory.WindSpeedService.setCharacteristic(Characteristic.OccupancyDetected, convertedValue >= config.thresholdWindSpeed);
 					}
-					accessory.WindSpeedService.setCharacteristic(Characteristic.ConfiguredName, "Wind Speed: " + convertedValue + " " + accessory.WindSpeedService.unit);
-					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speed: " + convertedValue + " " + accessory.WindSpeedService.unit);
+					accessory.WindSpeedService.setCharacteristic(Characteristic.ConfiguredName, "Wind Speedː " + convertedValue + " " + accessory.WindSpeedService.unit);
+					accessory.WindSpeedService.setCharacteristic(Characteristic.Name, "Wind Speedː " + convertedValue + " " + accessory.WindSpeedService.unit);
 				}
 				else if(name === "RainDay") {
 					accessory.RainDayService.setCharacteristic(Characteristic.OccupancyDetected, value > 0);
-					accessory.RainDayService.setCharacteristic(Characteristic.ConfiguredName, "Total Precip: " + convertedValue + " " + accessory.RainDayService.unit);
-					accessory.RainDayService.setCharacteristic(Characteristic.Name, "Total Precip: " + convertedValue + " " + accessory.RainDayService.unit);
+					accessory.RainDayService.setCharacteristic(Characteristic.ConfiguredName, "Total Precipː " + convertedValue + " " + accessory.RainDayService.unit);
+					accessory.RainDayService.setCharacteristic(Characteristic.Name, "Total Precipː " + convertedValue + " " + accessory.RainDayService.unit);
 				}
 				else
 				{
