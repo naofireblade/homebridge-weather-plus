@@ -95,15 +95,15 @@ class WundergroundAPI
 			report.ObservationStation = observation.stationID + " : " + observation.neighborhood;
 			report.ObservationTime = moment(Date.parse(observation.obsTimeUtc)).format('HH:mm:ss');
 			report.WindDirection = converter.getWindDirection(isNaN(parseInt(observation.winddir)) ? 0 : parseInt(observation.winddir));
-			report.Humidity = isNaN(observation.humidity) ? 0 : observation.humidity;
-			report.SolarRadiation = isNaN(observation.solarRadiation) ? 0 : observation.solarRadiation;
-			report.UVIndex = isNaN(observation.uv) ? 0 : observation.uv;
-			report.Temperature = isNaN(values.temp) ? 0 : values.temp;
-			report.DewPoint = isNaN(values.dewpt) ? 0 : values.dewpt;
-			report.AirPressure = isNaN(values.pressure) ? 0 : values.pressure;
-			report.WindSpeed = isNaN(values.windSpeed) ? 0 : values.windSpeed;
-			report.WindSpeedMax = isNaN(values.windGust) ? 0 : values.windGust;
-			report.RainDay = isNaN(values.precipTotal) ? 0 : values.precipTotal;
+			report.Humidity = isNaN(parseInt(observation.humidity)) ? 0 : observation.humidity;
+			report.SolarRadiation = isNaN(parseInt(observation.solarRadiation)) ? 0 : observation.solarRadiation;
+			report.UVIndex = isNaN(parseInt(observation.uv)) ? 0 : observation.uv;
+			report.Temperature = isNaN(parseInt(values.temp)) ? 0 : values.temp;
+			report.DewPoint = isNaN(parseInt(values.dewpt)) ? 0 : values.dewpt;
+			report.AirPressure = isNaN(parseInt(values.pressure)) ? 0 : values.pressure;
+			report.WindSpeed = isNaN(parseInt(values.windSpeed)) ? 0 : values.windSpeed;
+			report.WindSpeedMax = isNaN(parseInt(values.windGust)) ? 0 : values.windGust;
+			report.RainDay = isNaN(parseInt(values.precipTotal)) ? 0 : values.precipTotal;
 			report.RainBool = isNaN(values.precipRate) ? false : (values.precipRate > 0 ? true : false);
 
 		} catch (error)

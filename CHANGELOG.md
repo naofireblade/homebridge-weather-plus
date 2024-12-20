@@ -302,3 +302,4 @@
 * Fix punycode deprication warning and util._extend warning.
 * Move off depricated request package and moved to axios package for all URL loading.
 * Make changes needed for HomeBridge 2.0
+* Ensure WeatherUnderground passes valid numbers
