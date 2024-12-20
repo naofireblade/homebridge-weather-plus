@@ -301,3 +301,4 @@
 * Fix issue with threshold triggers and WeatherUnderground. In 3.3.4, WeatherUnderground API call was modified and incorrectly return values in km, and km/h. 
 * Fix punycode deprication warning and util._extend warning.
 * Move off depricated request package and moved to axios package for all URL loading.
+* Make changes needed for HomeBridge 2.0
