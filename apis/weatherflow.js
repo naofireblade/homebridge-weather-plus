@@ -326,6 +326,10 @@ class TempestAPI
 
 			// Any value other than zero for sensor_status means we have a failure
 			that.currentReport.StatusFault = message.sensor_status == 0 ? false : true;
+			if (that.currentReport.StatusFault) {
+				that.currentReport.StatusFault = false;
+				that.log.debug("Ignoring Tempest sensor failure");
+			}
 			if (message.sensor_status == 0) {
 				this.currentReport.SensorString = "Ok";
 				
@@ -387,12 +391,12 @@ class TempestAPI
 				// Unit prefixes: AR Air, SK Sky, ST Tempest
 				if (message.serial_number.charAt(1) == 'R') {
 					if (this.currentReport.AirSensorFailureLog != moment.unix(message.timestamp).hour()) {
-						this.log.error("Sensor on unit %s failed: ", message.serial_number, this.currentReport.SensorString);
+						this.log.debug("Sensor on unit %s failed: ", message.serial_number, this.currentReport.SensorString);
 					}
 					this.currentReport.AirSensorFailureLog = moment.unix(message.timestamp).hour();
 				} else {
 					if (this.currentReport.SkySensorFailureLog != moment.unix(message.timestamp).hour()) {
-						this.log.error("Sensor on unit %s failed: ", message.serial_number, this.currentReport.SensorString);
+						this.log.debug("Sensor on unit %s failed: ", message.serial_number, this.currentReport.SensorString);
 					}
 					this.currentReport.SkySensorFailureLog = moment.unix(message.timestamp).hour();
 				}
