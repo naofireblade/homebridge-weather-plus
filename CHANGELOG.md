@@ -296,11 +296,11 @@
 ## 3.3.5
 * Fix issue where compatibility (occupancy) sensors are not showing in Apple's Home app
 
-## 3.3.6
-* The fix in 3.3.4 for tile naming in Home app was not supported with HomeBridge. Add setting of Name property back for HomeBridge compatibility. 
+## 3.4.0
+* Added support for HomeBridge 2.0
+* The fix in 3.3.4 for tile naming in Home app was not supported with HomeBridge. Add setting of Name property back for HomeBridge compatibility.
 * Fix issue with threshold triggers and WeatherUnderground. In 3.3.4, WeatherUnderground API call was modified and incorrectly return values in km, and km/h. 
 * Fix punycode deprication warning and util._extend warning.
 * Move off depricated request package and moved to axios package for all URL loading.
-* Make changes needed for HomeBridge 2.0
 * Ensure WeatherUnderground passes valid numbers
 * Remove reporting of failing sensors on Tempest weather station as the error status from the unit is erronous 
