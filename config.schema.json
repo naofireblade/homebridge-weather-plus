@@ -65,12 +65,19 @@
               {
                 "title": "Tempest Weather Station",
                 "const": "tempest"
+              },
+              {
+                "title": "Ambient Weather",
+                "const": "ambientweather"
               }
             ]
           },
           "key": {
             "type": "string",
             "required": true
+          },
+          "appKey": {
+            "type": "string"
           },
           "locationGeo": {
             "type": "array",
@@ -333,6 +340,13 @@
               }
             },
             {
+              "type": "help",
+              "helpvalue": "<h6>API Key</h6><p class='help-block'>Registration is available for users with a PWS. Get your free api key <a target='_blank' href='https://ambientweather.net/welcome'>here</a>.</p>",
+              "condition": {
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'ambientweather'"
+              }
+            },
+            {
               "key": "stations[].key",
               "notitle": true
             },
@@ -393,6 +407,15 @@
               "description": "Your personal StationID.",
               "condition": {
                 "functionBody": "return model.stations[arrayIndices[0]].service === 'weatherunderground' || model.stations[arrayIndices[0]].service === 'tempest'"
+              }
+            },
+            {
+              "key": "stations[].appKey",
+              "title": "Application Key",
+              "description": "Your personal Application Key.",
+              "required": true,
+              "condition": {
+                "functionBody": "return model.stations[arrayIndices[0]].service === 'ambientweather'"
               }
             },
             {
