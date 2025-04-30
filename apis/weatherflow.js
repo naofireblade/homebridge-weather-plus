@@ -430,11 +430,11 @@ class TempestAPI
 			// We could get out of range values if the sensors have failed.
 			if (that.currentReport.Humidity > 0 && that.currentReport.Humidity <= 100 &&
 				that.currentReport.Temperature > -100 && that.currentReport.Temperature < 100) {
-				that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
-					wformula.celciusToKelvin(that.currentReport.Temperature), 
+				that.currentReport.DewPoint = wformula.temperature.kelvinToCelcius(wformula.temperature.dewPointMagnusFormula(
+					wformula.temperature.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
-				that.currentReport.TemperatureApparent = wformula.kelvinToCelcius(wformula.australianAapparentTemperature(
-					wformula.celciusToKelvin(that.currentReport.Temperature),
+				that.currentReport.TemperatureApparent = wformula.temperature.kelvinToCelcius(wformula.temperature.australianAapparentTemperature(
+					wformula.temperature.celciusToKelvin(that.currentReport.Temperature),
 					that.currentReport.Humidity,
 					that.currentReport.WindSpeed));
 				that.currentReport.TemperatureWetBulb =
@@ -525,12 +525,12 @@ class TempestAPI
             // We could get out of range values if the sensors have failed.
             if (that.currentReport.Humidity > 0 && that.currentReport.Humidity <= 100 &&
                     that.currentReport.Temperature > -100 && that.currentReport.Temperature < 100) {
-                that.currentReport.DewPoint = wformula.kelvinToCelcius(wformula.dewPointMagnusFormula(
-					wformula.celciusToKelvin(that.currentReport.Temperature), 
+                that.currentReport.DewPoint = wformula.temperature.kelvinToCelcius(wformula.temperature.dewPointMagnusFormula(
+					wformula.temperature.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
 
-                that.currentReport.TemperatureApparent = wformula.kelvinToCelcius(wformula.australianAapparentTemperature(
-					wformula.celciusToKelvin(that.currentReport.Temperature),
+                that.currentReport.TemperatureApparent = wformula.temperature.kelvinToCelcius(wformula.temperature.australianAapparentTemperature(
+					wformula.temperature.celciusToKelvin(that.currentReport.Temperature),
 					that.currentReport.Humidity,
 					message.obs[0][2]));
                 that.currentReport.TemperatureWetBulb =
