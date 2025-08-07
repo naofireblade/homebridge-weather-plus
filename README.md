@@ -337,6 +337,7 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [Vincent Niehues](https://github.com/vniehues) for adding rain chance characteristic to the OpenWeatherMap api
 - [Hendrik-Cv](https://github.com/Hendrik-Cv) for updating the OpenWeatherMap api to v3.0
 - [David Carson](https://github.com/dacarson) for integration with Tempest WeatherFlow and fixing several bugs in different apis (essentially maintaining the plugin since 2023)
+- [Øyvind](https://github.com/oyve) for providing a fix in the Tempest WeatherFlow integration
 
 Also thanks to numerous people helping with the docs.
 

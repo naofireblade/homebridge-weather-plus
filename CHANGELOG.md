@@ -304,3 +304,6 @@
 * Move off depricated request package and moved to axios package for all URL loading.
 * Ensure WeatherUnderground passes valid numbers
 * Remove reporting of failing sensors on Tempest weather station as the error status from the unit is erronous 
+
+## 3.4.1
+* Fixed error in WeatherFlow's Tempest weather station integration
