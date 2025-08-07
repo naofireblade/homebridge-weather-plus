@@ -5,6 +5,7 @@ const weatherunderground = require("./apis/weatherunderground").WundergroundAPI,
 	openweathermap = require("./apis/openweathermap").OpenWeatherMapAPI,
 	weewx = require("./apis/weewx").WeewxAPI,
 	tempest = require('./apis/weatherflow').TempestAPI,
+	ambientweather = require('./apis/ambientweather').AmbientWeatherAPI,
 	debug = require("debug")("homebridge-weather-plus"),
 	compatibility = require("./util/compatibility");
 
@@ -85,6 +86,10 @@ function WeatherPlusPlatform(_log, _config)
 				this.stations.push(new tempest(config.key, config.locationId, config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
 				this.interval = 1;  // Tempest broadcasts new data every minute, forecasts are limited to once per hour
 				break;
+			case "ambientweather":
+				this.log.info("Adding station with weather service AmbientWeather named '" + config.nameNow + "'");
+				this.stations.push(new ambientweather(config.key, config.appKey, config.locationId, config.conditionDetail, this.log, HomebridgeAPI.user.persistPath()));
+			        break;
 			default:
 				this.log.error("Unsupported weather service: " + config.service);
 		}
@@ -147,6 +152,10 @@ WeatherPlusPlatform.prototype = {
 		{
 			// If location city is not set for Tempest, set it so that in HomeKit the Serial Number is reported as "tempest - local"
 			this.locationCity = "local";
+		}
+		if (!station.locationId && stationConfig.service === "ambientweather")
+		{
+			station.locationId = stationConfig.nameNow;
 		}
 		if (!station.locationId && !station.locationCity && !station.locationGeo && !(station.service === "tempest"))
 		{

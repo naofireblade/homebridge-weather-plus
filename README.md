@@ -17,7 +17,7 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 ## Features
 - Get [27 observation and forecast](#observations-and-forecasts) values for up to 7 days
-- Choose from 3 different weather [services](#choose-your-weather-service)
+- Choose from 4 different weather [services](#choose-your-weather-service)
 - Add [multiple](#multiple-stations-configuration) locations/services
 - See the weather [history](#screenshots) in the Eve App
 - See all values, translations and [icons](#screenshots) in the Eve App
@@ -29,15 +29,15 @@ Feel free to leave any feedback [here](https://github.com/naofireblade/homebridg
 
 This plugin supports multiple weather services. Each has its own advantages. The following table shows a comparison to help you to choose one.
 
-|                            |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        |     Tempest weather station <sup>[7](#a7)</sup>      |
-|----------------------------|:-----------------------------------------------------:|:----------------------------------------------------:|:----------------------------------------------------:|
-| Current observation values |                          15                           |                          12                          |                          20                          |
-| Forecast values            |                 18<sup>[6](#a6)</sup>                 |                          0                           |                          10                          |
-| Forecast days              |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                      today + 9                       |
-| Location                   |              city name, geo-coordinates               |                      station id                      |                        local                         |
-| Personal weather stations  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |                  :heavy_check_mark:                  |
-| Free                       |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    |      :heavy_check_mark: (you need the station)       |
-| Register                   | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) |      [here](https://tempestwx.com/settings/tokens)   |
+|                            |             OpenWeatherMap (recommended)              |       Weather Underground <sup>[2](#a2)</sup>        | Tempest weather station <sup>[7](#a7)</sup>   | Ambient Weather                            |
+|----------------------------|:-----------------------------------------------------:|:----------------------------------------------------:|:---------------------------------------------:|:------------------------------------------:|
+| Current observation values |                          15                           |                          12                          |                     20                        | 12                                         |
+| Forecast values            |                 18<sup>[6](#a6)</sup>                 |                          0                           |                     10                        | 0                                          |
+| Forecast days              |             today + 7<sup>[6](#a6)</sup>              |                          0                           |                 today + 9                     | 0                                          |
+| Location                   |              city name, geo-coordinates               |                      station id                      |                   local                       | city name, geo-coordinates                 |
+| Personal weather stations  |                  :heavy_check_mark:                   |                  :heavy_check_mark:                  |             :heavy_check_mark:                | :heavy_check_mark:                         |
+| Free                       |                  :heavy_check_mark:                   |    :heavy_check_mark: (only if you own a station)    | :heavy_check_mark: (you need the station)     | :heavy_check_mark: (you need the station)  |
+| Register                   | [here](https://home.openweathermap.org/users/sign_up) | [here](https://www.wunderground.com/member/api-keys) | [here](https://tempestwx.com/settings/tokens) | [here](https://ambientweather.net/welcome) |
 
 *You can add more services easily by forking the project and submitting a pull request for a new api file.*
 
@@ -188,6 +188,10 @@ The [Tempest Weatherflow](https://weatherflow.com/tempest-home-weather-system/) 
     }
 ]
 ```
+
+### Ambient Weather
+
+Ambient Weather ([ambientweather.com](https://ambientweather.com/)) sells weather stations, and has a site at [ambientweather.net](https://ambientweather.net/) that provides a UI for the weather station data.  Once you have registered your weather station on ambientweather.net, you can access your weather station's data over the [Ambient Weather REST API](https://ambientweather.docs.apiary.io/#introduction) once you have created API and Application keys (you need both) on the [Account > API Keys page](https://ambientweather.net/account/keys).
 
 ## Advanced Configuration
 
@@ -347,3 +351,4 @@ This plugin is a fork of [homebridge-weather-station](https://github.com/kcharwo
 - [Powered by Weather Underground](https://www.wunderground.com/)
 - [Powered by OpenWeatherMap](https://openweathermap.org/)
 - [Powered by WeatherFlow - Tempest](https://tempest.earth/tempest-home-weather-system/)
+- [Powered by Ambient Weather](https://www.ambientweather.net/)

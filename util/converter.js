@@ -5,7 +5,7 @@ const getWindDirection = function (degree)
 {
 	if (typeof degree !== 'number' || isNaN(degree))
 	{
-		return 'Unkown';
+		return 'Unknown';
 	}
 	let cat = Math.round(degree % 360 / 22.5);
 	let dir;
