@@ -49,17 +49,19 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			this.HumidityService = new Service.HumiditySensor("Humidity")
 		}
 		
-		// Separate light level into a single service if configurated
-		if (this.config.extraLightLevel)
-		{
-			this.log.debug("Separating light level into an extra service");
-			this.LightLevelService = new Service.LightSensor("Light Level");
-			this.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
-				.setProps({
-					minValue: 0,
-					maxValue: 200000
-				});
-		}
+		//Current Ambiant Light Level Characteristic not in required or optional characteristic section for service TemperatureSensor
+		//Proposing removing this option, hoping this may solve the issue with the plugin
+		//// Separate light level into a single service if configurated
+		//if (this.config.extraLightLevel)
+		//{
+		//	this.log.debug("Separating light level into an extra service");
+		//	this.LightLevelService = new Service.LightSensor("Light Level");
+		//	this.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+		//		.setProps({
+		//			minValue: 0,
+		//			maxValue: 200000
+		//		});
+		//}
 	}
 	this.services.push(this.CurrentConditionsService);
 
@@ -103,23 +105,26 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 			}
-			// Use separate service for light level if configured
-			else if (this.config.compatibility === "eve" && name === "LightLevel" && this.config.extraLightLevel)
-			{
-				//
-			}
-			// illuminance is a general apple home kit characteristic
-			else if (name === "LightLevel")
-			{
-				this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentAmbientLightLevel);
-				// Override the defaults for light level as default is too low for daylight
-				this.CurrentConditionsService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
-					.setProps({
-						minValue: 0,
-						maxValue: 200000,
-						minStep: 1
-					});
-			}
+			
+			//Current Ambiant Light Level Characteristic not in required or optional characteristic section for service TemperatureSensor
+		    //Proposing removing this option, hoping this may solve the issue with the plugin	
+			//// Use separate service for light level if configured
+			//else if (this.config.compatibility === "eve" && name === "LightLevel" && this.config.extraLightLevel)
+			//{
+			//	//
+			//}
+			//// illuminance is a general apple home kit characteristic
+			//else if (name === "LightLevel")
+			//{
+			//	this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentAmbientLightLevel);
+			//	// Override the defaults for light level as default is too low for daylight
+			//	this.CurrentConditionsService.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+			//		.setProps({
+			//			minValue: 0,
+			//			maxValue: 200000,
+			//			minStep: 1
+			//		});
+			//}
 			// Battery level is a general apple home kit characteristic
 			else if (name === "BatteryLevel")
 			{
