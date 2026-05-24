@@ -478,8 +478,14 @@ WeatherPlusPlatform.prototype = {
 					temperatureService.setCharacteristic(Characteristic.StatusFault, Characteristic.StatusFault.NO_FAULT);
 				}
 			}
-			// Set everything else as a custom characteristic in the temperature service
-			else
+			// Set everything else as a custom characteristic on the main service.
+			// Matches the accessory-construction guard in
+			// accessories/currentConditions.js + forecast.js — only the
+			// Eve-targeting compatibility modes mount Custom Characteristics
+			// on the main service, so we mirror that here. Writing into a
+			// characteristic that was never added would silently auto-add it
+			// via getCharacteristic() and trigger the strict-HAP rejection.
+			else if (config.compatibility === "eve" || config.compatibility === "eve2")
 			{
 				temperatureService.setCharacteristic(CustomCharacteristic[name], convertedValue);
 			}
