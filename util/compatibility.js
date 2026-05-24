@@ -118,8 +118,36 @@ const getServices = function (that)
 	return services;
 };
 
+// Checks whether `name` (a CamelCase identifier from reportCharacteristics,
+// e.g. "AirPressure") is present in the user's `hidden` config array.
+//
+// Accepts either form for backwards compatibility:
+//   - CamelCase exactly as used internally:  "AirPressure"
+//   - The display form used in the schema:   "Air Pressure"
+//
+// The schema (config.schema.json) lists the display form with spaces, so
+// users wiring up "hidden" through the Homebridge UI / config-ui-x end up
+// with the space form, which previously silently no-op'd because the
+// runtime comparison was a literal Array.indexOf against the CamelCase name.
+const isHidden = function (hidden, name)
+{
+	if (!Array.isArray(hidden))
+	{
+		return false;
+	}
+	return hidden.some((entry) =>
+	{
+		if (typeof entry !== "string")
+		{
+			return false;
+		}
+		return entry === name || entry.replace(/ /g, "") === name;
+	});
+};
+
 module.exports = {
 	types,
 	createService,
-	getServices
+	getServices,
+	isHidden
 };
