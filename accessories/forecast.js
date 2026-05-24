@@ -79,17 +79,17 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
 			}
-			// Use separate services and the temperature service for these characteristics if compatiblity is "both"
+			// Use separate services for these characteristics if compatiblity is "both".
+			// See the matching block in accessories/currentConditions.js for the
+			// reasoning — Apple's strict HAP validation rejects Custom Characteristics
+			// on standard services, so non-Humidity entries are no longer added to the
+			// forecast TemperatureSensor.
 			else if (this.config.compatibility === "both" && compatibility.types.includes(name))
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
 				if (name === "Humidity")
 				{
 					this.ForecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
-				}
-				else
-				{
-					this.ForecastService.addCharacteristic(CustomCharacteristic[name]);
 				}
 			}
 			// Add humidity characteristic to temperature service

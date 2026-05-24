@@ -80,17 +80,21 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
 			}
-			// Use separate services and the temperature service for these characteristics if compatiblity is "both"
+			// Use separate services for these characteristics if compatiblity is "both".
+			// CurrentRelativeHumidity is also added to the main TemperatureSensor
+			// because it is an official optional characteristic of that service.
+			// Other Custom Characteristics used to be added to the main
+			// TemperatureSensor too, but Apple's strict HAP validation rejects
+			// non-conformant characteristics on standard services as "Accessory
+			// out of compliance", so we only expose them on the separate services
+			// from now on. Eve still finds the values via the Custom UUIDs on
+			// those services and the fakegato history service is unaffected.
 			else if (this.config.compatibility === "both" && compatibility.types.includes(name))
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
 				if (name === "Humidity")
 				{
 					this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
-				}
-				else
-				{
-					this.CurrentConditionsService.addCharacteristic(CustomCharacteristic[name]);
 				}
 			}
 			// Use separate service for humidity if configured
