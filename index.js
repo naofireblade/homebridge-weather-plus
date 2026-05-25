@@ -74,7 +74,7 @@ function WeatherPlusPlatform(_log, _config)
 				break;
 			case "openweathermap":
 				this.log.info("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
-				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, config.conditionDetail, this.log));
+				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, config.conditionDetail, this.log, config.apiVersion));
 				break;
 			case "weewx":
 				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
@@ -172,6 +172,15 @@ WeatherPlusPlatform.prototype = {
 
 		// Condition detail level
 		station.conditionDetail = stationConfig.conditionCategory || "simple";
+
+		// OpenWeatherMap API version selection. "auto" (default) probes 3.0
+		// once at start and falls back to 2.5 on a 401, which is the
+		// historic behaviour. "2.5" skips the probe entirely (use this if
+		// your API key does not have OneCall 3.0 — silences the recurring
+		// "Could not retreive weather report with API 3.0" info line on
+		// every plugin start). "3.0" pins the modern endpoint without
+		// fallback.
+		station.apiVersion = ["auto", "2.5", "3.0"].includes(stationConfig.apiVersion) ? stationConfig.apiVersion : "auto";
 
 		// Separate humidity accessory
 		station.extraHumidity = stationConfig.extraHumidity || false;
