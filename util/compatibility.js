@@ -1,7 +1,7 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
-const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
+const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "SunriseTime", "SunsetTime", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
 
 const createService = function (that, name, Service, Characteristic, CustomCharacteristic)
 {
@@ -48,6 +48,23 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 	{
 		that.SnowBoolService = new Service.OccupancySensor("Snow", "Snow");
 		that.SnowBoolService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Snow");
+	}
+	if (name === "SunriseTime")
+	{
+		// The actual value is a formatted "HH:mm:ss" string and is not a
+		// HAP-native characteristic, so we expose it as an OccupancySensor
+		// whose ConfiguredName / Name is rewritten to "Sunriseː HH:mm" on
+		// every update (same pattern as UVIndex / WindSpeed / Visibility).
+		// Apple Home renders the ConfiguredName as the tile label, so the
+		// time is visible without depending on a Custom Characteristic
+		// being rendered.
+		that.SunriseTimeService = new Service.OccupancySensor("Sunrise Time", "Sunrise Time");
+		that.SunriseTimeService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Sunrise Time");
+	}
+	if (name === "SunsetTime")
+	{
+		that.SunsetTimeService = new Service.OccupancySensor("Sunset Time", "Sunset Time");
+		that.SunsetTimeService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Sunset Time");
 	}
 	if (name === "TemperatureMin")
 	{

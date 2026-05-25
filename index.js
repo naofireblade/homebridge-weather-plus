@@ -413,6 +413,16 @@ WeatherPlusPlatform.prototype = {
 					accessory.VisibilityService.setCharacteristic(Characteristic.ConfiguredName, "Visibilityː " + convertedValue + " " + accessory.VisibilityService.unit);
 					accessory.VisibilityService.setCharacteristic(Characteristic.Name, "Visibilityː " + convertedValue + " " + accessory.VisibilityService.unit);
 				}
+				else if (name === "SunriseTime")
+				{
+					accessory.SunriseTimeService.setCharacteristic(Characteristic.ConfiguredName, "Sunriseː " + convertedValue);
+					accessory.SunriseTimeService.setCharacteristic(Characteristic.Name, "Sunriseː " + convertedValue);
+				}
+				else if (name === "SunsetTime")
+				{
+					accessory.SunsetTimeService.setCharacteristic(Characteristic.ConfiguredName, "Sunsetː " + convertedValue);
+					accessory.SunsetTimeService.setCharacteristic(Characteristic.Name, "Sunsetː " + convertedValue);
+				}
 				else if (name === "WindDirection")
 				{
 					accessory.WindDirectionService.setCharacteristic(Characteristic.ConfiguredName, "Wind Dirː " + convertedValue);
