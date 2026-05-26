@@ -58,7 +58,7 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 		that.SolarRadiationService = new Service.OccupancySensor("Solar Radiation", "Solar Radiation");
 		that.SolarRadiationService.unit = temporaryService.getCharacteristic(CustomCharacteristic.SolarRadiation).props.unit;
 		that.SolarRadiationService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Solar Radiation");
-  }
+	}
 	if (name === "SunriseTime")
 	{
 		// The actual value is a formatted "HH:mm:ss" string and is not a
