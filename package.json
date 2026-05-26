@@ -1,7 +1,7 @@
 {
   "name": "homebridge-weather-plus",
   "displayName": "Weather Plus",
-  "version": "3.4.1",
+  "version": "3.5.0-beta.1",
   "description": "A comprehensive weather plugin for homekit with current observations, forecasts and history.",
   "license": "MIT",
   "keywords": [
@@ -45,7 +45,7 @@
   ],
   "engines": {
     "node": ">=10.0.0 || ^20.15.1",
-    "homebridge": ">=1.0.0 || ^2.0.0-beta.0"
+    "homebridge": ">=1.0.0 || ^2.0.0"
   },
   "author": {
     "name": "Arne Blumentritt",
@@ -108,6 +108,10 @@
     {
       "name": "Øyvind",
       "url": "https://github.com/oyve"
+    },
+    {
+      "name": "7onnie",
+      "url": "https://github.com/7onnie"
     }
   ],
   "repository": {

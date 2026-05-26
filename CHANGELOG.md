@@ -307,3 +307,9 @@
 
 ## 3.4.1
 * Fixed error in WeatherFlow's Tempest weather station integration
+
+## 3.5.0
+* Fixed accessory out of compliance error since iOS 26.5
+* Fixed hiding Air Pressure, Dew Point and Wind Speed by config has no effect
+* Added solar radiation to apple home compatibility mode
+* Added sunrise and sunset to apple home compatibility mode

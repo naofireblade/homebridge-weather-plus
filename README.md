@@ -111,6 +111,9 @@ City name and optional country code, can be found [here](https://openweathermap.
 **locationGeo**<sup>[5](#a5)</sup>  
 List with the latitude and longitude for your location (don't forget the square brackets). You can get your coordinates: [here](http://www.mapcoordinates.net/en).
 
+**openWeatherMapApiVersion** 
+Api Version to be used for open weather map requests. '2.5' is available for free, '3.0' for paid subscriptions. Plugin defaults to 'auto' which tries both.
+
 > <b name="a5">5</b> You need only **one** of these location options.
 
 ```json
@@ -338,6 +341,7 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [Hendrik-Cv](https://github.com/Hendrik-Cv) for updating the OpenWeatherMap api to v3.0
 - [David Carson](https://github.com/dacarson) for integration with Tempest WeatherFlow and fixing several bugs in different apis (essentially maintaining the plugin since 2023)
 - [Øyvind](https://github.com/oyve) for providing a fix in the Tempest WeatherFlow integration
+- [7onnie](https://github.com/7onnie) for providing a fix for the plugin to work with iOS 26.5. Also adding more characteristics for home compatibility and improving the config ui.
 
 Also thanks to numerous people helping with the docs.
 
