@@ -97,8 +97,11 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 			{
 				this.ForecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 			}
-			// Add everything else as a custom characteristic to the temperature service
-			else
+			// See accessories/currentConditions.js for the rationale —
+			// only mount Custom Characteristics on the main forecast service
+			// in the Eve-targeting compatibility modes; "home" and "both"
+			// would be rejected by Apple's strict HAP validation.
+			else if (this.config.compatibility === "eve" || this.config.compatibility === "eve2")
 			{
 				this.ForecastService.addCharacteristic(CustomCharacteristic[name]);
 			}

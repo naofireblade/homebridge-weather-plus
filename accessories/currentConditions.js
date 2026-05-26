@@ -112,8 +112,16 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				//
 			}
-			// illuminance is a general apple home kit characteristic
-			else if (name === "LightLevel")
+			// illuminance is a general apple home kit characteristic, but
+			// it is not in the required/optional set of a TemperatureSensor,
+			// so attaching it triggers Apple's strict-HAP "out of compliance"
+			// rejection in "home" and "both" modes. Only mount it onto the
+			// main service in the Eve-targeting compatibility modes — Eve
+			// renders it from the EveWeatherService (eve2) or the patched
+			// TempSensor (eve). For "home" / "both" users LightLevel should
+			// be exposed through a dedicated Service.LightSensor instead
+			// (see compatibility.types).
+			else if (name === "LightLevel" && (this.config.compatibility === "eve" || this.config.compatibility === "eve2"))
 			{
 				this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentAmbientLightLevel);
 				// Override the defaults for light level as default is too low for daylight
@@ -138,8 +146,23 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				this.CurrentConditionsService.addCharacteristic(Characteristic.StatusFault);
 			}
-			// Add everything else as a custom characteristic to the temperature service
-			else
+			// Add everything else as a custom characteristic to the main service.
+			// Custom characteristics on a standard TemperatureSensor are not
+			// part of the HAP optional set, so Apple's strict validation
+			// rejects the whole bridge as "Accessory out of compliance"
+			// once any non-conformant characteristic is mounted there.
+			// Only do this in the Eve-targeting compatibility modes:
+			//   - "eve":  the main service is still a TemperatureSensor but
+			//             the user opted into Eve-style display knowing
+			//             Apple Home will silently ignore the values.
+			//   - "eve2": the main service is the EveWeatherService — Eve's
+			//             own container type — so custom characteristics are
+			//             expected there.
+			// For "home" and "both" the value is still recorded in fakegato
+			// history and is available on the separate service produced by
+			// compatibility.createService() when the entry is in
+			// compatibility.types.
+			else if (this.config.compatibility === "eve" || this.config.compatibility === "eve2")
 			{
 				this.CurrentConditionsService.addCharacteristic(CustomCharacteristic[name]);
 			}
