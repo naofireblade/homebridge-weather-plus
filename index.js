@@ -321,7 +321,7 @@ WeatherPlusPlatform.prototype = {
 		// The passed in 'value' may be used later for comparison to trigger value(s) in the unconverted units
 		const convertedValue = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
 
-		if (config.hidden.indexOf(name) === -1 || name === "Temperature" || name === "TemperatureMax")
+		if (!compatibility.isHidden(config.hidden, name) || name === "Temperature" || name === "TemperatureMax")
 		{
 			this.log.debug("Setting %s to %s", name, convertedValue);
 			// Temperature is an official homekit characteristic

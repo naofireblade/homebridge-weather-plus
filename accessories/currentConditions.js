@@ -67,7 +67,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	// Add all current condition characteristics that are supported by the selected api
 	this.platform.stations[stationIndex].reportCharacteristics.forEach((name) =>
 	{
-		if (this.config.hidden.indexOf(name) === -1)
+		if (!compatibility.isHidden(this.config.hidden, name))
 		{
 			// Temperature is an official homekit characteristic
 			if (name === "Temperature")
