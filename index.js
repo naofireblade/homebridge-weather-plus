@@ -329,19 +329,16 @@ WeatherPlusPlatform.prototype = {
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 			}
-			// Compatibility characteristics have a separate service
+			// Compatibility characteristics have a separate service.
+			// In "both" mode the optional CurrentRelativeHumidity is also mirrored
+			// onto the main TemperatureSensor (HAP-compliant), but other Custom
+			// Characteristics are no longer written there to avoid Apple's
+			// strict-mode "Accessory out of compliance" rejection.
 			else if (["home", "both"].includes(config.compatibility) && compatibility.types.includes(name))
 			{
-				if (config.compatibility === "both")
+				if (config.compatibility === "both" && name === "Humidity")
 				{
-					if (name === "Humidity")
-					{
-						temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
-					}
-					else
-					{
-						temperatureService.setCharacteristic(CustomCharacteristic[name], convertedValue);
-					}
+					temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 				}
 
 				if (name === "AirPressure")
