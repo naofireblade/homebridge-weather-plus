@@ -66,7 +66,7 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 	// Get all forecast characteristics that are supported by the selected api
 	this.platform.stations[stationIndex].forecastCharacteristics.forEach((name) =>
 	{
-		if (this.config.hidden.indexOf(name) === -1)
+		if (!compatibility.isHidden(this.config.hidden, name))
 		{
 			// Temperature is an official homekit characteristic
 			if (name === "TemperatureMax")
@@ -79,7 +79,11 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
 			}
-			// Use separate services and the temperature service for these characteristics if compatiblity is "both"
+			// Use separate services for these characteristics if compatiblity is "both".
+			// See the matching block in accessories/currentConditions.js for the
+			// reasoning — Apple's strict HAP validation rejects Custom Characteristics
+			// on standard services, so non-Humidity entries are no longer added to the
+			// forecast TemperatureSensor.
 			else if (this.config.compatibility === "both" && compatibility.types.includes(name))
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
@@ -87,18 +91,17 @@ function ForecastWeatherAccessory(platform, stationIndex, day)
 				{
 					this.ForecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 				}
-				else
-				{
-					this.ForecastService.addCharacteristic(CustomCharacteristic[name]);
-				}
 			}
 			// Add humidity characteristic to temperature service
 			else if (name === "Humidity")
 			{
 				this.ForecastService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
 			}
-			// Add everything else as a custom characteristic to the temperature service
-			else
+			// See accessories/currentConditions.js for the rationale —
+			// only mount Custom Characteristics on the main forecast service
+			// in the Eve-targeting compatibility modes; "home" and "both"
+			// would be rejected by Apple's strict HAP validation.
+			else if (this.config.compatibility === "eve" || this.config.compatibility === "eve2")
 			{
 				this.ForecastService.addCharacteristic(CustomCharacteristic[name]);
 			}

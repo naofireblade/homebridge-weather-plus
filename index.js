@@ -273,9 +273,9 @@ WeatherPlusPlatform.prototype = {
 								accessory.historyService.addEntry({
 									time: new Date().getTime() / 1000,
 									temp: accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
-									pressure: accessory.AirPressureService ? accessory.AirPressureService.value : accessory.CurrentConditionsService.getCharacteristic(CustomCharacteristic.AirPressure).value,
+									pressure: accessory.AirPressureService ? accessory.AirPressureService.value : 0,
 									humidity: accessory.HumidityService ? accessory.HumidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value,
-									lux: accessory.LightLevelService ? accessory.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value
+									lux: accessory.LightLevelService ? accessory.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value : 0
 								});
 							} catch (error2)
 							{
@@ -321,7 +321,7 @@ WeatherPlusPlatform.prototype = {
 		// The passed in 'value' may be used later for comparison to trigger value(s) in the unconverted units
 		const convertedValue = name in CustomCharacteristic && CustomCharacteristic[name]._unitvalue ? CustomCharacteristic[name]._unitvalue(value) : value;
 
-		if (config.hidden.indexOf(name) === -1 || name === "Temperature" || name === "TemperatureMax")
+		if (!compatibility.isHidden(config.hidden, name) || name === "Temperature" || name === "TemperatureMax")
 		{
 			this.log.debug("Setting %s to %s", name, convertedValue);
 			// Temperature is an official homekit characteristic
@@ -329,19 +329,16 @@ WeatherPlusPlatform.prototype = {
 			{
 				temperatureService.setCharacteristic(Characteristic.CurrentTemperature, convertedValue);
 			}
-			// Compatibility characteristics have a separate service
+			// Compatibility characteristics have a separate service.
+			// In "both" mode the optional CurrentRelativeHumidity is also mirrored
+			// onto the main TemperatureSensor (HAP-compliant), but other Custom
+			// Characteristics are no longer written there to avoid Apple's
+			// strict-mode "Accessory out of compliance" rejection.
 			else if (["home", "both"].includes(config.compatibility) && compatibility.types.includes(name))
 			{
-				if (config.compatibility === "both")
+				if (config.compatibility === "both" && name === "Humidity")
 				{
-					if (name === "Humidity")
-					{
-						temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
-					}
-					else
-					{
-						temperatureService.setCharacteristic(CustomCharacteristic[name], convertedValue);
-					}
+					temperatureService.setCharacteristic(Characteristic.CurrentRelativeHumidity, convertedValue);
 				}
 
 				if (name === "AirPressure")
@@ -417,6 +414,16 @@ WeatherPlusPlatform.prototype = {
 				{
 					accessory.SolarRadiationService.setCharacteristic(Characteristic.ConfiguredName, "Solar Radː " + convertedValue + " " + accessory.SolarRadiationService.unit);
 					accessory.SolarRadiationService.setCharacteristic(Characteristic.Name, "Solar Radː " + convertedValue + " " + accessory.SolarRadiationService.unit);
+        }
+				else if (name === "SunriseTime")
+				{
+					accessory.SunriseTimeService.setCharacteristic(Characteristic.ConfiguredName, "Sunriseː " + convertedValue);
+					accessory.SunriseTimeService.setCharacteristic(Characteristic.Name, "Sunriseː " + convertedValue);
+				}
+				else if (name === "SunsetTime")
+				{
+					accessory.SunsetTimeService.setCharacteristic(Characteristic.ConfiguredName, "Sunsetː " + convertedValue);
+					accessory.SunsetTimeService.setCharacteristic(Characteristic.Name, "Sunsetː " + convertedValue);
 				}
 				else if (name === "WindDirection")
 				{
@@ -483,8 +490,14 @@ WeatherPlusPlatform.prototype = {
 					temperatureService.setCharacteristic(Characteristic.StatusFault, Characteristic.StatusFault.NO_FAULT);
 				}
 			}
-			// Set everything else as a custom characteristic in the temperature service
-			else
+			// Set everything else as a custom characteristic on the main service.
+			// Matches the accessory-construction guard in
+			// accessories/currentConditions.js + forecast.js — only the
+			// Eve-targeting compatibility modes mount Custom Characteristics
+			// on the main service, so we mirror that here. Writing into a
+			// characteristic that was never added would silently auto-add it
+			// via getCharacteristic() and trigger the strict-HAP rejection.
+			else if (config.compatibility === "eve" || config.compatibility === "eve2")
 			{
 				temperatureService.setCharacteristic(CustomCharacteristic[name], convertedValue);
 			}

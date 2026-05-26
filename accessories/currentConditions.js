@@ -67,7 +67,7 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 	// Add all current condition characteristics that are supported by the selected api
 	this.platform.stations[stationIndex].reportCharacteristics.forEach((name) =>
 	{
-		if (this.config.hidden.indexOf(name) === -1)
+		if (!compatibility.isHidden(this.config.hidden, name))
 		{
 			// Temperature is an official homekit characteristic
 			if (name === "Temperature")
@@ -80,17 +80,21 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
 			}
-			// Use separate services and the temperature service for these characteristics if compatiblity is "both"
+			// Use separate services for these characteristics if compatiblity is "both".
+			// CurrentRelativeHumidity is also added to the main TemperatureSensor
+			// because it is an official optional characteristic of that service.
+			// Other Custom Characteristics used to be added to the main
+			// TemperatureSensor too, but Apple's strict HAP validation rejects
+			// non-conformant characteristics on standard services as "Accessory
+			// out of compliance", so we only expose them on the separate services
+			// from now on. Eve still finds the values via the Custom UUIDs on
+			// those services and the fakegato history service is unaffected.
 			else if (this.config.compatibility === "both" && compatibility.types.includes(name))
 			{
 				compatibility.createService(this, name, Service, Characteristic, CustomCharacteristic);
 				if (name === "Humidity")
 				{
 					this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentRelativeHumidity);
-				}
-				else
-				{
-					this.CurrentConditionsService.addCharacteristic(CustomCharacteristic[name]);
 				}
 			}
 			// Use separate service for humidity if configured
@@ -108,8 +112,16 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				//
 			}
-			// illuminance is a general apple home kit characteristic
-			else if (name === "LightLevel")
+			// illuminance is a general apple home kit characteristic, but
+			// it is not in the required/optional set of a TemperatureSensor,
+			// so attaching it triggers Apple's strict-HAP "out of compliance"
+			// rejection in "home" and "both" modes. Only mount it onto the
+			// main service in the Eve-targeting compatibility modes — Eve
+			// renders it from the EveWeatherService (eve2) or the patched
+			// TempSensor (eve). For "home" / "both" users LightLevel should
+			// be exposed through a dedicated Service.LightSensor instead
+			// (see compatibility.types).
+			else if (name === "LightLevel" && (this.config.compatibility === "eve" || this.config.compatibility === "eve2"))
 			{
 				this.CurrentConditionsService.addCharacteristic(Characteristic.CurrentAmbientLightLevel);
 				// Override the defaults for light level as default is too low for daylight
@@ -134,8 +146,23 @@ function CurrentConditionsWeatherAccessory(platform, stationIndex)
 			{
 				this.CurrentConditionsService.addCharacteristic(Characteristic.StatusFault);
 			}
-			// Add everything else as a custom characteristic to the temperature service
-			else
+			// Add everything else as a custom characteristic to the main service.
+			// Custom characteristics on a standard TemperatureSensor are not
+			// part of the HAP optional set, so Apple's strict validation
+			// rejects the whole bridge as "Accessory out of compliance"
+			// once any non-conformant characteristic is mounted there.
+			// Only do this in the Eve-targeting compatibility modes:
+			//   - "eve":  the main service is still a TemperatureSensor but
+			//             the user opted into Eve-style display knowing
+			//             Apple Home will silently ignore the values.
+			//   - "eve2": the main service is the EveWeatherService — Eve's
+			//             own container type — so custom characteristics are
+			//             expected there.
+			// For "home" and "both" the value is still recorded in fakegato
+			// history and is available on the separate service produced by
+			// compatibility.createService() when the entry is in
+			// compatibility.types.
+			else if (this.config.compatibility === "eve" || this.config.compatibility === "eve2")
 			{
 				this.CurrentConditionsService.addCharacteristic(CustomCharacteristic[name]);
 			}

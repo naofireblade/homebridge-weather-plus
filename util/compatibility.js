@@ -1,7 +1,7 @@
 /*jshint esversion: 6,node: true,-W041: false */
 "use strict";
 
-const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "SolarRadiation", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
+const types = ["AirPressure", "CloudCover", "DewPoint", "Humidity", "RainBool", "SnowBool", "SolarRadiation", "SunriseTime", "SunsetTime", "TemperatureMin", "TemperatureApparent", "UVIndex", "Visibility", "WindDirection", "WindSpeed", "RainDay"];
 
 const createService = function (that, name, Service, Characteristic, CustomCharacteristic)
 {
@@ -58,6 +58,23 @@ const createService = function (that, name, Service, Characteristic, CustomChara
 		that.SolarRadiationService = new Service.OccupancySensor("Solar Radiation", "Solar Radiation");
 		that.SolarRadiationService.unit = temporaryService.getCharacteristic(CustomCharacteristic.SolarRadiation).props.unit;
 		that.SolarRadiationService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Solar Radiation");
+  }
+	if (name === "SunriseTime")
+	{
+		// The actual value is a formatted "HH:mm:ss" string and is not a
+		// HAP-native characteristic, so we expose it as an OccupancySensor
+		// whose ConfiguredName / Name is rewritten to "Sunriseː HH:mm" on
+		// every update (same pattern as UVIndex / WindSpeed / Visibility).
+		// Apple Home renders the ConfiguredName as the tile label, so the
+		// time is visible without depending on a Custom Characteristic
+		// being rendered.
+		that.SunriseTimeService = new Service.OccupancySensor("Sunrise Time", "Sunrise Time");
+		that.SunriseTimeService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Sunrise Time");
+	}
+	if (name === "SunsetTime")
+	{
+		that.SunsetTimeService = new Service.OccupancySensor("Sunset Time", "Sunset Time");
+		that.SunsetTimeService.getCharacteristic(Characteristic.ConfiguredName).updateValue("Sunset Time");
 	}
 	if (name === "TemperatureMin")
 	{
@@ -128,8 +145,36 @@ const getServices = function (that)
 	return services;
 };
 
+// Checks whether `name` (a CamelCase identifier from reportCharacteristics,
+// e.g. "AirPressure") is present in the user's `hidden` config array.
+//
+// Accepts either form for backwards compatibility:
+//   - CamelCase exactly as used internally:  "AirPressure"
+//   - The display form used in the schema:   "Air Pressure"
+//
+// The schema (config.schema.json) lists the display form with spaces, so
+// users wiring up "hidden" through the Homebridge UI / config-ui-x end up
+// with the space form, which previously silently no-op'd because the
+// runtime comparison was a literal Array.indexOf against the CamelCase name.
+const isHidden = function (hidden, name)
+{
+	if (!Array.isArray(hidden))
+	{
+		return false;
+	}
+	return hidden.some((entry) =>
+	{
+		if (typeof entry !== "string")
+		{
+			return false;
+		}
+		return entry === name || entry.replace(/ /g, "") === name;
+	});
+};
+
 module.exports = {
 	types,
 	createService,
-	getServices
+	getServices,
+	isHidden
 };
