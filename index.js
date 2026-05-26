@@ -414,7 +414,7 @@ WeatherPlusPlatform.prototype = {
 				{
 					accessory.SolarRadiationService.setCharacteristic(Characteristic.ConfiguredName, "Solar Radː " + convertedValue + " " + accessory.SolarRadiationService.unit);
 					accessory.SolarRadiationService.setCharacteristic(Characteristic.Name, "Solar Radː " + convertedValue + " " + accessory.SolarRadiationService.unit);
-        }
+				}
 				else if (name === "SunriseTime")
 				{
 					accessory.SunriseTimeService.setCharacteristic(Characteristic.ConfiguredName, "Sunriseː " + convertedValue);
