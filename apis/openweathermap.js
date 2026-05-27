@@ -7,10 +7,20 @@ const converter = require('../util/converter'),
 
 class OpenWeatherMapAPI
 {
-	constructor(apiKey, language, locationId, locationGeo, locationCity, conditionDetail, log)
+	constructor(apiKey, language, locationId, locationGeo, locationCity, conditionDetail, log, apiVersion)
 	{
 		this.log = log;
-		this.api = "3.0";
+		// apiVersion may be "auto" (default — try 3.0, fall back to 2.5 on 401),
+		// "3.0" (use One Call API 3.0, requires the paid subscription, no fallback)
+		// or "2.5" (skip the 3.0 probe and use the legacy free endpoints).
+		// The auto-fallback historically logged "Could not retrieve weather report
+		// with API 3.0, trying API 2.5 now ..." on every plugin start, which is
+		// expected for free-tier OpenWeatherMap API keys but creates the
+		// impression of a recurring error. Setting apiVersion="2.5" silences
+		// that and avoids the wasted initial 3.0 HTTP request.
+		const requestedVersion = apiVersion === "3.0" || apiVersion === "2.5" ? apiVersion : "auto";
+		this.apiAuto = requestedVersion === "auto";
+		this.api = requestedVersion === "2.5" ? "2.5" : "3.0";
 		this.apiBaseURL = "https://api.openweathermap.org";
 
 		this.apiKey = apiKey;
@@ -67,6 +77,18 @@ class OpenWeatherMapAPI
 		];
 		this.forecastDays = 8;
 		this.conditionDetail = conditionDetail;
+
+		// If the caller forced API 2.5, drop the 3.0-only characteristics up
+		// front so that the rest of the plugin sees the same shape as it
+		// would after a runtime fallback from 3.0.
+		if (this.api === "2.5")
+		{
+			this.removeCharacteristic(this.reportCharacteristics, "UVIndex");
+			this.removeCharacteristic(this.reportCharacteristics, "DewPoint");
+			this.removeCharacteristic(this.forecastCharacteristics, "UVIndex");
+			this.removeCharacteristic(this.forecastCharacteristics, "DewPoint");
+			this.forecastDays = 5;
+		}
 	}
 
 	update(forecastDays, callback)
@@ -127,7 +149,7 @@ class OpenWeatherMapAPI
 				{
 					if (error !== undefined && error.toString().includes("401"))
 					{
-						if (this.api === "3.0")
+						if (this.api === "3.0" && this.apiAuto)
 						{
 							that.log.info("Could not retreive weather report with API 3.0, trying API 2.5 now ...")
 							this.api = "2.5";
@@ -137,6 +159,14 @@ class OpenWeatherMapAPI
 							this.removeCharacteristic(this.forecastCharacteristics, "DewPoint");
 							this.forecastDays = 5;
 							this.update(forecastDays, callback);
+						}
+						else if (this.api === "3.0")
+						{
+							// apiVersion was pinned to "3.0" by config — no fallback.
+							that.log.error("Could not retreive weather report with API 3.0. Verify the api key has access to OneCall API 3.0, or set apiVersion to \"auto\" or \"2.5\" in the plugin config.");
+							that.log.error("Error result: " + result);
+							that.log.error("Error message: " + error);
+							callback();
 						}
 						else
 						{

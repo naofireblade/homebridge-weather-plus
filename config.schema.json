@@ -72,6 +72,17 @@
             "type": "string",
             "required": true
           },
+          "apiVersion": {
+            "type": "string",
+            "title": "OpenWeatherMap API version",
+            "description": "Only used when service is openweathermap. \"auto\" (default) probes One Call API 3.0 once and falls back to API 2.5 on a 401 — silently the historic behaviour. \"2.5\" skips the probe (recommended for free-tier API keys without OneCall 3.0). \"3.0\" pins OneCall 3.0 without fallback.",
+            "default": "auto",
+            "enum": [
+              "auto",
+              "2.5",
+              "3.0"
+            ]
+          },
           "locationGeo": {
             "type": "array",
             "maxItems": 2,
