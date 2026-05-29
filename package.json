@@ -123,7 +123,7 @@
     "geo-tz": "^6.0.0",
     "moment-timezone": "^0.5.28",
     "axios": "^1.7.9",
-    "weather-formulas": "^1",
+    "weather-formulas": "^1.0.9",
     "node-persist": "^2.1.0",
     "debug": "^4.4.0"
   },

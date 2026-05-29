@@ -433,7 +433,7 @@ class TempestAPI
 				that.currentReport.DewPoint = wformula.temperature.kelvinToCelcius(wformula.temperature.dewPointMagnusFormula(
 					wformula.temperature.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
-				that.currentReport.TemperatureApparent = wformula.temperature.kelvinToCelcius(wformula.temperature.australianAapparentTemperature(
+				that.currentReport.TemperatureApparent = wformula.temperature.kelvinToCelcius(wformula.temperature.australianApparentTemperature(
 					wformula.temperature.celciusToKelvin(that.currentReport.Temperature),
 					that.currentReport.Humidity,
 					that.currentReport.WindSpeed));
@@ -529,7 +529,7 @@ class TempestAPI
 					wformula.temperature.celciusToKelvin(that.currentReport.Temperature), 
 					that.currentReport.Humidity));
 
-                that.currentReport.TemperatureApparent = wformula.temperature.kelvinToCelcius(wformula.temperature.australianAapparentTemperature(
+                that.currentReport.TemperatureApparent = wformula.temperature.kelvinToCelcius(wformula.temperature.australianApparentTemperature(
 					wformula.temperature.celciusToKelvin(that.currentReport.Temperature),
 					that.currentReport.Humidity,
 					message.obs[0][2]));
