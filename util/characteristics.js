@@ -48,6 +48,7 @@ function round(value, decimals)
 
 module.exports = function (Characteristic, HomebridgeAPI, units)
 {
+	const readPerm = HomebridgeAPI.hap.Perms.PAIRED_READ || HomebridgeAPI.hap.Perms.READ;
 
 	units =                    		//	rainfail    temperature    visibility	windspeed    airpressure
 		{
@@ -70,7 +71,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 		return Object.assign(
 			{
 				format: HomebridgeAPI.hap.Formats.FLOAT
-				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				, perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let rainfallValue = (val) =>
@@ -92,7 +93,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			{
 				format: HomebridgeAPI.hap.Formats.FLOAT
 				, minStep: 0.1
-				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				, perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 
@@ -109,7 +110,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			{
 				format: HomebridgeAPI.hap.Formats.UINT8
 				, minStep: 1
-				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				, perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let visibilityValue = (val) =>
@@ -135,7 +136,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			{
 				format: HomebridgeAPI.hap.Formats.UINT8
 				, minStep: 0.1
-				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				, perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let windspeedValue = (val) =>
@@ -158,7 +159,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			{
 				format: HomebridgeAPI.hap.Formats.UINT16
 				, minStep: 1
-				, perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				, perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			}, range);
 	};
 	let airpressureValue = (val) =>
@@ -186,7 +187,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 				maxValue: 100,
 				minValue: 0,
 				minStep: 1,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -198,7 +199,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Weather Condition', CustomUUID.Condition);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.STRING,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -213,7 +214,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 				maxValue: 9,
 				minValue: 0,
 				minStep: 1,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -234,7 +235,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Day', CustomUUID.ForecastDay);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.STRING,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -246,7 +247,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Station', CustomUUID.ObservationStation);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.STRING,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -258,7 +259,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Observation Time', CustomUUID.ObservationTime);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.STRING,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -274,7 +275,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 				maxValue: 500,
 				minValue: 0,
 				minStep: 1,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -300,7 +301,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Rain', CustomUUID.RainBool);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.BOOL,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -316,7 +317,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 				maxValue: 100,
 				minValue: 0,
 				minStep: 1,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -343,7 +344,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Snow', CustomUUID.SnowBool);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.BOOL,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -359,7 +360,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 				maxValue: 2000,
 				minValue: 0,
 				minStep: 1,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -371,7 +372,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Sunrise', CustomUUID.SunriseTime);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.STRING,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -383,7 +384,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Sunset', CustomUUID.SunsetTime);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.STRING,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -416,7 +417,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 				maxValue: 15,
 				minValue: 0,
 				minStep: 1,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -439,7 +440,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 			super('Wind Direction', CustomUUID.WindDirection);
 			this.setProps({
 				format: HomebridgeAPI.hap.Formats.STRING,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
@@ -487,7 +488,7 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 				maxValue: 1000,
 				minValue: 0,
 				minStep: 1,
-				perms: [HomebridgeAPI.hap.Perms.READ, HomebridgeAPI.hap.Perms.NOTIFY]
+				perms: [readPerm, HomebridgeAPI.hap.Perms.NOTIFY]
 			});
 			this.value = this.getDefaultValue();
 		}
