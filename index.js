@@ -274,7 +274,7 @@ WeatherPlusPlatform.prototype = {
 									time: new Date().getTime() / 1000,
 									temp: accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
 									pressure: accessory.AirPressureService ? accessory.AirPressureService.value : 0,
-									humidity: accessory.HumidityService ? accessory.HumidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value,
+									humidity: accessory.HumidityService ? accessory.HumidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : (accessory.CurrentConditionsService.testCharacteristic(Characteristic.CurrentRelativeHumidity) ? accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : 0),
 									lux: accessory.LightLevelService ? accessory.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value : 0
 								});
 							} catch (error2)
