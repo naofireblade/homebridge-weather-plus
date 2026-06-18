@@ -40,8 +40,8 @@ class WundergroundAPI
 
 		axios.get(encodeURI(queryUri))
 		  .then(response => {
-			if (response.data) {
-				try 
+			if (response.data && typeof response.data === 'object') {
+				try
 				{
 					const jsonObj = response.data;
 					if (jsonObj.errors === undefined || jsonObj.errors.length === 0)
@@ -64,8 +64,9 @@ class WundergroundAPI
 			}
 			else
 			{
-				const error = new Error("Empty response body");
+				const error = new Error("Empty or invalid response body (the response could not be parsed as JSON, e.g. an empty or truncated payload)");
 				this.log.error(error.message);
+				this.log.error("Response Object: " + response.data);
 			  	callback(error);
 			}
 		  })
