@@ -499,7 +499,18 @@ WeatherPlusPlatform.prototype = {
 			// via getCharacteristic() and trigger the strict-HAP rejection.
 			else if (config.compatibility === "eve" || config.compatibility === "eve2")
 			{
-				temperatureService.setCharacteristic(CustomCharacteristic[name], convertedValue);
+				// Eve-only conversion. Temperature-bearing Custom Characteristics
+				// (DewPoint, TemperatureMin, TemperatureApparent, TemperatureWetBulb)
+				// carry a fahrenheit unit label under imperial units, so the value
+				// shown here must be fahrenheit to match that label. We convert via
+				// the per-characteristic _evevalue hook ONLY at this sink, never via
+				// the global _unitvalue at convertedValue — that single value is also
+				// written into HAP's built-in CurrentTemperature in home/both mode,
+				// which is always Celsius and localized by Apple Home. See #129.
+				const eveValue = (name in CustomCharacteristic && CustomCharacteristic[name]._evevalue)
+					? CustomCharacteristic[name]._evevalue(convertedValue)
+					: convertedValue;
+				temperatureService.setCharacteristic(CustomCharacteristic[name], eveValue);
 			}
 		}
 	}
