@@ -163,7 +163,7 @@ class OpenWeatherMapAPI
 						else if (this.api === "3.0")
 						{
 							// apiVersion was pinned to "3.0" by config — no fallback.
-							that.log.error("Could not retreive weather report with API 3.0. Verify the api key has access to OneCall API 3.0, or set apiVersion to \"auto\" or \"2.5\" in the plugin config.");
+							that.log.error("Could not retreive weather report with API 3.0. Verify the api key has access to OneCall API 3.0, or set openWeatherMapApiVersion to \"auto\" or \"2.5\" in the plugin config.");
 							that.log.error("Error result: " + result);
 							that.log.error("Error message: " + error);
 							callback();

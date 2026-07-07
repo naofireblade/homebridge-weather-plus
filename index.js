@@ -74,7 +74,7 @@ function WeatherPlusPlatform(_log, _config)
 				break;
 			case "openweathermap":
 				this.log.info("Adding station with weather service OpenWeatherMap named '" + config.nameNow + "'");
-				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, config.conditionDetail, this.log, config.apiVersion));
+				this.stations.push(new openweathermap(config.key, config.language, config.locationId, config.locationGeo, config.locationCity, config.conditionDetail, this.log, config.openWeatherMapApiVersion));
 				break;
 			case "weewx":
 				this.log.info("Adding station with weather service Weewx named '" + config.nameNow + "'");
@@ -180,7 +180,7 @@ WeatherPlusPlatform.prototype = {
 		// "Could not retreive weather report with API 3.0" info line on
 		// every plugin start). "3.0" pins the modern endpoint without
 		// fallback.
-		station.apiVersion = ["auto", "2.5", "3.0"].includes(stationConfig.apiVersion) ? stationConfig.apiVersion : "auto";
+		station.apiVersion = ["auto", "2.5", "3.0"].includes(stationConfig.openWeatherMapApiVersion) ? stationConfig.openWeatherMapApiVersion : "auto";
 
 		// Separate humidity accessory
 		station.extraHumidity = stationConfig.extraHumidity || false;
