@@ -170,8 +170,8 @@ WeatherPlusPlatform.prototype = {
 		station.compatibility = "currentObservations" in stationConfig && stationConfig.currentObservations === "eve" ? "eve2" : station.compatibility; // old eve is now eve2
 		station.compatibility = ["eve", "eve2", "home", "both"].includes(station.compatibility) ? station.compatibility : "eve";
 
-		// Condition detail level
-		station.conditionDetail = stationConfig.conditionCategory || "simple";
+		// Condition detail level — stored as boolean so downstream detail ? x : y checks work correctly
+		station.conditionDetail = (stationConfig.conditionCategory === 'detailed');
 
 		// Separate humidity accessory
 		station.extraHumidity = stationConfig.extraHumidity || false;
@@ -270,12 +270,21 @@ WeatherPlusPlatform.prototype = {
 								});
 
 								this.log.debug("Saving history entry");
+								// Read pressure from the raw report value rather than the HomeKit
+								// characteristic: AirPressure is UINT16/minStep 1 so it loses the
+								// decimals the Eve graph relies on. Store raw hPa (no unit conversion)
+								// so the value is correct regardless of the user's unit setting.
+								// Never store 0 — it wrecks graph scaling since real pressure only
+								// varies a little — so reuse the last known value until a real
+								// reading arrives.
+								let pressure = (data.AirPressure !== undefined) ? data.AirPressure : 0;
+								if (pressure) accessory.lastHistoryPressure = pressure;
 								accessory.historyService.addEntry({
 									time: new Date().getTime() / 1000,
 									temp: accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentTemperature).value,
-									pressure: accessory.AirPressureService ? accessory.AirPressureService.value : 0,
+									pressure: accessory.lastHistoryPressure || 0,
 									humidity: accessory.HumidityService ? accessory.HumidityService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value : accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentRelativeHumidity).value,
-									lux: accessory.LightLevelService ? accessory.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value : 0
+									lux: accessory.LightLevelService ? accessory.LightLevelService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value : (accessory.CurrentConditionsService.testCharacteristic(Characteristic.CurrentAmbientLightLevel) ? accessory.CurrentConditionsService.getCharacteristic(Characteristic.CurrentAmbientLightLevel).value : 0)
 								});
 							} catch (error2)
 							{
