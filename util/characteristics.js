@@ -222,6 +222,12 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 	CustomCharacteristic.ConditionCategory = CustomCharacteristicConditionCategory;
 
 	class CustomCharacteristicDewPoint extends Characteristic {
+		// Convert ONLY for the Eve custom-characteristic sink (see index.js).
+		// Must NOT use _unitvalue: that would also convert the value written
+		// into HAP's built-in CurrentTemperature in home/both mode, which is
+		// always Celsius and localized by Apple Home.
+		static _evevalue = temperatureValue;
+
 		constructor() {
 			super('Dew Point', CustomUUID.DewPoint);
 			this.setProps(temperatureProps(-50, 100));
@@ -392,6 +398,9 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 	CustomCharacteristic.SunsetTime = CustomCharacteristicSunsetTime;
 
 	class CustomCharacteristicTemperatureMin extends Characteristic {
+		// Convert ONLY for the Eve custom-characteristic sink (see DewPoint above).
+		static _evevalue = temperatureValue;
+
 		constructor() {
 			super('Temperature Min', CustomUUID.TemperatureMin);
 			this.setProps(temperatureProps(-50, 100));
@@ -401,6 +410,9 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 	CustomCharacteristic.TemperatureMin = CustomCharacteristicTemperatureMin;
 
 	class CustomCharacteristicTemperatureApparent extends Characteristic {
+		// Convert ONLY for the Eve custom-characteristic sink (see DewPoint above).
+		static _evevalue = temperatureValue;
+
 		constructor() {
 			super('Apparent temperature', CustomUUID.TemperatureApparent);
 			this.setProps(temperatureProps(-50, 100));
@@ -509,6 +521,9 @@ module.exports = function (Characteristic, HomebridgeAPI, units)
 	// @see https://en.wikipedia.org/wiki/Wet-bulb_temperature
 	// Max value based on max observed temperature for wet bulb in wikipedia
     class CustomCharacteristicTemperatureWetBulb extends Characteristic {
+		// Convert ONLY for the Eve custom-characteristic sink (see DewPoint above).
+		static _evevalue = temperatureValue;
+
 		constructor() {
 			super('Wet-bulb temperature', CustomUUID.TemperatureWetBulb);
 			this.setProps(temperatureProps(-50, 40));
