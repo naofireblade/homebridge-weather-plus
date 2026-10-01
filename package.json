@@ -118,6 +118,9 @@
     "type": "git",
     "url": "https://github.com/naofireblade/homebridge-weather-plus.git"
   },
+  "scripts": {
+    "test": "node test/weatherflow-udp-recovery.test.js"
+  },
   "dependencies": {
     "fakegato-history": "^0.6.7",
     "geo-tz": "^6.0.0",
