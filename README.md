@@ -342,6 +342,8 @@ Many thanks to the awesome contributors who support the project with pull reques
 - [David Carson](https://github.com/dacarson) for integration with Tempest WeatherFlow and fixing several bugs in different apis (essentially maintaining the plugin since 2023)
 - [Øyvind](https://github.com/oyve) for providing a fix in the Tempest WeatherFlow integration
 - [7onnie](https://github.com/7onnie) for providing a fix for the plugin to work with iOS 26.5. Also adding more characteristics for home compatibility and improving the config ui.
+- [Julian Missig](https://github.com/jmissig) for improvements in the WeatherFlow Tempest integration and fixing compatibility with homebrige 2.0.2
+- [jmnovak50](https://github.com/jmnovak50) for fixing a HAP-NodeJS warning
 
 Also thanks to numerous people helping with the docs.
 
